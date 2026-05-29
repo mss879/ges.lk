@@ -1502,17 +1502,17 @@ export default function Home() {
       </div>
       </section>
 
-      {/* SECTION 5: Sustainable Mountain & Forest Skyline (Top Footer Banner) */}
-      <div className="w-full relative z-10 overflow-hidden border-t border-stone-200 bg-white">
-        <img 
-          src="/footer-1.png" 
-          alt="Sustainable Mountain Forest Skyline" 
-          className="w-full h-auto select-none pointer-events-none block"
-        />
-      </div>
-
-      {/* FOOTER SECTION: Dynamic Lime-Green Info Grid */}
-      <footer className="w-full bg-[#e2ff3a] text-[#032e16] pt-20 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans">
+      {/* FOOTER SECTION: Integrated Lime-Green Info Grid Overlayed on footer-1.png */}
+      <footer 
+        className="w-full text-[#032e16] pt-32 sm:pt-40 md:pt-48 lg:pt-56 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans"
+        style={{
+          backgroundImage: 'url("/footer-1.png")',
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: '#e2ff3a'
+        }}
+      >
         <div className="max-w-[1360px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
             
