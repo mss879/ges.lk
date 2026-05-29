@@ -731,6 +731,18 @@ export default function Home() {
                   <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Projects" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
                 </div>
 
+                {/* Blogs */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("Blogs")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    Blogs
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
+
                 {/* Contact Button */}
                 <div className="nav-item-anim opacity-0 items-center justify-start relative z-50 transform-gpu ml-1 lg:ml-2">
                   <div className="flex items-center gap-4 pl-2">
@@ -1549,6 +1561,7 @@ export default function Home() {
                 <li><button onClick={() => setActiveTab("About")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">About Us</button></li>
                 <li><button onClick={() => setActiveTab("Services")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</button></li>
                 <li><button onClick={() => setActiveTab("Projects")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</button></li>
+                <li><button onClick={() => setActiveTab("Blogs")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Blogs</button></li>
                 <li><button onClick={() => setActiveTab("Contact")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</button></li>
               </ul>
             </div>
