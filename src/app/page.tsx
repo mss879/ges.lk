@@ -1502,7 +1502,7 @@ export default function Home() {
       </div>
       </section>      {/* FOOTER SECTION: Integrated Lime-Green Info Grid Overlayed on footer-1.png */}
       <footer 
-        className="w-full text-[#032e16] pt-48 sm:pt-56 md:pt-72 lg:pt-80 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans"
+        className="w-full text-[#032e16] pt-[280px] sm:pt-[360px] md:pt-[460px] lg:pt-[540px] xl:pt-[580px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans"
         style={{
           backgroundImage: 'url("/footer-1.png")',
           backgroundSize: '100% auto',
