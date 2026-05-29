@@ -1323,7 +1323,7 @@ export default function Home() {
             ]).map((card) => (
               <div
                 key={card.id}
-                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-green-600/85 to-green-700/85 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(21,128,61,0.25),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.2)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
+                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-green-700/90 to-green-800/90 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(21,128,61,0.25),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.2)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
               >
                 {/* 3D Glass Highlights exactly like the Contact Button */}
                 <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.25)] z-0 pointer-events-none" />
