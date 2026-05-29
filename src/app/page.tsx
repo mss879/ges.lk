@@ -1,65 +1,1215 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ArrowUpRight, ArrowRight, Battery, Sun, Wind, Thermometer, Globe } from "lucide-react";
+import { motion } from "framer-motion";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Home() {
+  const headlineItems = [
+    { type: "word", text: "Driven" },
+    { type: "word", text: "by" },
+    { type: "word", text: "sustainability" },
+    { type: "word", text: "we" },
+    { type: "word", text: "work" },
+    { type: "word", text: "to" },
+    { type: "word", text: "protect" },
+    { type: "word", text: "the" },
+    { type: "word", text: "planet" },
+    { type: "pill", src: "/eco_bulb_fill.png", alt: "Ecological Energy Icon" },
+    { type: "word", text: "by" },
+    { type: "word", text: "advancing" },
+    { type: "word", text: "clean" },
+    { type: "word", text: "energy" },
+    { type: "word", text: "reducing" },
+    { type: "word", text: "waste" },
+    { type: "word", text: "and" },
+    { type: "word", text: "promoting" },
+    { type: "word", text: "responsible" },
+    { type: "pill", src: "/eco_globe_fill.png", alt: "Ecological Globe Icon" },
+    { type: "word", text: "resource" },
+    { type: "word", text: "use" },
+    { type: "word", text: "for" },
+    { type: "word", text: "a" },
+    { type: "word", text: "healthier" },
+    { type: "word", text: "future." },
+  ];
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("Home");
+  const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const [batteryCharge, setBatteryCharge] = useState(0);
+  const [isFilling, setIsFilling] = useState(true);
+
+  // 24-hour detailed generation data for high-density solar yield chart
+  const hourlyData = [
+    { hour: "12:00 AM", val: 0.0, height: 0 },
+    { hour: "01:00 AM", val: 0.0, height: 0 },
+    { hour: "02:00 AM", val: 0.0, height: 0 },
+    { hour: "03:00 AM", val: 0.0, height: 0 },
+    { hour: "04:00 AM", val: 0.0, height: 0 },
+    { hour: "05:00 AM", val: 0.1, height: 4 },
+    { hour: "06:00 AM", val: 0.4, height: 10 },
+    { hour: "07:00 AM", val: 0.9, height: 22 },
+    { hour: "08:00 AM", val: 1.8, height: 38 },
+    { hour: "09:00 AM", val: 2.9, height: 55 },
+    { hour: "10:00 AM", val: 3.8, height: 70 },
+    { hour: "11:00 AM", val: 4.8, height: 85 },
+    { hour: "12:00 PM", val: 5.4, height: 95 },
+    { hour: "01:00 PM", val: 5.8, height: 100 },
+    { hour: "02:00 PM", val: 5.5, height: 92 },
+    { hour: "03:00 PM", val: 4.6, height: 80 },
+    { hour: "04:00 PM", val: 3.4, height: 60 },
+    { hour: "05:00 PM", val: 2.1, height: 38 },
+    { hour: "06:00 PM", val: 1.1, height: 20 },
+    { hour: "07:00 PM", val: 0.4, height: 8 },
+    { hour: "08:00 PM", val: 0.1, height: 2 },
+    { hour: "09:00 PM", val: 0.0, height: 0 },
+    { hour: "10:00 PM", val: 0.0, height: 0 },
+    { hour: "11:00 PM", val: 0.0, height: 0 },
+  ];
+
+  // Background slow charge / gradual fill-up simulation
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isFilling) {
+      // Slower, smooth charging animation: 0% -> 100% over 20 seconds (1% every 200ms)
+      interval = setInterval(() => {
+        setBatteryCharge((prev) => {
+          if (prev >= 100) {
+            setIsFilling(false);
+            return 100;
+          }
+          return prev + 1;
+        });
+      }, 200);
+    } else {
+      // Ambient slow charge: increase by 1% every 8 seconds if under 100%
+      interval = setInterval(() => {
+        setBatteryCharge((prev) => {
+          if (prev < 100) {
+            return prev + 1;
+          }
+          return prev;
+        });
+      }, 8000);
+    }
+    return () => clearInterval(interval);
+  }, [isFilling]);
+
+  const handleBatteryClick = () => {
+    if (!isFilling) {
+      setBatteryCharge(0);
+      setIsFilling(true);
+    }
+  };
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+      // Clean, hardware-accelerated entrance pipeline
+      tl.fromTo(
+        ".inner-dashboard",
+        { opacity: 0, scale: 0.97 },
+        { opacity: 1, scale: 1, duration: 1.2 }
+      );
+
+      tl.fromTo(
+        ".nav-item-anim",
+        { y: -15, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.04 },
+        "-=0.9"
+      );
+
+      // Bottom grid staggered entry
+      tl.fromTo(
+        ".bottom-grid-card",
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1 },
+        "-=0.8"
+      );
+
+      // Performance optimized horizontal progress bars
+      tl.fromTo(
+        ".bar-growth",
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          transformOrigin: "left",
+          duration: 1.2,
+          stagger: 0.08,
+          ease: "power2.inOut",
+        },
+        "-=0.5"
+      );
+
+      // Performance optimized charging column bars
+      tl.fromTo(
+        ".vertical-col-grow",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          transformOrigin: "bottom",
+          duration: 1.1,
+          stagger: 0.015,
+          ease: "elastic.out(1, 0.8)",
+        },
+        "-=0.9"
+      );
+
+      // Weather status pill translations
+      tl.fromTo(
+        ".weather-pill-grow",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          transformOrigin: "bottom",
+          duration: 1.4,
+          stagger: 0.1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      );
+
+      // ScrollTrigger scroll-driven text reveal for Section 2 headline
+      gsap.fromTo(
+        ".reveal-item",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          stagger: 0.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".headline-trigger",
+            start: "top 85%",
+            end: "top 35%",
+            scrub: true,
+          },
+        }
+      );
+
+      // ScrollTrigger scroll-driven left column entry (creative scale + rotation + translate)
+      gsap.fromTo(
+        ".left-column-anim",
+        { x: -100, y: 30, rotate: -4, scale: 0.95, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".split-grid-trigger",
+            start: "top 75%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      );
+
+      // ScrollTrigger scroll-driven Card 1 entry from left (creative rotate + translate)
+      gsap.fromTo(
+        ".card-1-anim",
+        { x: -140, y: 40, rotate: -6, scale: 0.9, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".split-grid-trigger",
+            start: "top 75%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      );
+
+      // ScrollTrigger scroll-driven Card 2 entry from right (creative rotate + translate)
+      gsap.fromTo(
+        ".card-2-anim",
+        { x: 140, y: 40, rotate: 6, scale: 0.9, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".split-grid-trigger",
+            start: "top 75%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      );
+
+      // ScrollTrigger scroll-driven Card 3 entry from right (creative rotate + translate)
+      gsap.fromTo(
+        ".card-3-anim",
+        { x: 140, y: 40, rotate: 6, scale: 0.9, opacity: 0 },
+        {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".split-grid-trigger",
+            start: "top 75%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col overflow-y-auto overflow-x-hidden">
+
+      {/* SECTION 1: Interactive Dashboard (Hero Fold) */}
+      <div className="w-full h-screen min-h-[750px] shrink-0 p-[4px] sm:p-[6px] lg:p-[8px] relative flex items-center justify-center">
+
+        {/* Clip paths for custom shaped panels */}
+        <svg width="0" height="0" className="absolute pointer-events-none">
+          <defs>
+            <clipPath id="right-card-clip" clipPathUnits="objectBoundingBox">
+              <path d="M 1 1 L 1 0 L 0.525 0 Q 0.535 0, 0.539 0.1 L 0.571 0.9 Q 0.575 1, 0.585 1 L 1 1 Z" />
+            </clipPath>
+          </defs>
+        </svg>
+
+        {/* Outer Dashboard frame */}
+        <div className="inner-dashboard relative opacity-0 w-full h-full bg-[#f8f9fa] rounded-[20px] sm:rounded-[28px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden">
+
+          {/* Full-bleed Hero Background Image */}
+          <div className="absolute inset-0 w-full h-full z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="object-cover w-full h-full"
+            >
+              <source src="/Luxury_solar_home_front_view_202605291448.mp4" type="video/mp4" />
+            </video>
+
+            {/* Realistic Cloud-like White Fade at the top of the Hero Section */}
+            <div className="absolute top-0 left-0 right-0 h-[145px] z-10 pointer-events-none select-none overflow-hidden">
+              {/* Solid white at the absolute top edge to prevent hard cuts */}
+              <div className="absolute top-0 left-0 w-full h-6 bg-white" />
+
+              {/* Layer 1: Deep dense background clouds */}
+              <div className="absolute top-[-20px] left-[-10%] w-[40%] h-[75px] bg-white rounded-[100%] blur-[14px]" />
+              <div className="absolute top-[-5px] left-[20%] w-[50%] h-[95px] bg-white rounded-[100%] blur-[16px]" />
+              <div className="absolute top-[-25px] left-[60%] w-[50%] h-[80px] bg-white rounded-[100%] blur-[15px]" />
+
+              {/* Layer 2: Defined fluffy mid-ground clouds */}
+              <div className="absolute top-[5px] left-[-5%] w-[25%] h-[55px] bg-white rounded-[100%] blur-[10px]" />
+              <div className="absolute top-[20px] left-[12%] w-[20%] h-[45px] bg-white rounded-[100%] blur-[6px]" />
+              <div className="absolute top-[10px] left-[28%] w-[28%] h-[68px] bg-white rounded-[100%] blur-[10px]" />
+              <div className="absolute top-[25px] left-[48%] w-[18%] h-[40px] bg-white rounded-[100%] blur-[6px]" />
+              <div className="absolute top-[15px] left-[60%] w-[26%] h-[60px] bg-white rounded-[100%] blur-[10px]" />
+              <div className="absolute top-[22px] left-[80%] w-[22%] h-[52px] bg-white rounded-[100%] blur-[8px]" />
+              <div className="absolute top-[5px] left-[90%] w-[20%] h-[68px] bg-white rounded-[100%] blur-[10px]" />
+
+              {/* Layer 3: Soft transparent wisps extending lower */}
+              <div className="absolute top-[45px] left-[5%] w-[30%] h-[40px] bg-white/60 rounded-[100%] blur-[14px]" />
+              <div className="absolute top-[55px] left-[35%] w-[25%] h-[35px] bg-white/50 rounded-[100%] blur-[12px]" />
+              <div className="absolute top-[50px] left-[65%] w-[35%] h-[45px] bg-white/55 rounded-[100%] blur-[15px]" />
+
+              {/* Global soft gradient blend for cohesion */}
+              <div className="absolute top-0 left-0 w-full h-[110px] bg-gradient-to-b from-white via-white/50 to-transparent mix-blend-normal" />
+            </div>
+
+            {/* White Cutout SVG Overlay at bottom-left with a gorgeous, sharp, perfectly parallel bezel gap */}
+            <div className="absolute bottom-[-2px] left-[-2px] w-[calc(100%+4px)] h-[15%] sm:h-[12.5%] z-10 text-[#f8f9fa] pointer-events-none">
+              <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full drop-shadow-lg">
+                {/* Proportional Outer Bezel gap fill (matches background color) with sharp fillets, leaving right card body transparent */}
+                <path d="M 0 100 L 0 0 L 525 0 Q 535 0, 539 10 L 571 90 Q 575 100, 585 100 L 0 100 Z" fill="currentColor" />
+                {/* Perfectly parallel Pure White Trust Card inside with sharp fillets (starts at y=0, no top gap) */}
+                <path d="M 0 100 L 0 0 L 510 0 Q 520 0, 524 10 L 556 90 Q 560 100, 570 100 L 0 100 Z" fill="#ffffff" />
+
+                {/* Right container glass background fill matching the exact shape */}
+                <path d="M 1000 100 L 1000 0 L 525 0 Q 535 0, 539 10 L 571 90 Q 575 100, 585 100 Z" fill="rgba(34,197,94,0.12)" />
+                {/* Right container top/left stroke matching the exact slope and fillets */}
+                <path d="M 1000 0 L 525 0 Q 535 0, 539 10 L 571 90 Q 575 100, 585 100" fill="none" stroke="rgba(34,197,94,0.4)" strokeWidth="1.5" />
+              </svg>
+            </div>
+
+            {/* Trust Logos Content Container (Absolute positioned exactly over the SVG - clipped dynamically to match the beveled card edges perfectly) */}
+            <div
+              className="absolute bottom-[-2px] left-[-2px] w-[calc(100%+4px)] h-[15%] sm:h-[12.5%] z-20 px-6 sm:px-10 pb-2.5 pt-5 flex flex-col justify-center pointer-events-auto"
+              style={{ clipPath: "polygon(0% 100%, 0% 0%, 51% 0%, 57% 100%)" }}
+            >
+              <span className="text-stone-400 font-display font-bold text-[9px] sm:text-[10px] uppercase tracking-widest mb-2">trusted by</span>
+
+              {/* Infinite Scrolling Logo Carousel */}
+              <div className="relative w-[82%] sm:w-[74%] md:w-[60%] lg:w-[53%] overflow-hidden py-1">
+                <div className="animate-logo-scroll flex items-center gap-16 pr-16">
+                  {/* Set 1 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+
+                  {/* Set 2 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1 Set 2" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2 Set 2" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3 Set 2" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4 Set 2" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+
+                  {/* Set 3 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1 Set 3" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2 Set 3" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3 Set 3" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4 Set 3" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+
+                  {/* Set 4 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1 Set 4" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2 Set 4" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3 Set 4" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4 Set 4" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+
+                  {/* Set 5 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1 Set 5" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2 Set 5" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3 Set 5" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4 Set 5" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+
+                  {/* Set 6 */}
+                  <img src="/logos-carosel/Asset-1@4x-3-scaled.png" alt="Client Logo 1 Set 6" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-scaled.png" alt="Client Logo 2 Set 6" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-4-2@4x-scaled.png" alt="Client Logo 3 Set 6" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                  <img src="/logos-carosel/Asset-3@4x-4-copy-scaled.png" alt="Client Logo 4 Set 6" className="h-8 sm:h-9 w-auto object-contain brightness-90 opacity-70 hover:opacity-100 hover:brightness-100 transition-all duration-300" />
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side Energy Metrics (Absolute positioned, mirroring the left bezel) */}
+            <div className="absolute bottom-[-2px] left-[-2px] w-[calc(100%+4px)] h-[15%] sm:h-[12.5%] z-20 pointer-events-none hidden md:block">
+              <div
+                className="absolute inset-0 bg-primary-green/8 backdrop-blur-3xl pointer-events-auto flex justify-end items-center pr-6 sm:pr-10 transition-all duration-500"
+                style={{ clipPath: "url(#right-card-clip)" }}
+              >
+                {/* Perfectly balanced fluid-width content deck that dynamically fills 100% of the available space in the green card */}
+                <div className="absolute inset-0 w-full h-full flex items-center justify-between pl-[61%] sm:pl-[60%] lg:pl-[59%] xl:pl-[58.5%] pr-6 sm:pr-10 pointer-events-auto">
+
+                  {/* Unified System Analytics Deck */}
+                  <div className="flex items-center justify-between gap-6 lg:gap-8 w-full h-full pt-[2%] pb-[1%]">
+
+                    {/* Left Block: Power Storage (Battery) */}
+                    <div
+                      onClick={handleBatteryClick}
+                      className="flex-1 flex flex-col justify-center h-full cursor-pointer select-none group/battery min-w-[140px] sm:min-w-[180px] lg:min-w-[200px]"
+                    >
+                      <span className="text-white/60 font-bold font-display text-[9px] sm:text-[10px] xl:text-[11px] tracking-widest uppercase mb-1.5 transition-colors group-hover/battery:text-white/95 text-left">
+                        Power Storage
+                      </span>
+                      <div className="flex items-center gap-3 lg:gap-4 xl:gap-6">
+                        {/* Scaled Battery Cell */}
+                        <div className="relative shrink-0 w-[64px] sm:w-[72px] lg:w-[84px] xl:w-[96px] h-[30px] sm:h-[34px] lg:h-[40px] xl:h-[44px] bg-black/40 border border-white/15 rounded-lg p-[2px] lg:p-[3px] flex items-center shadow-inner group-hover/battery:border-primary-green/50 transition-all duration-500">
+                          <div
+                            className={`h-full rounded-[5px] transition-all duration-300 bg-gradient-to-r ${batteryCharge < 20
+                              ? "from-red-500 to-red-400 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+                              : batteryCharge < 50
+                                ? "from-amber-500 to-yellow-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                                : "from-green-500 to-emerald-400 shadow-[0_0_12px_rgba(34,197,94,0.5)]"
+                              }`}
+                            style={{ width: `${batteryCharge}%` }}
+                          />
+                          <div className="absolute -right-[3px] lg:-right-[4px] top-1/2 -translate-y-1/2 w-[2px] lg:w-[3px] h-[8px] lg:h-[12px] bg-white/30 rounded-r border-r border-t border-b border-white/20" />
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <svg
+                              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-white drop-shadow-[0_1px_4px_rgba(255,255,255,0.7)] transition-all duration-300 ${isFilling || (batteryCharge > 0 && batteryCharge < 100) ? "animate-pulse scale-110" : "opacity-80"
+                                }`}
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M11 21h-1l1-7H7.5c-.3 0-.5-.1-.6-.3-.1-.2-.1-.5.1-.7l6-9h1l-1 7h3.5c.3 0 .5.1.6.3.1.2.1.5-.1.7l-6 9z" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Percentage & Load column */}
+                        <div className="flex flex-col justify-center leading-none">
+                          <div className="flex items-baseline">
+                            <span className="font-display font-black text-xl sm:text-2xl lg:text-3xl xl:text-4xl text-white tracking-tight">
+                              {batteryCharge}
+                            </span>
+                            <span className="text-[10px] sm:text-xs xl:text-sm font-extrabold text-white/80 ml-0.5">%</span>
+                          </div>
+                          <span className="text-[8px] sm:text-[9px] xl:text-[10px] text-stone-300 font-mono tracking-wide mt-1 uppercase">
+                            {isFilling ? "+24.5 kW" : batteryCharge >= 100 ? "0.0 kW" : "+2.8 kW"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* High-Tech Vertical Divider Connector */}
+                    <div className="w-px h-[45%] bg-gradient-to-b from-transparent via-white/20 to-transparent shrink-0 mx-3 lg:mx-5 xl:mx-8" />
+
+                    {/* Right Block: Live Generation Chart */}
+                    <div className="flex-1 flex flex-col justify-center h-full group/yield cursor-pointer min-w-[160px] sm:min-w-[200px] lg:min-w-[240px]">
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-white/60 font-bold font-display text-[9px] sm:text-[10px] xl:text-[11px] tracking-widest uppercase transition-colors group-hover/yield:text-white/95">
+                          {hoveredBarIndex !== null ? "Live Yield" : "Daily Yield"}
+                        </span>
+                        <span className="text-white font-black font-display text-[10px] sm:text-[11px] xl:text-xs tracking-wider bg-white/10 px-2 py-0.5 rounded-md leading-none select-none transition-all duration-300 hover:bg-white/20">
+                          {hoveredBarIndex !== null ? (
+                            <>
+                              {hourlyData[hoveredBarIndex].val.toFixed(1)} <span className="text-[8px] xl:text-[9px] text-white/80 font-bold">kW</span>
+                            </>
+                          ) : (
+                            <>
+                              24.8 <span className="text-[8px] xl:text-[9px] text-white/80 font-bold">kWh</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Chart Container (Fluid-scaling heights) */}
+                      <div className="h-8 lg:h-12 xl:h-[60px] 2xl:h-[72px] flex items-end gap-[2px] xl:gap-[3px] w-full mt-1">
+                        {hourlyData.map((data, i) => {
+                          const isHovered = hoveredBarIndex === i;
+                          return (
+                            <div
+                              key={i}
+                              className="vertical-col-grow flex-1 rounded-[1px] bg-black/25 shadow-inner relative cursor-pointer"
+                              style={{ height: "100%" }}
+                              onMouseEnter={() => setHoveredBarIndex(i)}
+                              onMouseLeave={() => setHoveredBarIndex(null)}
+                            >
+                              <div
+                                className={`w-full h-full rounded-[1px] transition-all duration-200 ${isHovered
+                                  ? "bg-white shadow-[0_0_12px_rgba(255,255,255,0.9)] scale-110 z-10"
+                                  : i % 2 === 0
+                                    ? "bg-primary-green/90"
+                                    : "bg-[#f1c40f]/90"
+                                  }`}
+                                style={{ height: `${data.height}%` }}
+                              />
+                              {/* Ambient light glow behind hovered bar */}
+                              {isHovered && (
+                                <div className="absolute inset-0 bg-white/20 blur-[4px] rounded-full -z-10 animate-pulse" />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Foreground Content Wrapper */}
+          <div className="relative z-20 w-full h-full p-4 sm:p-5 lg:p-7 flex flex-col justify-between">
+
+            {/* Navigation Header (High-end, split layout with centered logo) */}
+            <header className="relative z-[100] transform-gpu flex-none flex items-center justify-between pb-4 pt-0 -mt-2 lg:-mt-3 border-b border-white/10 w-full px-4 lg:px-8">
+
+              {/* Mobile spacer to balance hamburger and keep logo centered */}
+              <div className="flex lg:hidden flex-1" />
+
+              {/* Left Section: Navigation Links */}
+              <nav className="hidden lg:flex items-center gap-4 lg:gap-6 xl:gap-10 2xl:gap-12 flex-1 justify-end pr-4 lg:pr-6 xl:pr-10 whitespace-nowrap">
+                {/* Home */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("Home")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Home" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    Home
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Home" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
+
+                {/* About Us */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("About Us")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "About Us" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    About Us
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "About Us" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
+
+                {/* Solutions Dropdown */}
+                <div
+                  className="nav-item-anim opacity-0 relative py-4 -my-2"
+                  onMouseEnter={() => setActiveDropdown("Solutions")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button className={`flex items-center gap-1.5 text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold transition-colors cursor-pointer ${["Residential Solar", "Commercial & Industrial", "Utility-Scale Systems", "Energy Storage"].includes(activeTab) ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                    }`}>
+                    Solutions
+                    <svg className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === "Solutions" ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {activeDropdown === "Solutions" && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-[100] w-[800px] xl:w-[850px] cursor-default pointer-events-auto whitespace-normal">
+                      <div className="bg-white/95 backdrop-blur-3xl border border-white/60 rounded-[28px] p-2.5 flex shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)]">
+
+                        {/* Left: Featured Banner */}
+                        <div className="w-[280px] relative overflow-hidden rounded-[20px] bg-stone-900 p-6 flex flex-col justify-between group/feature cursor-pointer border border-stone-800 shadow-inner">
+                          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-green/20 via-transparent to-transparent opacity-50 group-hover/feature:opacity-100 transition-opacity duration-700"></div>
+                          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary-green/30 rounded-full blur-[60px] group-hover/feature:bg-primary-green/40 group-hover/feature:scale-110 transition-all duration-700"></div>
+
+                          <div className="relative z-10">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[9px] font-bold tracking-wider uppercase text-white/90 backdrop-blur-md mb-6 shadow-sm">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
+                              Ecosystem
+                            </div>
+                            <h3 className="font-display text-2xl font-extrabold text-white mb-2 leading-tight drop-shadow-sm">
+                              Total Energy <br /> Independence
+                            </h3>
+                            <p className="text-stone-400 text-xs font-medium leading-relaxed pr-2">
+                              Explore how our interconnected solar arrays, battery storage, and smart apps work seamlessly together.
+                            </p>
+                          </div>
+
+                          <div className="relative z-10 flex items-center gap-3 mt-8">
+                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md group-hover/feature:bg-primary-green group-hover/feature:text-white transition-colors duration-300 border border-white/10">
+                              <ArrowRight className="w-3.5 h-3.5 text-white" />
+                            </div>
+                            <span className="text-xs font-bold text-white group-hover/feature:text-primary-green transition-colors duration-300">
+                              View Ecosystem
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Right: Grid of Solutions */}
+                        <div className="flex-1 grid grid-cols-2 gap-1.5 pl-2.5">
+                          {[
+                            {
+                              name: "Residential Solar",
+                              desc: "Sleek rooftop solar & battery integration for modern smart homes.",
+                              icon: (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                              )
+                            },
+                            {
+                              name: "Commercial & Industrial",
+                              desc: "High-efficiency commercial microgrids & industrial solar arrays.",
+                              icon: (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                              )
+                            },
+                            {
+                              name: "Utility-Scale Systems",
+                              desc: "Gigawatt grid-tied solar fields & deep transmission infrastructure.",
+                              icon: (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                              )
+                            },
+                            {
+                              name: "Energy Storage",
+                              desc: "Intelligent battery backup stations & power grid optimization.",
+                              icon: (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                                </svg>
+                              )
+                            }
+                          ].map((item) => (
+                            <button
+                              key={item.name}
+                              onClick={() => {
+                                setActiveTab(item.name);
+                                setActiveDropdown(null);
+                              }}
+                              className={`group/card relative p-4 rounded-[20px] transition-all duration-500 overflow-hidden cursor-pointer flex flex-col justify-center text-left ${activeTab === item.name
+                                ? "bg-primary-green/5"
+                                : "hover:bg-stone-50/80"
+                                }`}
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-br from-primary-green/[0.03] to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+
+                              <div className="relative z-10 flex gap-4 items-start">
+                                <div className={`mt-0.5 shrink-0 flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-500 shadow-sm border ${activeTab === item.name
+                                  ? "bg-primary-green text-white border-primary-green/20 shadow-primary-green/20"
+                                  : "bg-white text-stone-500 border-stone-200/60 group-hover/card:text-primary-green group-hover/card:border-primary-green/20 group-hover/card:shadow-md group-hover/card:-translate-y-0.5"
+                                  }`}>
+                                  {item.icon}
+                                </div>
+
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <h4 className={`font-display text-sm font-extrabold tracking-wide transition-colors duration-300 ${activeTab === item.name ? "text-primary-green" : "text-stone-900 group-hover/card:text-primary-green"
+                                      }`}>
+                                      {item.name}
+                                    </h4>
+                                    <ArrowUpRight className={`w-3.5 h-3.5 transition-all duration-500 ${activeTab === item.name
+                                      ? "text-primary-green opacity-100 translate-x-0 translate-y-0"
+                                      : "text-stone-300 opacity-0 -translate-x-2 translate-y-2 group-hover/card:opacity-100 group-hover/card:translate-x-0 group-hover/card:translate-y-0 group-hover/card:text-primary-green"
+                                      }`} />
+                                  </div>
+                                  <p className="text-[11px] text-stone-500 font-medium leading-relaxed pr-2">
+                                    {item.desc}
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </nav>
+
+              {/* Center Section: Logo */}
+              <div className="nav-item-anim opacity-0 relative z-50 transform-gpu flex items-center justify-center shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="GES Logo"
+                  width={190}
+                  height={55}
+                  priority
+                  className="h-12 xl:h-14 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-500 cursor-pointer"
+                  onClick={() => setActiveTab("Home")}
+                />
+              </div>
+
+              {/* Right Section: Navigation Links & Contact Button */}
+              <nav className="hidden lg:flex items-center gap-4 lg:gap-6 xl:gap-10 2xl:gap-12 flex-1 justify-start pl-4 lg:pl-6 xl:pl-10 whitespace-nowrap">
+                {/* Products */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("Products")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Products" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    Products
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Products" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
+
+                {/* Projects */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("Projects")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Projects" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    Projects
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Projects" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
+
+                {/* Contact Button */}
+                <div className="nav-item-anim opacity-0 items-center justify-start relative z-50 transform-gpu ml-1 lg:ml-2">
+                  <div className="flex items-center gap-4 pl-2">
+                    <button className="flex items-center justify-center w-[38px] h-[38px] bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300 border border-gray-200 text-gray-500 hover:text-primary-green shadow-sm cursor-pointer" title="Search (Cmd+K)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("Contact")}
+                      className="relative group/btn text-[13px] font-bold tracking-widest uppercase text-white overflow-hidden rounded-xl px-6 py-3 transition-transform hover:-translate-y-0.5 active:translate-y-0 duration-300 bg-gradient-to-b from-green-600 to-green-700 shadow-[0_6px_20px_rgba(21,128,61,0.4),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.2)] border border-white/20 backdrop-blur-md cursor-pointer"
+                    >
+                      <span className="relative z-10 drop-shadow-sm">Contact</span>
+                      <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 z-0"></div>
+                      <div className="absolute inset-0 rounded-xl shadow-[inset_0_0_10px_rgba(255,255,255,0.3)] z-0"></div>
+                    </button>
+                  </div>
+                </div>
+              </nav>
+
+              {/* Mobile hamburger menu (visible strictly below lg) */}
+              <div className="flex flex-1 justify-end lg:hidden">
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="nav-item-anim opacity-0 bg-stone-900/10 hover:bg-stone-900/20 active:bg-stone-900/30 border border-stone-900/10 w-11 h-11 rounded-full flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 z-50 relative"
+                  aria-label="Toggle Menu"
+                >
+                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-transform duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
+                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"}`} />
+                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-transform duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+                </button>
+              </div>
+
+            </header>
+
+            {/* Middle Spacer */}
+            <div className="flex-1" />
+
+            {/* Bottom Grid layout (Mobile Only now, Desktop is embedded in the absolute SVG container) */}
+            <div className="md:hidden">
+              <section className="flex-none grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 pt-2 relative z-20">
+
+                {/* col-span-7 acts as a completely transparent spacer for the absolute trust logos below */}
+                <div className="hidden md:block md:col-span-7 h-[140px] pointer-events-none" />
+
+                {/* Right side cards container (Estimated Full & Weather) */}
+                <div className="md:col-span-5 grid grid-cols-2 gap-3 sm:gap-5">
+
+                  {/* Card 2: Solar Yield */}
+                  <div className="bottom-grid-card opacity-0 bg-primary-green/15 backdrop-blur-2xl border border-primary-green/30 rounded-[24px] shadow-[0_8px_32px_0_rgba(34,197,94,0.15)] p-4 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-1">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-white/90 font-bold font-display text-[10px] sm:text-xs lg:text-sm tracking-wide">
+                        {hoveredBarIndex !== null ? "Live Generation" : "Daily Yield"}
+                      </span>
+                      <div className="p-1 rounded-lg bg-white/10 text-white/80 cursor-pointer hover:bg-white hover:text-stone-900 transition-colors">
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <h2 className="font-display font-extrabold text-xl text-white leading-none flex items-baseline">
+                        {hoveredBarIndex !== null ? (
+                          <>
+                            {hourlyData[hoveredBarIndex].val.toFixed(1)}
+                            <span className="text-xs sm:text-sm font-bold ml-1 text-white/80">kW</span>
+                          </>
+                        ) : (
+                          <>
+                            24.8
+                            <span className="text-xs sm:text-sm font-bold ml-1 text-white/80">kWh</span>
+                          </>
+                        )}
+                      </h2>
+                      <span className="text-[9px] sm:text-[10px] text-stone-300 font-mono tracking-wide leading-tight truncate">
+                        {hoveredBarIndex !== null
+                          ? `Time: ${hourlyData[hoveredBarIndex].hour}`
+                          : "Peak output: 5.8 kW at 1:00 PM"
+                        }
+                      </span>
+
+                      <div className="h-12 flex items-end gap-[2px] w-full mt-2">
+                        {hourlyData.map((data, i) => {
+                          const isHovered = hoveredBarIndex === i;
+                          return (
+                            <div
+                              key={i}
+                              className="vertical-col-grow flex-1 rounded-sm bg-black/20 shadow-inner cursor-pointer relative"
+                              style={{ height: "100%" }}
+                              onMouseEnter={() => setHoveredBarIndex(i)}
+                              onMouseLeave={() => setHoveredBarIndex(null)}
+                            >
+                              <div
+                                className={`w-full h-full rounded-sm transition-all duration-200 ${isHovered
+                                  ? "bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] scale-110"
+                                  : i % 2 === 0
+                                    ? "bg-primary-green"
+                                    : "bg-[#f1c40f]"
+                                  }`}
+                                style={{ height: `${data.height}%` }}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Battery Storage */}
+                  <div
+                    onClick={handleBatteryClick}
+                    className="bottom-grid-card opacity-0 bg-primary-green/15 backdrop-blur-2xl border border-primary-green/30 rounded-[24px] shadow-[0_8px_32px_0_rgba(34,197,94,0.15)] p-4 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-1 cursor-pointer select-none group/battery"
+                  >
+                    {/* Title & Arrow */}
+                    <div className="flex justify-between items-start">
+                      <span className="text-white/90 font-bold font-display text-[10px] sm:text-xs lg:text-sm tracking-wide">
+                        Battery Storage
+                      </span>
+                      <div className="p-1 rounded-lg bg-white/10 text-white/80 group-hover/battery:bg-white group-hover/battery:text-stone-900 transition-colors">
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+
+                    {/* Battery Visual & Percentage Row */}
+                    <div className="flex items-center gap-3 my-2">
+                      {/* Interactive Battery Cell */}
+                      <div className="relative flex-none w-[80px] h-[36px] bg-black/40 border border-white/15 rounded-lg p-[3px] flex items-center shadow-inner group-hover/battery:border-primary-green/40 transition-all duration-300">
+                        {/* Active Fluid Fill */}
+                        <div
+                          className={`h-full rounded-[5px] transition-all duration-300 bg-gradient-to-r ${batteryCharge < 20
+                            ? "from-red-500 to-red-400 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+                            : batteryCharge < 50
+                              ? "from-amber-500 to-yellow-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                              : "from-green-500 to-emerald-400 shadow-[0_0_12px_rgba(34,197,94,0.5)]"
+                            }`}
+                          style={{ width: `${batteryCharge}%` }}
+                        />
+
+                        {/* Battery Positive Cap (Right Tip) */}
+                        <div className="absolute -right-[4px] top-1/2 -translate-y-1/2 w-[3px] h-[12px] bg-white/30 rounded-r border-r border-t border-b border-white/20" />
+
+                        {/* Central Lightning Bolt Icon */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <svg
+                            className={`w-4 h-4 text-white drop-shadow-[0_1px_4px_rgba(255,255,255,0.7)] transition-all duration-300 ${isFilling || (batteryCharge > 0 && batteryCharge < 100) ? "animate-pulse scale-110" : "opacity-80"
+                              }`}
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M11 21h-1l1-7H7.5c-.3 0-.5-.1-.6-.3-.1-.2-.1-.5.1-.7l6-9h1l-1 7h3.5c.3 0 .5.1.6.3.1.2.1.5-.1.7l-6 9z" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Percentage Readout */}
+                      <div className="flex flex-col justify-center leading-none">
+                        <div className="flex items-baseline">
+                          <span className="font-display font-extrabold text-2xl text-white tracking-tight">
+                            {batteryCharge}
+                          </span>
+                          <span className="text-[10px] sm:text-xs font-bold text-white/80 ml-0.5">%</span>
+                        </div>
+
+                        <span className="text-[8px] sm:text-[9px] text-stone-300 font-mono tracking-wide mt-0.5 truncate uppercase">
+                          {isFilling ? "Recharging" : batteryCharge >= 100 ? "Balanced" : "Charging"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Subtext Status & Load Output */}
+                    <div className="flex justify-between items-center border-t border-white/5 pt-1.5 text-[8px] sm:text-[9px] font-mono text-white/60">
+                      <div className="flex items-center gap-1">
+                        <span className={`w-1.5 h-1.5 rounded-full ${isFilling
+                          ? "bg-amber-400 animate-ping"
+                          : batteryCharge >= 100
+                            ? "bg-green-500"
+                            : "bg-green-400 animate-pulse"
+                          }`} />
+                        <span>{isFilling ? "FAST CHARGE" : batteryCharge >= 100 ? "BALANCED" : "SOLAR INPUT"}</span>
+                      </div>
+                      <span className="font-bold text-white/80">
+                        {isFilling ? "+24.5 kW" : batteryCharge >= 100 ? "0.0 kW" : "+2.8 kW"}
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+            </div>
+
+          </div>
+
+          {/* Mobile Fullscreen Glass Drawer Menu */}
+          {isMobileMenuOpen && (
+            <div className="absolute inset-0 z-[100] bg-[#0c120c]/95 backdrop-blur-3xl flex flex-col p-6 sm:p-10 justify-between overflow-y-auto rounded-[20px] sm:rounded-[28px]">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <Image
+                  src="/logo.png"
+                  alt="SolarTech Logo"
+                  width={140}
+                  height={38}
+                  className="h-8 w-auto object-contain"
+                />
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/10 w-9 h-9 rounded-full flex items-center justify-center text-white cursor-pointer transition-colors duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* List of categories with staggered animations */}
+              <div className="flex-1 my-6 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-6 justify-center">
+                <div className="w-full max-w-[600px] mx-auto flex flex-col gap-6">
+
+                  {/* Category 1: Solutions */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Solar Solutions</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {[
+                        "Residential Solar",
+                        "Commercial & Industrial",
+                        "Utility-Scale Systems",
+                        "Energy Storage"
+                      ].map((item) => (
+                        <button
+                          key={item}
+                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
+                          onClick={() => {
+                            setActiveTab(item);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <span>{item}</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 2: Direct Links */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Discover</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {[
+                        "Home",
+                        "About Us",
+                        "Products",
+                        "Projects",
+                        "News & Blog",
+                        "Solar Calculator",
+                        "Contact"
+                      ].map((item) => (
+                        <button
+                          key={item}
+                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
+                          onClick={() => {
+                            setActiveTab(item);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <span>{item}</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Footer with branding */}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] text-stone-500 font-mono">
+                <span>GES.lk Solarwave Dashboard</span>
+                <span>v1.3.0</span>
+              </div>
+            </div>
+          )}
+        </div> {/* Closes inner-dashboard */}
+      </div> {/* Closes SECTION 1 wrapper */}
+
+      {/* SECTION 2: About & Core Solutions */}
+      <section className="w-full bg-white text-stone-900 py-24 px-6 sm:px-12 md:px-16 lg:px-24 flex flex-col gap-16 border-t border-stone-100/80">
+
+        {/* About Pill & Huge Headline */}
+        <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto">
+          {/* About Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="group inline-flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.03] text-[10px] sm:text-[11px] font-extrabold text-stone-800 tracking-widest uppercase w-fit select-none shadow-[0_4px_16px_rgba(16,185,129,0.04)] hover:border-emerald-500/40 hover:bg-emerald-500/[0.08] transition-all duration-500 cursor-pointer"
+          >
+            {/* Glowing Pulse Energy Core */}
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/25 relative overflow-hidden shrink-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              {/* Rotating background overlay mimicking a solar sweep */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-emerald-400/10 to-transparent animate-spin duration-[4000ms] pointer-events-none" />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-stone-800 group-hover:text-emerald-700 transition-colors duration-300">About GES</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-stone-300 group-hover:bg-emerald-400 transition-colors duration-300" />
+              <span className="font-mono text-[9px] text-emerald-600 font-extrabold tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/10 shadow-inner">ECO-CORE</span>
+            </div>
+          </motion.div>
+
+          {/* Main Headline with Scroll-Driven Word Reveal */}
+          <h2 className="headline-trigger font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-stone-950 tracking-tight leading-[1.3] w-full text-justify select-none">
+            {headlineItems.map((item, idx) => {
+              if (item.type === "word") {
+                return (
+                  <span key={idx} className="inline">
+                    <span className="reveal-item inline-block opacity-0 transform-gpu">
+                      {item.text}
+                    </span>
+                    {" "}
+                  </span>
+                );
+              } else {
+                return (
+                  <span key={idx} className="inline">
+                    <span className="reveal-item inline-flex items-center align-middle rounded-full border border-stone-200/80 shadow-sm w-[76px] sm:w-[96px] md:w-[116px] h-[34px] sm:h-[42px] md:h-[48px] overflow-hidden relative shrink-0 mx-1 sm:mx-1.5 opacity-0 transform-gpu">
+                      <Image
+                        src={item.src!}
+                        alt={item.alt!}
+                        fill
+                        sizes="(max-width: 640px) 76px, (max-width: 768px) 96px, 116px"
+                        className="object-cover hover:scale-110 transition-transform duration-500"
+                      />
+                    </span>
+                    {" "}
+                  </span>
+                );
+              }
+            })}
+          </h2>
+        </div>
+
+        {/* Divider Line */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.9, delay: 0.25, ease: "easeInOut" }}
+          className="w-full max-w-[1360px] mx-auto h-px bg-stone-200/60 origin-left"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        {/* Split Grid for Core Solutions */}
+        <div className="split-grid-trigger grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start w-full max-w-[1360px] mx-auto">
+
+          {/* Left Column: Solution Title & CTA */}
+          <div className="left-column-anim lg:col-span-3 opacity-0 will-change-transform">
+            <div className="flex flex-col justify-between gap-6 sm:gap-8 lg:min-h-[380px]">
+              <div className="flex flex-col gap-4">
+                <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-stone-950 tracking-tight">
+                  Core Solutions
+                </h3>
+                <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed max-w-sm">
+                  Powerful eco-tech tools built to simplify sustainability initiatives and drive measurable environmental impact with lasting value.
+                </p>
+              </div>
+
+              <button className="group relative overflow-hidden inline-flex items-center justify-center bg-stone-950 hover:bg-stone-900 text-white font-bold text-xs sm:text-sm tracking-widest uppercase px-8 py-4 rounded-full transition-all duration-300 w-fit cursor-pointer shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 mt-2 select-none">
+                <span className="relative z-10">Know more about us</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-800 to-stone-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: 3 rounded cards */}
+          <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+
+            {/* Card 1: Renewable Energy */}
+            <div className="card-1-anim opacity-0 will-change-transform">
+              <div className="h-[380px] sm:h-[420px] rounded-[32px] sm:rounded-[36px] overflow-hidden relative shadow-sm border border-stone-100/50 flex flex-col justify-end p-8 transition-all duration-500 group cursor-pointer hover:shadow-xl hover:-translate-y-1.5">
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="/green_terraces.png"
+                    alt="Renewable Energy"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {/* Gradient shade at the bottom to ensure white text is highly readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                </div>
+
+                <div className="relative z-20 flex flex-col gap-2">
+                  <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
+                    Renewable Energy
+                  </h4>
+                  <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
+                    Optimize solar wind and hydro energy with AI forecasting systems
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Carbon Tracking */}
+            <div className="card-2-anim opacity-0 will-change-transform">
+              <div className="h-[380px] sm:h-[420px] rounded-[32px] sm:rounded-[36px] overflow-hidden relative shadow-sm border border-stone-200/20 bg-[#eaf7e3] flex flex-col justify-between p-8 transition-all duration-500 group cursor-pointer hover:shadow-xl hover:-translate-y-1.5">
+
+                {/* Clean Outlined Icons at Top Left (No Badges) */}
+                <div className="flex items-center gap-3 relative z-20 pt-1 text-[#16a34a]">
+                  <Sun className="w-6 h-6 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
+                  <Globe className="w-6 h-6 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+
+                {/* Extra elegant, high-tech contour wireframe wave overlay in the background */}
+                <div className="absolute bottom-0 right-0 z-0 w-full h-[65%] pointer-events-none opacity-30 select-none group-hover:scale-105 transition-transform duration-700">
+                  <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                    <path d="M0 120 C 50 115, 100 85, 200 95" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
+                    <path d="M0 105 C 40 100, 90 75, 200 85" stroke="#16a34a" strokeWidth="0.25" />
+                    <path d="M0 90 C 30 85, 80 65, 200 75" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
+                    <path d="M0 75 C 20 70, 70 55, 200 65" stroke="#16a34a" strokeWidth="0.25" />
+                    <path d="M0 60 C 10 55, 60 45, 200 55" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
+                    <path d="M0 45 C 5 40, 50 35, 200 45" stroke="#16a34a" strokeWidth="0.25" />
+                  </svg>
+                </div>
+
+                {/* Bottom text content */}
+                <div className="relative z-20 flex flex-col gap-2">
+                  <h4 className="font-display text-2xl font-bold text-stone-950 tracking-tight leading-tight group-hover:text-green-800 transition-colors duration-300">
+                    Carbon Tracking
+                  </h4>
+                  <p className="text-stone-600 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
+                    Real-time monitoring and analytics to measure report and reduce your carbon footprint effectively.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Smart Waste */}
+            <div className="card-3-anim opacity-0 will-change-transform">
+              <div className="h-[380px] sm:h-[420px] rounded-[32px] sm:rounded-[36px] overflow-hidden relative shadow-sm border border-stone-100/50 flex flex-col justify-between p-8 transition-all duration-500 group cursor-pointer hover:shadow-xl hover:-translate-y-1.5">
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="/leaf_drops.png"
+                    alt="Smart Waste"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {/* Gradient shade to ensure readable text at bottom, and highlight top-right stat */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 z-10" />
+                </div>
+
+                {/* Top-Left Highlighted Stat (Matches Screenshot Placement Exactly) */}
+                <div className="relative z-20 flex flex-col items-start leading-none mt-1">
+                  <span className="font-display font-extrabold text-[48px] text-white tracking-tight leading-none drop-shadow-sm">
+                    95%
+                  </span>
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-white/80 uppercase tracking-widest mt-2 text-left drop-shadow-sm">
+                    Consumed Energy
+                  </span>
+                </div>
+
+                {/* Bottom text content */}
+                <div className="relative z-20 flex flex-col gap-2 mt-auto">
+                  <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
+                    Smart Waste
+                  </h4>
+                  <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
+                    IoT-enabled waste systems optimizing routes, boosting recycling efficiency
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+      </section>
+
     </div>
   );
 }
