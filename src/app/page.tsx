@@ -1501,11 +1501,11 @@ export default function Home() {
         </div>
       </div>
       </section>      <footer 
-        className="w-full text-white pt-[280px] sm:pt-[360px] md:pt-[460px] lg:pt-[540px] xl:pt-[580px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
+        className="w-full text-white pt-[240px] sm:pt-[310px] md:pt-[400px] lg:pt-[470px] xl:pt-[510px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
         style={{
           backgroundImage: 'url("/footer-1.png")',
           backgroundSize: '100% auto',
-          backgroundPosition: 'center -30%',
+          backgroundPosition: 'center -35%',
           backgroundRepeat: 'no-repeat',
           backgroundColor: '#012716'
         }}
