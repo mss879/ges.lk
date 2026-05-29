@@ -690,6 +690,18 @@ export default function Home() {
                     </div>
                   )}
                 </div>
+
+                {/* Blogs */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <button
+                    onClick={() => setActiveTab("Blogs")}
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                      }`}
+                  >
+                    Blogs
+                  </button>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                </div>
               </nav>
 
               {/* Center Section: Logo */}
@@ -729,18 +741,6 @@ export default function Home() {
                     Projects
                   </button>
                   <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Projects" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
-                </div>
-
-                {/* Blogs */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => setActiveTab("Blogs")}
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
-                      }`}
-                  >
-                    Blogs
-                  </button>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
                 </div>
 
                 {/* Contact Button */}
