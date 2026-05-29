@@ -46,6 +46,7 @@ export default function Home() {
   const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(0);
 
   const [batteryCharge, setBatteryCharge] = useState(0);
   const [isFilling, setIsFilling] = useState(true);
@@ -1248,11 +1249,13 @@ export default function Home() {
         </div>
 
         {/* Ticker Container (Infinite Carousel) */}
-        <div className="relative w-full z-10 overflow-hidden py-4 select-none">
-          {/* Subtle fade shading overlays to blend margins cleanly */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-white to-transparent z-20 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-white to-transparent z-20 pointer-events-none" />
-
+        <div 
+          className="relative w-full z-10 overflow-hidden py-4 select-none"
+          style={{
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, white 15%, white 85%, transparent 100%)',
+            maskImage: 'linear-gradient(to right, transparent 0%, white 15%, white 85%, transparent 100%)'
+          }}
+        >
           {/* Marquee Row */}
           <div className="animate-stats-scroll flex gap-6 px-3">
             {[...Array(4)].flatMap((_, repIdx) => [
@@ -1290,7 +1293,7 @@ export default function Home() {
                   <div className="relative w-9 h-9 flex items-center justify-center opacity-75 group-hover:opacity-100 transition-opacity duration-500 relative z-10">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                       <defs>
-                        <linearGradient id={`blueGreenGrad-${repIdx}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                         <linearGradient id={`blueGreenGrad-${repIdx}`} x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="#ffffff" />
                           <stop offset="100%" stopColor="#34d399" />
                         </linearGradient>
@@ -1323,7 +1326,7 @@ export default function Home() {
             ]).map((card) => (
               <div
                 key={card.id}
-                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-green-700/90 to-green-800/90 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(21,128,61,0.25),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.2)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
+                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-[#093e25]/95 to-[#041d11]/95 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(4,40,22,0.3),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.3)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
               >
                 {/* 3D Glass Highlights exactly like the Contact Button */}
                 <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.25)] z-0 pointer-events-none" />
@@ -1339,7 +1342,7 @@ export default function Home() {
                   <h3 className="font-display font-extrabold text-[28px] sm:text-[32px] tracking-tight text-white leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
                     {card.val}
                   </h3>
-                  <span className="font-display font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-200">
+                  <span className="font-display font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-300">
                     {card.label}
                   </span>
                 </div>
@@ -1349,6 +1352,287 @@ export default function Home() {
         </div>
 
       </section>
+
+      {/* SECTION 4: Interactive Values Accordion */}
+      <section className="w-full bg-white text-stone-900 py-24 border-t border-stone-100 relative">
+        {/* Soft Ambient Background Glows */}
+        <div className="absolute top-1/2 left-2/3 -translate-y-1/2 w-96 h-96 bg-emerald-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
+        <div className="absolute top-1/4 left-1/3 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
+
+        <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+            
+            {/* Left Column: Heading and Brand Info */}
+            <div className="lg:col-span-5 lg:sticky lg:top-32 self-start flex flex-col items-start">
+              <span className="text-emerald-600 font-extrabold text-sm sm:text-base tracking-widest uppercase mb-4 block">
+                Our Values
+              </span>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-stone-950 leading-tight mb-6">
+                Sustainability is not just our focus – it's our foundation.
+              </h2>
+              <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed mb-8 max-w-lg">
+                At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
+              </p>
+              
+              {/* Meet our Team pill-button with sliding transitions */}
+              <button 
+                onClick={() => setActiveTab("About")}
+                className="inline-flex items-center gap-4 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-6 py-2 border border-stone-200/60 text-stone-800 hover:text-stone-950 cursor-pointer text-sm sm:text-base font-bold group shadow-sm transition-all duration-300 active:scale-[0.98]"
+              >
+                <span className="w-8 h-8 sm:w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:scale-105 group-hover:bg-emerald-700 transition-all duration-300">
+                  <svg className="w-4 h-4 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
+                <span className="relative z-10 select-none">Meet our team</span>
+              </button>
+            </div>
+
+            {/* Right Column: High-End Interactive Accordion */}
+            <div className="lg:col-span-7 flex flex-col">
+              {[
+                {
+                  title: "Human",
+                  index: "01",
+                  desc: "We put people first in everything we build. From the safety of our field engineers to the long-term partnerships with our clients, empathy and collaboration drive our success.",
+                  badgeLabel: "RETENTION RATE",
+                  badgeVal: "99% Engineering Trust",
+                  icon: (
+                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Curious",
+                  index: "02",
+                  desc: "We constantly question current energy paradigms to discover smarter solutions. Continuous learning keeps us at the absolute cutting edge of solar technology and smart-grid integration.",
+                  badgeLabel: "R&D INVESTMENT",
+                  badgeVal: "Pioneering Smart Tech",
+                  icon: (
+                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Pragmatic",
+                  index: "03",
+                  desc: "We value real-world results over hypothetical concepts. Every system we design is built for high reliability, maximum commercial efficiency, and structural durability under harsh climates.",
+                  badgeLabel: "SYSTEM RELIABILITY",
+                  badgeVal: "99.98% Operational Up-time",
+                  icon: (
+                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Impact-Driven",
+                  index: "04",
+                  desc: "We are obsessed with tangible environmental and financial footprints. Every kilowatt of clean power we scale contributes directly to a carbon-neutral planet.",
+                  badgeLabel: "CARBON OFFSET",
+                  badgeVal: "100K+ Tons CO2 Saved",
+                  icon: (
+                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h2a2.5 2.5 0 002.5-2.5V14a2 2 0 012-2h.055M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                    </svg>
+                  )
+                }
+              ].map((item, idx) => {
+                const isOpen = activeValueIndex === idx;
+                return (
+                  <div key={idx} className="border-b border-stone-200/80 last:border-0">
+                    <div 
+                      onClick={() => setActiveValueIndex(isOpen ? null : idx)}
+                      className="flex items-center justify-between py-6 sm:py-8 cursor-pointer select-none group/hdr"
+                    >
+                      <div className="flex items-center gap-6 sm:gap-8">
+                        <span className="font-mono text-xs sm:text-sm font-semibold text-stone-400">
+                          {item.index}
+                        </span>
+                        <h3 className={`font-display text-2xl sm:text-3xl md:text-[38px] font-extrabold tracking-tight transition-all duration-300 ${isOpen ? "text-emerald-700" : "text-stone-900 group-hover/hdr:text-emerald-600"}`}>
+                          {item.title}
+                        </h3>
+                      </div>
+                      
+                      {/* Premium Circle SVG chevron indicator */}
+                      <div className={`w-9 h-9 sm:w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-350 ${isOpen ? "border-emerald-600 bg-emerald-50 text-emerald-600 rotate-180" : "border-stone-200 bg-stone-50 text-stone-500 group-hover/hdr:border-emerald-600 group-hover/hdr:bg-emerald-50 group-hover/hdr:text-emerald-600"}`}>
+                        <svg className="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Smooth height panel transition using grid scale */}
+                    <div 
+                      className={`grid transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${isOpen ? "grid-rows-[1fr] opacity-100 pb-8 sm:pb-10" : "grid-rows-[0fr] opacity-0 pointer-events-none"}`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pt-2">
+                          <p className="text-stone-600 font-medium text-sm sm:text-base leading-relaxed max-w-xl">
+                            {item.desc}
+                          </p>
+                          
+                          {/* Rich Badge detailing live indicators */}
+                          <div className="flex items-center gap-3 shrink-0 bg-stone-50 border border-stone-200/50 rounded-2xl p-4 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] self-start md:self-auto">
+                            <div className="p-2 bg-emerald-50 border border-emerald-100 rounded-xl">
+                              {item.icon}
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest leading-none">
+                                {item.badgeLabel}
+                              </span>
+                              <span className="text-xs sm:text-sm font-extrabold text-stone-800 tracking-tight mt-1.5">
+                                {item.badgeVal}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </div>
+      </div>
+      </section>
+
+      {/* SECTION 5: Sustainable Mountain & Forest Skyline (Top Footer Banner) */}
+      <div 
+        className="w-full h-40 sm:h-48 md:h-56 border-t border-stone-200 relative z-10" 
+        style={{
+          backgroundImage: 'url("/mountain_footer_bg.png")',
+          backgroundSize: 'auto 100%',
+          backgroundRepeat: 'repeat-x',
+          backgroundPosition: 'bottom center'
+        }} 
+      />
+
+      {/* FOOTER SECTION: Dynamic Lime-Green Info Grid */}
+      <footer className="w-full bg-[#e2ff3a] text-[#032e16] pt-20 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans">
+        <div className="max-w-[1360px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+            
+            {/* Column 1: Brand details & Newsletter Subscription */}
+            <div className="lg:col-span-5 flex flex-col items-start">
+              <div className="flex items-center gap-3 font-display font-black text-2xl sm:text-3xl tracking-tight uppercase mb-6 text-[#032e16]">
+                <svg className="w-8 h-8 text-[#032e16]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+                <span>GES</span>
+              </div>
+              <p className="text-[#032e16]/80 font-semibold text-sm leading-relaxed max-w-sm">
+                We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
+              </p>
+              
+              {/* Premium email subscription input */}
+              <div className="mt-8 flex items-center justify-between bg-transparent border border-[#032e16]/25 rounded-2xl p-1.5 w-full max-w-md focus-within:border-[#032e16]/55 transition-all duration-300">
+                <input 
+                  type="email" 
+                  placeholder="Email Address" 
+                  className="bg-transparent pl-3 pr-2 py-2.5 text-sm text-[#032e16] placeholder-[#032e16]/50 focus:outline-none w-full font-bold"
+                />
+                <button className="bg-[#032e16] text-[#e2ff3a] hover:bg-[#032e16]/90 transition-all duration-300 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest cursor-pointer shrink-0 shadow-sm active:scale-[0.98]">
+                  Subscribe
+                </button>
+              </div>
+            </div>
+
+            {/* Column 2: Navigation Links */}
+            <div className="lg:col-span-2 lg:col-start-7 flex flex-col">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+                Links
+              </h4>
+              <ul className="flex flex-col gap-3 font-bold text-sm">
+                <li><button onClick={() => setActiveTab("Home")} className="hover:opacity-60 transition-opacity cursor-pointer">Home</button></li>
+                <li><button onClick={() => setActiveTab("About")} className="hover:opacity-60 transition-opacity cursor-pointer">About Us</button></li>
+                <li><button onClick={() => setActiveTab("Services")} className="hover:opacity-60 transition-opacity cursor-pointer">Services</button></li>
+                <li><button onClick={() => setActiveTab("Projects")} className="hover:opacity-60 transition-opacity cursor-pointer">Projects</button></li>
+                <li><button onClick={() => setActiveTab("Contact")} className="hover:opacity-60 transition-opacity cursor-pointer">Contact</button></li>
+              </ul>
+            </div>
+
+            {/* Column 3: Legal/Policies */}
+            <div className="lg:col-span-2 flex flex-col">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+                Legal
+              </h4>
+              <ul className="flex flex-col gap-3 font-bold text-sm">
+                <li><a href="#" className="hover:opacity-60 transition-opacity">Privacy Policy</a></li>
+                <li><a href="#" className="hover:opacity-60 transition-opacity">Terms & Conditions</a></li>
+                <li><a href="#" className="hover:opacity-60 transition-opacity">Engineering Standards</a></li>
+                <li><a href="#" className="hover:opacity-60 transition-opacity">License Details</a></li>
+              </ul>
+            </div>
+
+            {/* Column 4: Contact Us Info */}
+            <div className="lg:col-span-2 flex flex-col">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+                Contact Us
+              </h4>
+              <ul className="flex flex-col gap-4 font-bold text-sm text-[#032e16]/80">
+                <li className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[#032e16] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="leading-relaxed font-semibold">No. 45, Galle Road, Colombo 03, Sri Lanka</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-[#032e16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href="mailto:info@ges.lk" className="hover:opacity-60 transition-opacity">info@ges.lk</a>
+                </li>
+                <li className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-[#032e16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <a href="tel:+94112543210" className="hover:opacity-60 transition-opacity">+94 112 543 210</a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Bottom Copyright & Socials */}
+          <div className="border-t border-[#032e16]/10 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <span className="text-xs font-bold text-[#032e16]/65">
+              © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved. Powered by Clean Energy.
+            </span>
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-5">
+              <a href="#" className="text-[#032e16] hover:opacity-60 transition-opacity">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </a>
+              <a href="#" className="text-[#032e16] hover:opacity-60 transition-opacity">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              <a href="#" className="text-[#032e16] hover:opacity-60 transition-opacity">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+              </a>
+              <a href="#" className="text-[#032e16] hover:opacity-60 transition-opacity">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );
