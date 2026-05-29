@@ -1506,7 +1506,7 @@ export default function Home() {
         style={{
           backgroundImage: 'url("/footer-1.png")',
           backgroundSize: '100% auto',
-          backgroundPosition: 'top center',
+          backgroundPosition: 'center -30%',
           backgroundRepeat: 'no-repeat',
           backgroundColor: '#032e16'
         }}
