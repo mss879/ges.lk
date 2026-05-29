@@ -1506,7 +1506,7 @@ export default function Home() {
       <div 
         className="w-full h-40 sm:h-48 md:h-56 border-t border-stone-200 relative z-10" 
         style={{
-          backgroundImage: 'url("/mountain_footer_bg.png")',
+          backgroundImage: 'url("/footer-1.png")',
           backgroundSize: 'auto 100%',
           backgroundRepeat: 'repeat-x',
           backgroundPosition: 'bottom center'
