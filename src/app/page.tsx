@@ -13,32 +13,32 @@ if (typeof window !== "undefined") {
 
 export default function Home() {
   const headlineItems = [
-    { type: "word", text: "Driven" },
-    { type: "word", text: "by" },
-    { type: "word", text: "sustainability" },
-    { type: "word", text: "we" },
-    { type: "word", text: "work" },
-    { type: "word", text: "to" },
-    { type: "word", text: "protect" },
-    { type: "word", text: "the" },
-    { type: "word", text: "planet" },
-    { type: "pill", src: "/eco_bulb_fill.png", alt: "Ecological Energy Icon" },
-    { type: "word", text: "by" },
-    { type: "word", text: "advancing" },
+    { type: "word", text: "Empowering" },
+    { type: "word", text: "Sri" },
+    { type: "word", text: "Lanka" },
+    { type: "word", text: "with" },
     { type: "word", text: "clean" },
     { type: "word", text: "energy" },
-    { type: "word", text: "reducing" },
-    { type: "word", text: "waste" },
+    { type: "pill", src: "/eco_bulb_fill.png", alt: "Clean Energy Icon" },
+    { type: "word", text: "we" },
+    { type: "word", text: "deliver" },
+    { type: "word", text: "innovative" },
     { type: "word", text: "and" },
-    { type: "word", text: "promoting" },
-    { type: "word", text: "responsible" },
-    { type: "pill", src: "/eco_globe_fill.png", alt: "Ecological Globe Icon" },
-    { type: "word", text: "resource" },
-    { type: "word", text: "use" },
-    { type: "word", text: "for" },
-    { type: "word", text: "a" },
-    { type: "word", text: "healthier" },
-    { type: "word", text: "future." },
+    { type: "word", text: "eco-friendly" },
+    { type: "word", text: "solutions" },
+    { type: "word", text: "harnessing" },
+    { type: "word", text: "nature's" },
+    { type: "word", text: "power" },
+    { type: "pill", src: "/eco_globe_fill.png", alt: "Sustainable Globe Icon" },
+    { type: "word", text: "to" },
+    { type: "word", text: "provide" },
+    { type: "word", text: "efficient" },
+    { type: "word", text: "and" },
+    { type: "word", text: "reliable" },
+    { type: "word", text: "systems" },
+    { type: "word", text: "that" },
+    { type: "word", text: "drive" },
+    { type: "word", text: "sustainability." },
   ];
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1035,7 +1035,7 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-stone-800 group-hover:text-emerald-700 transition-colors duration-300">About GES</span>
+              <span className="text-stone-800 group-hover:text-emerald-700 transition-colors duration-300">About GE-Solar</span>
               <span className="w-1.5 h-1.5 rounded-full bg-stone-300 group-hover:bg-emerald-400 transition-colors duration-300" />
               <span className="font-mono text-[9px] text-emerald-600 font-extrabold tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/10 shadow-inner">ECO-CORE</span>
             </div>
@@ -1090,15 +1090,15 @@ export default function Home() {
             <div className="flex flex-col justify-between gap-6 sm:gap-8 lg:min-h-[380px]">
               <div className="flex flex-col gap-4">
                 <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-stone-950 tracking-tight">
-                  Core Solutions
+                  Why Choose Us
                 </h3>
                 <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed max-w-sm">
-                  Powerful eco-tech tools built to simplify sustainability initiatives and drive measurable environmental impact with lasting value.
+                  We are committed to delivering reliable and cost-effective solar energy solutions tailored precisely to your needs. Choose us for a seamless journey to energy independence.
                 </p>
               </div>
 
               <button className="group relative overflow-hidden inline-flex items-center justify-center bg-stone-950 hover:bg-stone-900 text-white font-bold text-xs sm:text-sm tracking-widest uppercase px-8 py-4 rounded-full transition-all duration-300 w-fit cursor-pointer shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 mt-2 select-none">
-                <span className="relative z-10">Know more about us</span>
+                <span className="relative z-10">Explore Our Solutions</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-stone-800 to-stone-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
               </button>
             </div>
@@ -1124,10 +1124,10 @@ export default function Home() {
 
                 <div className="relative z-20 flex flex-col gap-2">
                   <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
-                    Renewable Energy
+                    10 Years Industry Experience
                   </h4>
                   <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
-                    Optimize solar wind and hydro energy with AI forecasting systems
+                    Comprehensive, long-term warranties on all equipment and workmanship, ensuring peace of mind for decades.
                   </p>
                 </div>
               </div>
@@ -1157,11 +1157,11 @@ export default function Home() {
 
                 {/* Bottom text content */}
                 <div className="relative z-20 flex flex-col gap-2">
-                  <h4 className="font-display text-2xl font-bold text-stone-950 tracking-tight leading-tight group-hover:text-green-800 transition-colors duration-300">
-                    Carbon Tracking
+                    <h4 className="font-display text-2xl font-bold text-stone-950 tracking-tight leading-tight group-hover:text-green-800 transition-colors duration-300">
+                    Certified Engineers & Installers
                   </h4>
                   <p className="text-stone-600 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
-                    Real-time monitoring and analytics to measure report and reduce your carbon footprint effectively.
+                    Highly trained, certified professionals who guarantee safe, efficient, and up-to-standard installation every time.
                   </p>
                 </div>
               </div>
@@ -1188,17 +1188,17 @@ export default function Home() {
                     95%
                   </span>
                   <span className="text-[10px] sm:text-[11px] font-extrabold text-white/80 uppercase tracking-widest mt-2 text-left drop-shadow-sm">
-                    Consumed Energy
+                    Energy Optimized
                   </span>
                 </div>
 
                 {/* Bottom text content */}
                 <div className="relative z-20 flex flex-col gap-2 mt-auto">
                   <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
-                    Smart Waste
+                    Customized Energy Audits
                   </h4>
                   <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
-                    IoT-enabled waste systems optimizing routes, boosting recycling efficiency
+                    Thorough, personalized assessments of your energy usage to design a solar system that maximizes savings and performance.
                   </p>
                 </div>
               </div>
