@@ -1506,9 +1506,9 @@ export default function Home() {
         style={{
           backgroundImage: 'url("/footer-1.png")',
           backgroundSize: '100% auto',
-          backgroundPosition: 'center -30%',
+          backgroundPosition: 'center -40%',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: '#032e16'
+          backgroundColor: '#021a0f'
         }}
       >
         <div className="max-w-[1360px] mx-auto">
