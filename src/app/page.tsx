@@ -1502,13 +1502,13 @@ export default function Home() {
       </div>
       </section>      {/* FOOTER SECTION: Integrated Lime-Green Info Grid Overlayed on footer-1.png */}
       <footer 
-        className="w-full text-[#032e16] pt-[250px] sm:pt-[330px] md:pt-[420px] lg:pt-[490px] xl:pt-[530px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans"
+        className="w-full text-white pt-[250px] sm:pt-[330px] md:pt-[420px] lg:pt-[490px] xl:pt-[530px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-[#032e16]/10 relative z-10 font-sans"
         style={{
           backgroundImage: 'url("/footer-1.png")',
           backgroundSize: '100% auto',
           backgroundPosition: 'top center',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: '#e2ff3a'
+          backgroundColor: '#032e16'
         }}
       >
         <div className="max-w-[1360px] mx-auto">
@@ -1516,25 +1516,25 @@ export default function Home() {
             
             {/* Column 1: Brand details & Newsletter Subscription */}
             <div className="lg:col-span-5 flex flex-col items-start">
-              <div className="flex items-center gap-3 font-display font-black text-2xl sm:text-3xl tracking-tight uppercase mb-6 text-[#032e16]">
-                <svg className="w-8 h-8 text-[#032e16]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <div className="flex items-center gap-3 font-display font-black text-2xl sm:text-3xl tracking-tight uppercase mb-6 text-white">
+                <svg className="w-8 h-8 text-[#e2ff3a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <circle cx="12" cy="12" r="4" />
                   <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
                 </svg>
                 <span>GES</span>
               </div>
-              <p className="text-[#032e16]/80 font-semibold text-sm leading-relaxed max-w-sm">
+              <p className="text-white/85 font-semibold text-sm leading-relaxed max-w-sm">
                 We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
               </p>
               
               {/* Premium email subscription input */}
-              <div className="mt-8 flex items-center justify-between bg-transparent border border-[#032e16]/25 rounded-2xl p-1.5 w-full max-w-md focus-within:border-[#032e16]/55 transition-all duration-300">
+              <div className="mt-8 flex items-center justify-between bg-transparent border border-white/20 rounded-2xl p-1.5 w-full max-w-md focus-within:border-white/50 transition-all duration-300">
                 <input 
                   type="email" 
                   placeholder="Email Address" 
-                  className="bg-transparent pl-3 pr-2 py-2.5 text-sm text-[#032e16] placeholder-[#032e16]/50 focus:outline-none w-full font-bold"
+                  className="bg-transparent pl-3 pr-2 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none w-full font-bold"
                 />
-                <button className="bg-[#032e16] text-[#e2ff3a] hover:bg-[#032e16]/90 transition-all duration-300 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest cursor-pointer shrink-0 shadow-sm active:scale-[0.98]">
+                <button className="bg-[#e2ff3a] text-[#032e16] hover:bg-[#e2ff3a]/90 transition-all duration-300 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest cursor-pointer shrink-0 shadow-sm active:scale-[0.98]">
                   Subscribe
                 </button>
               </div>
@@ -1542,55 +1542,55 @@ export default function Home() {
 
             {/* Column 2: Navigation Links */}
             <div className="lg:col-span-2 lg:col-start-7 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/60">
                 Links
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
-                <li><button onClick={() => setActiveTab("Home")} className="hover:opacity-60 transition-opacity cursor-pointer">Home</button></li>
-                <li><button onClick={() => setActiveTab("About")} className="hover:opacity-60 transition-opacity cursor-pointer">About Us</button></li>
-                <li><button onClick={() => setActiveTab("Services")} className="hover:opacity-60 transition-opacity cursor-pointer">Services</button></li>
-                <li><button onClick={() => setActiveTab("Projects")} className="hover:opacity-60 transition-opacity cursor-pointer">Projects</button></li>
-                <li><button onClick={() => setActiveTab("Contact")} className="hover:opacity-60 transition-opacity cursor-pointer">Contact</button></li>
+                <li><button onClick={() => setActiveTab("Home")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Home</button></li>
+                <li><button onClick={() => setActiveTab("About")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">About Us</button></li>
+                <li><button onClick={() => setActiveTab("Services")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</button></li>
+                <li><button onClick={() => setActiveTab("Projects")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</button></li>
+                <li><button onClick={() => setActiveTab("Contact")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</button></li>
               </ul>
             </div>
 
             {/* Column 3: Legal/Policies */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/60">
                 Legal
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
-                <li><a href="#" className="hover:opacity-60 transition-opacity">Privacy Policy</a></li>
-                <li><a href="#" className="hover:opacity-60 transition-opacity">Terms & Conditions</a></li>
-                <li><a href="#" className="hover:opacity-60 transition-opacity">Engineering Standards</a></li>
-                <li><a href="#" className="hover:opacity-60 transition-opacity">License Details</a></li>
+                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Terms & Conditions</a></li>
+                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Engineering Standards</a></li>
+                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">License Details</a></li>
               </ul>
             </div>
 
             {/* Column 4: Contact Us Info */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-[#032e16]/60">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/60">
                 Contact Us
               </h4>
-              <ul className="flex flex-col gap-4 font-bold text-sm text-[#032e16]/80">
+              <ul className="flex flex-col gap-4 font-bold text-sm text-white/80">
                 <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#032e16] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <span className="leading-relaxed font-semibold">No. 45, Galle Road, Colombo 03, Sri Lanka</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-[#032e16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <a href="mailto:info@ges.lk" className="hover:opacity-60 transition-opacity">info@ges.lk</a>
+                  <a href="mailto:info@ges.lk" className="hover:text-[#e2ff3a] transition-colors">info@ges.lk</a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-[#032e16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <a href="tel:+94112543210" className="hover:opacity-60 transition-opacity">+94 112 543 210</a>
+                  <a href="tel:+94112543210" className="hover:text-[#e2ff3a] transition-colors">+94 112 543 210</a>
                 </li>
               </ul>
             </div>
