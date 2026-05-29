@@ -668,7 +668,7 @@ export default function Home() {
 
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between mb-1">
-                                    <h4 className={`font-display text-sm font-extrabold tracking-wide transition-colors duration-300 ${activeTab === item.name ? "text-primary-green" : "text-stone-900 group-hover/card:text-primary-green"
+                                    <h4 className={`font-display text-[15px] font-extrabold tracking-wide transition-colors duration-300 ${activeTab === item.name ? "text-primary-green" : "text-stone-900 group-hover/card:text-primary-green"
                                       }`}>
                                       {item.name}
                                     </h4>
@@ -779,7 +779,7 @@ export default function Home() {
                   {/* Card 2: Solar Yield */}
                   <div className="bottom-grid-card opacity-0 bg-primary-green/15 backdrop-blur-2xl border border-primary-green/30 rounded-[24px] shadow-[0_8px_32px_0_rgba(34,197,94,0.15)] p-4 flex flex-col justify-between min-h-[140px] transition-transform hover:-translate-y-1">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-white/90 font-bold font-display text-[10px] sm:text-xs lg:text-sm tracking-wide">
+                      <span className="text-white/90 font-bold font-display text-[11px] sm:text-sm lg:text-[15px] tracking-wide">
                         {hoveredBarIndex !== null ? "Live Generation" : "Daily Yield"}
                       </span>
                       <div className="p-1 rounded-lg bg-white/10 text-white/80 cursor-pointer hover:bg-white hover:text-stone-900 transition-colors">
@@ -842,7 +842,7 @@ export default function Home() {
                   >
                     {/* Title & Arrow */}
                     <div className="flex justify-between items-start">
-                      <span className="text-white/90 font-bold font-display text-[10px] sm:text-xs lg:text-sm tracking-wide">
+                      <span className="text-white/90 font-bold font-display text-[11px] sm:text-sm lg:text-[15px] tracking-wide">
                         Battery Storage
                       </span>
                       <div className="p-1 rounded-lg bg-white/10 text-white/80 group-hover/battery:bg-white group-hover/battery:text-stone-900 transition-colors">
@@ -1035,7 +1035,7 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-stone-800 group-hover:text-emerald-700 transition-colors duration-300">About GE-Solar</span>
+              <span className="text-stone-800 group-hover:text-emerald-700 transition-colors duration-300">About GES</span>
               <span className="w-1.5 h-1.5 rounded-full bg-stone-300 group-hover:bg-emerald-400 transition-colors duration-300" />
               <span className="font-mono text-[9px] text-emerald-600 font-extrabold tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/10 shadow-inner">ECO-CORE</span>
             </div>
@@ -1123,7 +1123,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-20 flex flex-col gap-2">
-                  <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
+                  <h4 className="font-display text-[26px] sm:text-[28px] font-bold text-white tracking-tight leading-tight">
                     10 Years Industry Experience
                   </h4>
                   <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
@@ -1137,32 +1137,48 @@ export default function Home() {
             <div className="card-2-anim opacity-0 will-change-transform">
               <div className="h-[380px] sm:h-[420px] rounded-[32px] sm:rounded-[36px] overflow-hidden relative shadow-sm border border-stone-200/20 bg-[#eaf7e3] flex flex-col justify-between p-8 transition-all duration-500 group cursor-pointer hover:shadow-xl hover:-translate-y-1.5">
 
-                {/* Clean Outlined Icons at Top Left (No Badges) */}
-                <div className="flex items-center gap-3 relative z-20 pt-1 text-[#16a34a]">
-                  <Sun className="w-6 h-6 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
-                  <Globe className="w-6 h-6 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
+                {/* Floating Icons (at the top) */}
+                <div className="relative z-20 flex items-center gap-3 text-[#16a34a] pt-1">
+                  <Sun className="w-6 h-6 stroke-[1.2] icon-float-1 group-hover:scale-110 transition-transform duration-300" />
+                  <Globe className="w-6 h-6 stroke-[1.2] icon-float-2 group-hover:scale-110 transition-transform duration-300" />
                 </div>
 
-                {/* Extra elegant, high-tech contour wireframe wave overlay in the background */}
-                <div className="absolute bottom-0 right-0 z-0 w-full h-[65%] pointer-events-none opacity-30 select-none group-hover:scale-105 transition-transform duration-700">
-                  <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                    <path d="M0 120 C 50 115, 100 85, 200 95" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
-                    <path d="M0 105 C 40 100, 90 75, 200 85" stroke="#16a34a" strokeWidth="0.25" />
-                    <path d="M0 90 C 30 85, 80 65, 200 75" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
-                    <path d="M0 75 C 20 70, 70 55, 200 65" stroke="#16a34a" strokeWidth="0.25" />
-                    <path d="M0 60 C 10 55, 60 45, 200 55" stroke="#16a34a" strokeWidth="0.25" strokeDasharray="1.5,1.5" />
-                    <path d="M0 45 C 5 40, 50 35, 200 45" stroke="#16a34a" strokeWidth="0.25" />
-                  </svg>
-                </div>
-
-                {/* Bottom text content */}
+                {/* Bottom Content: Heading and Description */}
                 <div className="relative z-20 flex flex-col gap-2">
-                    <h4 className="font-display text-2xl font-bold text-stone-950 tracking-tight leading-tight group-hover:text-green-800 transition-colors duration-300">
+                  <h4 className="font-display text-[26px] sm:text-[28px] font-bold text-stone-950 tracking-tight leading-tight group-hover:text-green-800 transition-colors duration-300">
                     Certified Engineers & Installers
                   </h4>
                   <p className="text-stone-600 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
                     Highly trained, certified professionals who guarantee safe, efficient, and up-to-standard installation every time.
                   </p>
+                </div>
+
+                {/* Creative High-Tech Engineering Blueprint Grid Background */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+                  {/* Subtle Grid Pattern Overlay */}
+                  <div className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,#16a34a_1px,transparent_1px),linear-gradient(to_bottom,#16a34a_1px,transparent_1px)] bg-[size:24px_24px]" />
+
+                  {/* Laser Scan Line Sweep */}
+                  <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#22c55e]/30 to-transparent animate-grid-scan" />
+
+                  {/* Light Reflection Sweep */}
+                  <div className="absolute top-0 bottom-0 w-[50%] bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-light-beam" />
+
+                  {/* Dual Orbiting Blueprint Solar Rings in top-right */}
+                  <div className="absolute -top-16 -right-16 w-56 h-56 opacity-[0.15] group-hover:opacity-[0.25] transition-opacity duration-500">
+                    {/* Outer Ring */}
+                    <svg viewBox="0 0 100 100" className="w-full h-full animate-ring-rotate-cw">
+                      <circle cx="50" cy="50" r="45" stroke="#16a34a" strokeWidth="0.8" strokeDasharray="3,3" fill="none" />
+                      <path d="M 50 2 L 50 8 M 50 92 L 50 98 M 2 50 L 8 50 M 92 50 L 98 50" stroke="#16a34a" strokeWidth="1" />
+                    </svg>
+                    {/* Inner Ring (reversing) */}
+                    <div className="absolute inset-4">
+                      <svg viewBox="0 0 100 100" className="w-full h-full animate-ring-rotate-ccw">
+                        <circle cx="50" cy="50" r="40" stroke="#22c55e" strokeWidth="0.5" fill="none" />
+                        <polygon points="50,15 53,45 85,50 53,55 50,85 47,55 15,50 47,45" stroke="#16a34a" strokeWidth="0.6" fill="none" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1194,11 +1210,11 @@ export default function Home() {
 
                 {/* Bottom text content */}
                 <div className="relative z-20 flex flex-col gap-2 mt-auto">
-                  <h4 className="font-display text-2xl font-bold text-white tracking-tight leading-tight">
+                  <h4 className="font-display text-[26px] sm:text-[28px] font-bold text-white tracking-tight leading-tight">
                     Customized Energy Audits
                   </h4>
                   <p className="text-white/80 font-medium text-xs sm:text-[13px] leading-relaxed max-w-[280px]">
-                    Thorough, personalized assessments of your energy usage to design a solar system that maximizes savings and performance.
+                    Detailed energy assessments to design custom solar systems that maximize savings and performance.
                   </p>
                 </div>
               </div>
@@ -1206,6 +1222,130 @@ export default function Home() {
 
           </div>
 
+        </div>
+
+      </section>
+
+      {/* SECTION 3: Performance & Scalability Telemetry Ticker (Infinite Scroll) */}
+      <section className="w-full bg-white text-stone-900 py-24 relative overflow-hidden">
+        
+        {/* Soft Ambient Green and Blue Glows in Background */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.03] rounded-full blur-[120px] pointer-events-none select-none" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.03] rounded-full blur-[120px] pointer-events-none select-none" />
+
+        {/* Header content wrapper designed to align pixel-perfectly with Section 2 header */}
+        <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 mb-16 relative z-10">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="flex flex-col gap-4">
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-stone-950 leading-tight">
+                GES Impact & Scale
+              </h2>
+            </div>
+            <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed max-w-md">
+              Real-time tracking of our global renewable energy footprint, engineering excellence, and customer trust.
+            </p>
+          </div>
+        </div>
+
+        {/* Ticker Container (Infinite Carousel) */}
+        <div className="relative w-full z-10 overflow-hidden py-4 select-none">
+          {/* Subtle fade shading overlays to blend margins cleanly */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-r from-white to-transparent z-20 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-48 bg-gradient-to-l from-white to-transparent z-20 pointer-events-none" />
+
+          {/* Marquee Row */}
+          <div className="animate-stats-scroll flex gap-6 px-3">
+            {[...Array(4)].flatMap((_, repIdx) => [
+              {
+                id: `stat-1-${repIdx}`,
+                val: "500MW+",
+                label: "Clean energy generated.",
+                icon: (
+                  <svg className="w-5.5 h-5.5 text-white stroke-[1.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                ),
+                iconClass: "icon-float-1",
+                graphic: (
+                  <div className="flex items-end gap-1.5 h-10 opacity-75 group-hover:opacity-100 transition-opacity duration-500 relative z-10">
+                    <div className="w-1 bg-white/30 h-4 rounded-sm animate-pulse" />
+                    <div className="w-1 bg-white/50 h-7 rounded-sm animate-pulse delay-75" />
+                    <div className="w-1 bg-white h-10 rounded-sm shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                    <div className="w-1 bg-white/75 h-8 rounded-sm animate-pulse" />
+                    <div className="w-1 bg-white/50 h-5 rounded-sm animate-pulse delay-150" />
+                  </div>
+                )
+              },
+              {
+                id: `stat-2-${repIdx}`,
+                val: "95%",
+                label: "Customers ratings.",
+                icon: (
+                  <svg className="w-5.5 h-5.5 text-white stroke-[1.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.243.578 1.82l-3.97 2.887a1 1 0 00-.364 1.118l1.52 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.887a1 1 0 00-1.175 0l-3.97 2.887c-.783.57-1.838-.197-1.538-1.118l1.52-4.674a1 1 0 00-.364-1.118l-3.97-2.887c-.783-.576-.38-1.82.578-1.82h4.907a1 1 0 00.95-.69l1.519-4.674z" />
+                  </svg>
+                ),
+                iconClass: "icon-float-2",
+                graphic: (
+                  <div className="relative w-9 h-9 flex items-center justify-center opacity-75 group-hover:opacity-100 transition-opacity duration-500 relative z-10">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <defs>
+                        <linearGradient id={`blueGreenGrad-${repIdx}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#ffffff" />
+                          <stop offset="100%" stopColor="#34d399" />
+                        </linearGradient>
+                      </defs>
+                      <path className="text-white/20" strokeWidth="2.8" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path stroke={`url(#blueGreenGrad-${repIdx})`} strokeWidth="2.8" strokeDasharray="95, 100" strokeLinecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <span className="absolute text-[8px] font-mono font-bold text-white leading-none">95%</span>
+                  </div>
+                )
+              },
+              {
+                id: `stat-3-${repIdx}`,
+                val: "1,200+",
+                label: "Systems installed till date.",
+                icon: (
+                  <svg className="w-5.5 h-5.5 text-white stroke-[1.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                ),
+                iconClass: "icon-float-1",
+                graphic: (
+                  <div className="relative w-9 h-9 opacity-75 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center relative z-10">
+                    <div className="absolute w-2 h-2 rounded-full bg-white animate-ping" />
+                    <div className="absolute w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                    <div className="w-8 h-8 rounded-full border border-white/20 animate-spin duration-[6000ms]" style={{ borderStyle: "dashed" }} />
+                  </div>
+                )
+              }
+            ]).map((card) => (
+              <div
+                key={card.id}
+                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-green-600/85 to-green-700/85 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(21,128,61,0.25),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.2)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
+              >
+                {/* 3D Glass Highlights exactly like the Contact Button */}
+                <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.25)] z-0 pointer-events-none" />
+
+                <div className="flex justify-between items-center relative z-10">
+                  <div className={`p-2 bg-white/10 border border-white/15 rounded-2xl shrink-0 ${card.iconClass}`}>
+                    {card.icon}
+                  </div>
+                  {card.graphic}
+                </div>
+
+                <div className="flex flex-col gap-0.5 mt-3 relative z-10">
+                  <h3 className="font-display font-extrabold text-[28px] sm:text-[32px] tracking-tight text-white leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
+                    {card.val}
+                  </h3>
+                  <span className="font-display font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-200">
+                    {card.label}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
       </section>
