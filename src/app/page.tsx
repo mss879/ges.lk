@@ -49,6 +49,7 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
+  const [hoveredApproach, setHoveredApproach] = useState<number>(3); // Default to 04. Perform card as opened
 
   const [batteryCharge, setBatteryCharge] = useState(0);
   const [isFilling, setIsFilling] = useState(true);
@@ -258,47 +259,22 @@ export default function Home() {
 
       const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
 
-      const processTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".process-section-trigger",
-          start: isDesktop ? "top top" : "top 70%",
-          end: isDesktop ? "+=150%" : "bottom 80%",
-          scrub: 1,
-          pin: isDesktop,
-          anticipatePin: 1,
+      // ScrollTrigger scroll-driven Approach cards stagger reveal
+      gsap.fromTo(
+        ".approach-card-anim",
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.18,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".approach-section-trigger",
+            start: "top 75%",
+          },
         }
-      });
-
-      processTl
-        .fromTo(".process-step-1", 
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
-        )
-        .fromTo(".process-line-1",
-          { scaleY: 0 },
-          { scaleY: 1, duration: 0.8, ease: "none", transformOrigin: "top" },
-          "-=0.2"
-        )
-        .fromTo(".process-step-2",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
-          "-=0.2"
-        )
-        .fromTo(".process-line-2",
-          { scaleY: 0 },
-          { scaleY: 1, duration: 0.8, ease: "none", transformOrigin: "top" },
-          "-=0.2"
-        )
-        .fromTo(".process-step-3",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
-          "-=0.2"
-        )
-        .fromTo(".process-image-wrap",
-          { opacity: 0, scale: 0.94, y: 40 },
-          { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out" },
-          "0"
-        );
+      );
     }, containerRef);
 
     // Ensure ScrollTrigger recalculates layout and heights perfectly after mounting
@@ -1718,85 +1694,117 @@ export default function Home() {
       </div>
       </section>
 
-      {/* SECTION 4.5: Our Process */}
-      <section className="process-section-trigger w-full bg-white text-stone-900 py-20 lg:py-0 lg:h-screen flex items-center border-t border-stone-100 relative z-20 overflow-hidden">
-        {/* Ambient glowing shapes */}
-        <div className="absolute top-1/3 right-[-100px] w-[500px] h-[500px] bg-emerald-500/[0.02] rounded-full blur-[140px] pointer-events-none select-none" />
-        <div className="absolute bottom-1/4 left-[-100px] w-[500px] h-[500px] bg-emerald-500/[0.02] rounded-full blur-[140px] pointer-events-none select-none" />
+      {/* SECTION 4.5: Our Process / Section Approach */}
+      <section className="approach-section-trigger w-full bg-[#f8f9fa] text-stone-900 py-24 md:py-32 relative overflow-hidden border-t border-stone-100/50">
+        
+        {/* Soft Ambient Background Glows */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.03] rounded-full blur-[130px] pointer-events-none select-none animate-pulse" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.03] rounded-full blur-[130px] pointer-events-none select-none animate-pulse delay-1000" />
 
-        <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            
-            {/* Left Column: Staggered Process Steps */}
-            <div className="lg:col-span-7 flex flex-col justify-center">
-              {/* Label */}
-              <span className="font-mono text-xs font-bold text-emerald-600/90 tracking-[0.2em] uppercase mb-4 block">
-                [OUR PROCESS]
-              </span>
-              
-              {/* Title */}
-              <h2 className="font-display text-4xl sm:text-5xl md:text-[54px] font-black tracking-tight text-stone-950 leading-tight mb-16 max-w-xl">
-                Switching To Solar In 3 Easy Steps
-              </h2>
-
-              {/* Steps Container */}
-              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 items-start mt-6">
-                {/* Step 1 */}
-                <div className="process-step-1 opacity-0 flex flex-col justify-start relative">
-                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">01</span>
-                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Free consultation</h3>
-                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
-                    Get a free energy audit and custom solar solution.
-                  </p>
-                  
-                  {/* Dashed line 1 (Desktop only) */}
-                  <div className="hidden md:block absolute right-[-24px] lg:right-[-32px] top-6 bottom-[-128px] w-[1px] pointer-events-none">
-                    <div className="process-line-1 h-full w-[1.5px] border-l-2 border-dashed border-emerald-500/40 origin-top scale-y-0" />
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="process-step-2 opacity-0 flex flex-col justify-start relative md:pt-32">
-                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">02</span>
-                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Design & install</h3>
-                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
-                    We'll plan, customise, and install your solar system.
-                  </p>
-                  
-                  {/* Dashed line 2 (Desktop only) */}
-                  <div className="hidden md:block absolute right-[-24px] lg:right-[-32px] top-[152px] bottom-[-128px] w-[1px] pointer-events-none">
-                    <div className="process-line-2 h-full w-[1.5px] border-l-2 border-dashed border-emerald-500/40 origin-top scale-y-0" />
-                  </div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="process-step-3 opacity-0 flex flex-col justify-start relative md:pt-64">
-                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">03</span>
-                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Start & Saving</h3>
-                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
-                    Enjoy clean energy and reduced bills from day one.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Premium Round Image */}
-            <div className="lg:col-span-5 relative mt-8 lg:mt-0">
-              <div className="process-image-wrap opacity-0 scale-95 relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden border border-stone-200/50 shadow-2xl">
-                <Image
-                  src="/solar_process_theme.png"
-                  alt="Eco-villa with premium integrated solar panel array"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-center"
-                  priority
-                />
-                {/* Overlay to give a premium depth */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-black/0 to-transparent" />
-              </div>
-            </div>
-
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 relative z-10">
+          
+          {/* Header Block */}
+          <div className="flex flex-col items-center text-center mb-16">
+            <span className="font-mono text-xs font-black text-emerald-700 tracking-[0.25em] uppercase mb-4 block">
+              _ our approach
+            </span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-[52px] font-black tracking-tight text-emerald-950 leading-tight max-w-3xl">
+              Our process, refined through experience
+            </h2>
           </div>
+
+          {/* Interactive Staggered Flex Accordion Cards */}
+          <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full min-h-[460px] mt-12">
+            {[
+              {
+                num: "01.",
+                title: "Design",
+                image: "https://framerusercontent.com/images/wZRwWZKVYJrfzGLdaj4uc9pa0E.webp",
+                desc: "We perform a comprehensive solar assessment, engineering a system mapped exactly to your site's peak irradiance and grid specs."
+              },
+              {
+                num: "02.",
+                title: "Build",
+                image: "https://framerusercontent.com/images/pJOiUSAQLtPX4kTdAuk5xtQY0.png",
+                desc: "Our certified in-house technicians assemble your high-capacity array, using premium Tier-1 smart microgrid components."
+              },
+              {
+                num: "03.",
+                title: "Install",
+                image: "https://framerusercontent.com/images/9uN2Q1rO2xdB7dxznL79FvhSXag.jpg",
+                desc: "Complete physical mount, grid synchronization, and net-metering integration with Ceylon Electricity Board standard approval."
+              },
+              {
+                num: "04.",
+                title: "Perform",
+                image: "https://framerusercontent.com/images/YTJHW8aOUqPgnBJEJkcF7yV6y2k.png",
+                desc: "Once live, your system is monitored to ensure it performs as expected. Ongoing support and maintenance help protect output and extend system lifespan."
+              }
+            ].map((card, idx) => {
+              const isHovered = hoveredApproach === idx;
+              return (
+                <div 
+                  key={idx}
+                  className={`approach-card-anim group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-stone-200/50 min-h-[380px] lg:min-h-[440px] flex flex-col justify-between p-6 sm:p-8 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-y-[40px] ${
+                    isHovered 
+                      ? "lg:flex-[2.6] flex-1 bg-[#011a14] shadow-2xl" 
+                      : "lg:flex-[1] flex-1 bg-[#011a14] hover:bg-[#02251d]"
+                  }`}
+                  onMouseEnter={() => setHoveredApproach(idx)}
+                >
+                  {/* Background Image & Overlay */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className={`w-full h-full object-cover transition-transform duration-[800ms] ease-out ${
+                        isHovered ? "scale-105 opacity-80" : "scale-100 opacity-30 group-hover:opacity-40"
+                      }`}
+                    />
+                    {/* Dark radial gradient for premium Framer depth */}
+                    <div 
+                      className="absolute inset-0 z-10 transition-opacity duration-700" 
+                      style={{
+                        background: isHovered
+                          ? 'radial-gradient(circle at 100% 0%, rgba(1, 26, 20, 0.1) 0%, rgba(1, 26, 20, 0.95) 100%)'
+                          : 'radial-gradient(circle at 50% 50%, rgba(1, 26, 20, 0.3) 0%, rgba(1, 26, 20, 0.98) 100%)'
+                      }}
+                    />
+                  </div>
+
+                  {/* 3D Glass Highlights */}
+                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_15px_rgba(255,255,255,0.12)] border border-white/5 z-20 pointer-events-none" />
+
+                  {/* Top: Staged Number */}
+                  <div className="relative z-30">
+                    <h1 className="font-display text-4xl sm:text-5xl font-black text-[#c8f69b] tracking-tight leading-none">
+                      {card.num}
+                    </h1>
+                  </div>
+
+                  {/* Bottom Content Wrap */}
+                  <div className="relative z-30 flex flex-col gap-3">
+                    <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-none">
+                      {card.title}
+                    </h3>
+                    
+                    {/* Subtitle / Description - Fades in and slides up ONLY when the card is expanded! */}
+                    <div 
+                      className={`transition-all duration-500 overflow-hidden ${
+                        isHovered ? "max-h-[140px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"
+                      }`}
+                    >
+                      <p className="text-stone-300 text-xs sm:text-sm font-semibold leading-relaxed max-w-md">
+                        {card.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+
         </div>
       </section>
 
