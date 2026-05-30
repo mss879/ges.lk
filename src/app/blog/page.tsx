@@ -397,12 +397,14 @@ export default function BlogListingPage() {
             
             {/* Column 1: Brand & Newsletter */}
             <div className="lg:col-span-5 flex flex-col items-start">
-              <div className="flex items-center gap-3 font-display font-black text-2xl sm:text-3xl tracking-tight uppercase mb-6 text-white">
-                <svg className="w-8 h-8 text-[#e2ff3a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-                <span>GES</span>
+              <div className="mb-6 flex items-center">
+                <Image
+                  src="/logo.png"
+                  alt="GES Logo"
+                  width={150}
+                  height={42}
+                  className="h-9 w-auto object-contain brightness-0 invert"
+                />
               </div>
               <p className="text-white/70 font-medium text-sm leading-relaxed max-w-sm">
                 We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
@@ -483,8 +485,10 @@ export default function BlogListingPage() {
       {/* Copyright bottom bar */}
       <div className="w-full bg-[#012716] text-white/60 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
         <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span className="text-xs font-bold text-white/50">
-            © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved. Powered by Clean Energy.
+          <span className="text-xs font-bold text-white/50 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>© {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.</span>
+            <span className="hidden sm:inline text-white/25">•</span>
+            <span className="text-white/80">Built and Designed by <span className="text-[#e2ff3a] tracking-wider">ARC AI</span></span>
           </span>
           
           <div className="flex items-center gap-5 text-white/70">

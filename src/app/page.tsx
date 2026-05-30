@@ -257,7 +257,7 @@ export default function Home() {
         }
       );
 
-      const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
+      const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
 
       // ScrollTrigger scroll-driven Approach cards stagger reveal
       gsap.fromTo(
@@ -275,6 +275,127 @@ export default function Home() {
           },
         }
       );
+
+      // ScrollTrigger scroll-driven Values corner-entry (Desktop only)
+      if (isDesktop) {
+        // Initially set them to opacity 0 to prevent a flash of content
+        gsap.set([".value-card-1", ".value-card-2", ".value-card-3", ".value-card-4"], {
+          opacity: 0
+        });
+
+        const valuesTL = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".values-pin-trigger",
+            start: "top top",
+            end: "+=150%", // Generous scroll height so each card has its own dedicated scroll space
+            scrub: true, // Perfect direct 1:1 scroll tracking
+            pin: true,
+            pinSpacing: true, // Explicitly enforce spacing on the parent wrapper
+            anticipatePin: 1,
+          }
+        });
+
+        const cardDuration = 1.0;
+
+        // Animate each card strictly one after the other to guarantee ONE card at a time
+        valuesTL
+          // Card 1: Comes in immediately as soon as we start scrolling
+          .fromTo(
+            ".value-card-1",
+            {
+              x: -150,
+              y: 150,
+              rotateY: -20,
+              rotateX: 10,
+              opacity: 0,
+              scale: 0.85,
+              transformPerspective: 1200,
+            },
+            {
+              x: 0,
+              y: 0,
+              rotateX: 0,
+              rotateY: 0,
+              opacity: 1,
+              scale: 1,
+              duration: cardDuration,
+              ease: "power2.out",
+            }
+          )
+          // Card 2: Animates only after Card 1 is fully complete
+          .fromTo(
+            ".value-card-2",
+            {
+              x: 150,
+              y: 150,
+              rotateY: 20,
+              rotateX: 10,
+              opacity: 0,
+              scale: 0.85,
+              transformPerspective: 1200,
+            },
+            {
+              x: 0,
+              y: 0,
+              rotateX: 0,
+              rotateY: 0,
+              opacity: 1,
+              scale: 1,
+              duration: cardDuration,
+              ease: "power2.out",
+            }
+          )
+          // Card 3: Animates only after Card 2 is fully complete
+          .fromTo(
+            ".value-card-3",
+            {
+              x: -150,
+              y: 150,
+              rotateY: -20,
+              rotateX: 10,
+              opacity: 0,
+              scale: 0.85,
+              transformPerspective: 1200,
+            },
+            {
+              x: 0,
+              y: 0,
+              rotateX: 0,
+              rotateY: 0,
+              opacity: 1,
+              scale: 1,
+              duration: cardDuration,
+              ease: "power2.out",
+            }
+          )
+          // Card 4: Animates only after Card 3 is fully complete
+          .fromTo(
+            ".value-card-4",
+            {
+              x: 150,
+              y: 150,
+              rotateY: 20,
+              rotateX: 10,
+              opacity: 0,
+              scale: 0.85,
+              transformPerspective: 1200,
+            },
+            {
+              x: 0,
+              y: 0,
+              rotateX: 0,
+              rotateY: 0,
+              opacity: 1,
+              scale: 1,
+              duration: cardDuration,
+              ease: "power2.out",
+            }
+          );
+
+        // Extra buffer tween at the end of the timeline so all cards remain completely settled
+        // and stay on screen for a moment before the section unpins!
+        valuesTL.to({}, { duration: 0.3 });
+      }
     }, containerRef);
 
     // Ensure ScrollTrigger recalculates layout and heights perfectly after mounting
@@ -284,6 +405,7 @@ export default function Home() {
 
     return () => {
       ctx.revert();
+      ScrollTrigger.getAll().forEach(t => t.kill());
       clearTimeout(refreshTimeout);
     };
   }, []);
@@ -1546,156 +1668,266 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 4: Interactive Values Accordion */}
-      <section className="w-full bg-white text-stone-900 py-24 border-t border-stone-100 relative">
-        {/* Soft Ambient Background Glows */}
-        <div className="absolute top-1/2 left-2/3 -translate-y-1/2 w-96 h-96 bg-emerald-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
-        <div className="absolute top-1/4 left-1/3 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
+      {/* Scroll-Trigger Pinned values Wrapper to isolate from parent flex container */}
+      <div className="values-pin-trigger w-full relative block z-30">
+        {/* SECTION 4: Centered & Scroll-Triggered Values (High-End Diagonal Slide) */}
+        <section className="w-full min-h-screen lg:h-screen relative flex items-center justify-center bg-white text-stone-900 overflow-hidden py-16 lg:py-0 border-t border-stone-100/60 z-10">
+        {/* Deep, Premium Ambient Background Glows */}
+        <div className="absolute top-1/2 left-[15%] -translate-y-1/2 w-[400px] h-[400px] bg-emerald-500/[0.03] rounded-full blur-[140px] pointer-events-none select-none" />
+        <div className="absolute top-1/2 right-[15%] -translate-y-1/2 w-[400px] h-[400px] bg-blue-500/[0.02] rounded-full blur-[140px] pointer-events-none select-none" />
+
         <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+          <div className="max-w-7xl mx-auto flex items-center justify-center h-full w-full">
             
-            {/* Left Column: Heading and Brand Info */}
-            <div className="lg:col-span-5 lg:sticky lg:top-32 self-start flex flex-col items-start">
-              <span className="text-emerald-600 font-extrabold text-sm sm:text-base tracking-widest uppercase mb-4 block">
-                Our Values
-              </span>
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-stone-950 leading-tight mb-6">
-                Sustainability is not just our focus – it's our foundation.
-              </h2>
-              <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed mb-8 max-w-lg">
-                At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
-              </p>
+            {/* 1. Desktop Pin Layout (GSAP Scroll-Triggered Corner-Slide Grid) */}
+            <div className="hidden lg:grid grid-cols-12 w-full max-w-[1400px] h-[80vh] items-center gap-6 z-20">
               
-              {/* Meet our Team pill-button with sliding transitions */}
-              <button 
-                onClick={() => setActiveTab("About")}
-                className="inline-flex items-center gap-4 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-6 py-2 border border-stone-200/60 text-stone-800 hover:text-stone-950 cursor-pointer text-sm sm:text-base font-bold group shadow-sm transition-all duration-300 active:scale-[0.98]"
-              >
-                <span className="w-8 h-8 sm:w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:scale-105 group-hover:bg-emerald-700 transition-all duration-300">
-                  <svg className="w-4 h-4 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
-                <span className="relative z-10 select-none">Meet our team</span>
-              </button>
+              {/* Left Column: Top-Left Card (01) & Bottom-Left Card (03) */}
+              <div className="col-span-4 h-full flex flex-col justify-between py-8">
+                
+                {/* Card 1: Top-Left (Human) */}
+                <div className="value-card-1 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                  {/* Background Texture and Tint Gradient Overlay */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Leaf Drops Texture"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 400px"
+                      className="object-cover mix-blend-luminosity opacity-85 group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+
+                  {/* Premium 3D Inner Glass Highlight */}
+                  <div className="absolute inset-0 rounded-3xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] z-20 pointer-events-none border border-white/5" />
+
+                  <div>
+                    <h3 className="relative z-30 font-display text-xl xl:text-2xl font-extrabold text-white mt-2 leading-none">Human</h3>
+                    <p className="relative z-30 text-emerald-100/80 font-semibold text-xs xl:text-sm leading-relaxed mt-3">
+                      We put people first in everything we build, driving success through empathy and collaboration.
+                    </p>
+                  </div>
+                  <div className="relative z-30 flex items-center gap-2 mt-4 self-start bg-white/10 border border-white/10 px-3 py-1 rounded-full">
+                    <span className="text-[9px] font-extrabold text-emerald-300 uppercase tracking-widest leading-none">RETENTION RATE:</span>
+                    <span className="text-[10px] font-black text-white">99% Engineering Trust</span>
+                  </div>
+                </div>
+
+                {/* Card 3: Bottom-Left (Pragmatic) */}
+                <div className="value-card-3 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                  {/* Background Texture and Tint Gradient Overlay */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Leaf Drops Texture"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 400px"
+                      className="object-cover mix-blend-luminosity opacity-85 group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+
+                  {/* Premium 3D Inner Glass Highlight */}
+                  <div className="absolute inset-0 rounded-3xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] z-20 pointer-events-none border border-white/5" />
+
+                  <div>
+                    <h3 className="relative z-30 font-display text-xl xl:text-2xl font-extrabold text-white mt-2 leading-none">Pragmatic</h3>
+                    <p className="relative z-30 text-emerald-100/80 font-semibold text-xs xl:text-sm leading-relaxed mt-3">
+                      We value real-world results over hypothetical concepts, designing systems for maximum durability.
+                    </p>
+                  </div>
+                  <div className="relative z-30 flex items-center gap-2 mt-4 self-start bg-white/10 border border-white/10 px-3 py-1 rounded-full">
+                    <span className="text-[9px] font-extrabold text-emerald-300 uppercase tracking-widest leading-none">SYSTEM RELIABILITY:</span>
+                    <span className="text-[10px] font-black text-white">99.98% Operational Up-time</span>
+                  </div>
+                </div>
+
+              </div>
+              
+              {/* Center Column: Simplified Main Info Block */}
+              <div className="col-span-4 h-full flex flex-col items-center justify-center text-center px-4">
+                <div className="value-center-content flex flex-col items-center max-w-md transform-gpu">
+                  <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-4 block">
+                    Our Values
+                  </span>
+                  <h2 className="font-display text-4xl xl:text-5xl font-black tracking-tight text-stone-950 leading-tight mb-6">
+                    Sustainability is our foundation.
+                  </h2>
+                  <p className="text-stone-500 font-semibold text-xs xl:text-sm leading-relaxed mb-8">
+                    At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
+                  </p>
+                  
+                  {/* Meet our Team pill-button */}
+                  <button 
+                    onClick={() => setActiveTab("About")}
+                    className="inline-flex items-center gap-4 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-6 py-2 border border-stone-200/60 text-stone-800 hover:text-stone-950 cursor-pointer text-xs xl:text-sm font-bold group shadow-sm transition-all duration-300 active:scale-[0.98]"
+                  >
+                    <span className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:scale-105 group-hover:bg-emerald-700 transition-all duration-300">
+                      <svg className="w-4 h-4 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </span>
+                    <span className="relative z-10 select-none">Meet our team</span>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Right Column: Top-Right Card (02) & Bottom-Right Card (04) */}
+              <div className="col-span-4 h-full flex flex-col justify-between py-8">
+                
+                {/* Card 2: Top-Right (Curious) */}
+                <div className="value-card-2 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                  {/* Background Texture and Tint Gradient Overlay */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Leaf Drops Texture"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 400px"
+                      className="object-cover mix-blend-luminosity opacity-85 group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+
+                  {/* Premium 3D Inner Glass Highlight */}
+                  <div className="absolute inset-0 rounded-3xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] z-20 pointer-events-none border border-white/5" />
+
+                  <div>
+                    <h3 className="relative z-30 font-display text-xl xl:text-2xl font-extrabold text-white mt-2 leading-none">Curious</h3>
+                    <p className="relative z-30 text-emerald-100/80 font-semibold text-xs xl:text-sm leading-relaxed mt-3">
+                      We constantly question current paradigms to discover smarter, cutting-edge solar solutions.
+                    </p>
+                  </div>
+                  <div className="relative z-30 flex items-center gap-2 mt-4 self-start bg-white/10 border border-white/10 px-3 py-1 rounded-full">
+                    <span className="text-[9px] font-extrabold text-emerald-300 uppercase tracking-widest leading-none">R&D INVESTMENT:</span>
+                    <span className="text-[10px] font-black text-white">Pioneering Smart Tech</span>
+                  </div>
+                </div>
+
+                {/* Card 4: Bottom-Right (Impact-Driven) */}
+                <div className="value-card-4 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                  {/* Background Texture and Tint Gradient Overlay */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Leaf Drops Texture"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 400px"
+                      className="object-cover mix-blend-luminosity opacity-85 group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+
+                  {/* Premium 3D Inner Glass Highlight */}
+                  <div className="absolute inset-0 rounded-3xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] z-20 pointer-events-none border border-white/5" />
+
+                  <div>
+                    <h3 className="relative z-30 font-display text-xl xl:text-2xl font-extrabold text-white mt-2 leading-none">Impact-Driven</h3>
+                    <p className="relative z-30 text-emerald-100/80 font-semibold text-xs xl:text-sm leading-relaxed mt-3">
+                      We scale clean power to deliver tangible financial savings and accelerate carbon neutrality.
+                    </p>
+                  </div>
+                  <div className="relative z-30 flex items-center gap-2 mt-4 self-start bg-white/10 border border-white/10 px-3 py-1 rounded-full">
+                    <span className="text-[9px] font-extrabold text-emerald-300 uppercase tracking-widest leading-none">CARBON OFFSET:</span>
+                    <span className="text-[10px] font-black text-white">100K+ Tons CO2 Saved</span>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
 
-            {/* Right Column: High-End Interactive Accordion */}
-            <div className="lg:col-span-7 flex flex-col">
-              {[
-                {
-                  title: "Human",
-                  index: "01",
-                  desc: "We put people first in everything we build. From the safety of our field engineers to the long-term partnerships with our clients, empathy and collaboration drive our success.",
-                  badgeLabel: "RETENTION RATE",
-                  badgeVal: "99% Engineering Trust",
-                  icon: (
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            {/* 2. Mobile/Tablet Layout (Native Stack Flow - Clean & Accessible) */}
+            <div className="lg:hidden flex flex-col gap-12 w-full">
+              
+              <div className="text-center max-w-xl mx-auto flex flex-col items-center">
+                <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-3 block">
+                  Our Values
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 leading-tight mb-4">
+                  Sustainability is our foundation.
+                </h2>
+                <p className="text-stone-500 font-medium text-xs sm:text-sm leading-relaxed mb-6">
+                  At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
+                </p>
+                <button 
+                  onClick={() => setActiveTab("About")}
+                  className="inline-flex items-center gap-3 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-5 py-1.5 border border-stone-200/60 text-stone-800 text-xs sm:text-sm font-bold group shadow-sm active:scale-[0.98] transition-all"
+                >
+                  <span className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:bg-emerald-700 transition-all">
+                    <svg className="w-3.5 h-3.5 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
-                  )
-                },
-                {
-                  title: "Curious",
-                  index: "02",
-                  desc: "We constantly question current energy paradigms to discover smarter solutions. Continuous learning keeps us at the absolute cutting edge of solar technology and smart-grid integration.",
-                  badgeLabel: "R&D INVESTMENT",
-                  badgeVal: "Pioneering Smart Tech",
-                  icon: (
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                  )
-                },
-                {
-                  title: "Pragmatic",
-                  index: "03",
-                  desc: "We value real-world results over hypothetical concepts. Every system we design is built for high reliability, maximum commercial efficiency, and structural durability under harsh climates.",
-                  badgeLabel: "SYSTEM RELIABILITY",
-                  badgeVal: "99.98% Operational Up-time",
-                  icon: (
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  )
-                },
-                {
-                  title: "Impact-Driven",
-                  index: "04",
-                  desc: "We are obsessed with tangible environmental and financial footprints. Every kilowatt of clean power we scale contributes directly to a carbon-neutral planet.",
-                  badgeLabel: "CARBON OFFSET",
-                  badgeVal: "100K+ Tons CO2 Saved",
-                  icon: (
-                    <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h2a2.5 2.5 0 002.5-2.5V14a2 2 0 012-2h.055M12 20a8 8 0 100-16 8 8 0 000 16z" />
-                    </svg>
-                  )
-                }
-              ].map((item, idx) => {
-                const isOpen = activeValueIndex === idx;
-                return (
-                  <div key={idx} className="border-b border-stone-200/80 last:border-0">
-                    <div 
-                      onClick={() => setActiveValueIndex(isOpen ? null : idx)}
-                      className="flex items-center justify-between py-6 sm:py-8 cursor-pointer select-none group/hdr"
-                    >
-                      <div className="flex items-center gap-6 sm:gap-8">
-                        <span className="font-mono text-xs sm:text-sm font-semibold text-stone-400">
-                          {item.index}
-                        </span>
-                        <h3 className={`font-display text-2xl sm:text-3xl md:text-[38px] font-extrabold tracking-tight transition-all duration-300 ${isOpen ? "text-emerald-700" : "text-stone-900 group-hover/hdr:text-emerald-600"}`}>
-                          {item.title}
-                        </h3>
-                      </div>
-                      
-                      {/* Premium Circle SVG chevron indicator */}
-                      <div className={`w-9 h-9 sm:w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-350 ${isOpen ? "border-emerald-600 bg-emerald-50 text-emerald-600 rotate-180" : "border-stone-200 bg-stone-50 text-stone-500 group-hover/hdr:border-emerald-600 group-hover/hdr:bg-emerald-50 group-hover/hdr:text-emerald-600"}`}>
-                        <svg className="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
+                  </span>
+                  <span>Meet our team</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                {[
+                  {
+                    title: "Human",
+                    desc: "We put people first in everything we build, driving success through empathy and collaboration.",
+                    badgeLabel: "RETENTION RATE",
+                    badgeVal: "99% Engineering Trust"
+                  },
+                  {
+                    title: "Curious",
+                    desc: "We constantly question current paradigms to discover smarter, cutting-edge solar solutions.",
+                    badgeLabel: "R&D INVESTMENT",
+                    badgeVal: "Pioneering Smart Tech"
+                  },
+                  {
+                    title: "Pragmatic",
+                    desc: "We value real-world results over hypothetical concepts, designing systems for maximum durability.",
+                    badgeLabel: "SYSTEM RELIABILITY",
+                    badgeVal: "99.98% Operational Up-time"
+                  },
+                  {
+                    title: "Impact-Driven",
+                    desc: "We scale clean power to deliver tangible financial savings and accelerate carbon neutrality.",
+                    badgeLabel: "CARBON OFFSET",
+                    badgeVal: "100K+ Tons CO2 Saved"
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className="overflow-hidden relative border border-white/5 rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[170px] shadow-[0_10px_35px_-10px_rgba(0,0,0,0.1)] active:scale-[0.98] transition-all group">
+                    {/* Background Texture and Tint Gradient Overlay */}
+                    <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                      <Image
+                        src="/leaf_drops.png"
+                        alt="Leaf Drops Texture"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                        className="object-cover mix-blend-luminosity opacity-85 group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
                     </div>
 
-                    {/* Smooth height panel transition using grid scale */}
-                    <div 
-                      className={`grid transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${isOpen ? "grid-rows-[1fr] opacity-100 pb-8 sm:pb-10" : "grid-rows-[0fr] opacity-0 pointer-events-none"}`}
-                    >
-                      <div className="overflow-hidden">
-                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pt-2">
-                          <p className="text-stone-600 font-medium text-sm sm:text-base leading-relaxed max-w-xl">
-                            {item.desc}
-                          </p>
-                          
-                          {/* Rich Badge detailing live indicators */}
-                          <div className="flex items-center gap-3 shrink-0 bg-stone-50 border border-stone-200/50 rounded-2xl p-4 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] self-start md:self-auto">
-                            <div className="p-2 bg-emerald-50 border border-emerald-100 rounded-xl">
-                              {item.icon}
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest leading-none">
-                                {item.badgeLabel}
-                              </span>
-                              <span className="text-xs sm:text-sm font-extrabold text-stone-800 tracking-tight mt-1.5">
-                                {item.badgeVal}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    {/* Premium 3D Inner Glass Highlight */}
+                    <div className="absolute inset-0 rounded-3xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] z-20 pointer-events-none border border-white/5" />
+
+                    <div>
+                      <h3 className="relative z-30 font-display text-lg sm:text-xl font-extrabold text-white mt-2 leading-none">{item.title}</h3>
+                      <p className="relative z-30 text-emerald-100/80 font-medium text-xs leading-relaxed mt-2.5">{item.desc}</p>
+                    </div>
+                    <div className="relative z-30 flex items-center gap-1.5 mt-3 self-start bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[8px] font-extrabold text-emerald-300 uppercase tracking-widest leading-none">{item.badgeLabel}:</span>
+                      <span className="text-[9px] font-black text-white">{item.badgeVal}</span>
                     </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
+
             </div>
 
           </div>
         </div>
-      </div>
       </section>
+      </div>
 
       {/* SECTION 4.5: Our Process / Section Approach */}
-      <section className="approach-section-trigger w-full bg-[#f8f9fa] text-stone-900 py-24 md:py-32 relative overflow-hidden border-t border-stone-100/50">
+      <section className="approach-section-trigger w-full bg-[#f8f9fa] text-stone-900 py-24 md:py-32 relative overflow-hidden border-t border-stone-100/50 z-20">
         
         {/* Soft Ambient Background Glows */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.03] rounded-full blur-[130px] pointer-events-none select-none animate-pulse" />
@@ -1732,7 +1964,7 @@ export default function Home() {
                 num: "03.",
                 title: "Install",
                 image: "https://framerusercontent.com/images/9uN2Q1rO2xdB7dxznL79FvhSXag.jpg",
-                desc: "Our master electricians perform the complete mechanical and electrical installation, safe CEB grid integration, and clean cleanup."
+                desc: "From permitting to final commissioning, our certified teams manage every detail. Installations are carefully planned to minimize disruption."
               },
               {
                 num: "04.",
@@ -1752,47 +1984,54 @@ export default function Home() {
                   }`}
                   onMouseEnter={() => setHoveredApproach(idx)}
                 >
-                  {/* Right-aligned Image: visible ONLY when expanded */}
-                  <div className={`absolute right-0 top-0 bottom-0 w-[60%] h-full z-0 select-none pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${
-                    isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
+                  {/* Full-Bleed Image with Radial Mask: visible ONLY when expanded */}
+                  <div className={`absolute inset-0 z-0 select-none pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+                    isHovered ? "opacity-100" : "opacity-0"
                   }`}>
-                    <img
+                    <Image
                       src={card.image}
                       alt={card.title}
-                      className="w-full h-full object-cover object-center"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover object-center"
                     />
-                    {/* Seamless horizontal fade mask into the dark card background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#011612] via-[#011612]/50 to-transparent z-10 w-[101%]" />
+                    {/* Seamless radial fade mask: transparent top-right, solid dark green everywhere else */}
+                    <div 
+                      className="absolute inset-0 z-10"
+                      style={{
+                        background: 'radial-gradient(60% 60% at 85% 25%, rgba(1, 22, 18, 0) 0%, rgba(1, 22, 18, 0.6) 30%, rgba(1, 22, 18, 1) 75%)'
+                      }}
+                    />
                   </div>
 
                   {/* 3D Glass Highlights */}
                   <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_15px_rgba(255,255,255,0.08)] border border-white/5 z-20 pointer-events-none" />
 
-                  {/* Card content aligned vertically */}
-                  <div className="relative z-30 flex flex-col justify-between h-full w-full">
-                    {/* Top: Number */}
-                    <div>
-                      <h1 className="font-display text-4xl sm:text-5xl font-black text-[#c8f69b] tracking-tight leading-none">
-                        {card.num}
-                      </h1>
-                    </div>
-
-                    {/* Bottom Content: Title + Description */}
-                    <div className="flex flex-col gap-3 max-w-full lg:max-w-[50%]">
-                      <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-none">
-                        {card.title}
-                      </h3>
-                      
-                      {/* Description - expanded only */}
-                      <div 
-                        className={`transition-all duration-500 overflow-hidden ${
-                          isHovered ? "max-h-[160px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"
-                        }`}
-                      >
-                        <p className="text-stone-300 text-xs sm:text-sm font-semibold leading-relaxed">
-                          {card.desc}
-                        </p>
+                    {/* Card content aligned vertically */}
+                    <div className="relative z-30 flex flex-col justify-between h-full w-full">
+                      {/* Top: Number */}
+                      <div>
+                        <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-black text-[#c8f69b] tracking-tight leading-none">
+                          {card.num}
+                        </h1>
                       </div>
+
+                      {/* Bottom Content: Title + Description */}
+                      <div className="flex flex-col gap-3 w-full">
+                        <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-none">
+                          {card.title}
+                        </h3>
+                        
+                        {/* Description - expanded only */}
+                        <div 
+                          className={`transition-all duration-500 overflow-hidden ${
+                            isHovered ? "max-h-[160px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"
+                          }`}
+                        >
+                          <p className="text-stone-300 text-xs sm:text-sm font-semibold leading-relaxed">
+                            {card.desc}
+                          </p>
+                        </div>
                     </div>
                   </div>
 
@@ -1805,7 +2044,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 5: Latest Insights (Blog Preview - Redesigned & Widened) */}
-      <section className="w-full bg-[#f8f9fa] text-stone-900 py-28 border-t border-stone-200/40 relative z-10 overflow-hidden">
+      <section className="w-full bg-[#f8f9fa] text-stone-900 py-28 border-t border-stone-200/40 relative z-20 overflow-hidden">
         {/* Ambient background glows */}
         <div className="absolute top-1/2 left-[-100px] -translate-y-1/2 w-[500px] h-[500px] bg-green-500/[0.03] rounded-full blur-[140px] pointer-events-none select-none" />
         <div className="absolute bottom-[-100px] right-[10%] w-[600px] h-[400px] bg-green-500/[0.02] rounded-full blur-[150px] pointer-events-none select-none" />
@@ -1939,12 +2178,14 @@ export default function Home() {
             
             {/* Column 1: Brand details & Newsletter Subscription */}
             <div className="lg:col-span-5 flex flex-col items-start">
-              <div className="flex items-center gap-3 font-display font-black text-2xl sm:text-3xl tracking-tight uppercase mb-6 text-white">
-                <svg className="w-8 h-8 text-[#e2ff3a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-                <span>GES</span>
+              <div className="mb-6 flex items-center">
+                <Image
+                  src="/logo.png"
+                  alt="GES Logo"
+                  width={150}
+                  height={42}
+                  className="h-9 w-auto object-contain brightness-0 invert"
+                />
               </div>
               <p className="text-white/70 font-medium text-sm leading-relaxed max-w-sm">
                 We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
@@ -2029,8 +2270,10 @@ export default function Home() {
       {/* COPYRIGHT SECTION: Deep Forest Green Bottom Bar with No Separator */}
       <div className="w-full bg-[#012716] text-white/60 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
         <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span className="text-xs font-bold text-white/50">
-            © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved. Powered by Clean Energy.
+          <span className="text-xs font-bold text-white/50 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>© {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.</span>
+            <span className="hidden sm:inline text-white/25">•</span>
+            <span className="text-white/80">Built and Designed by <span className="text-[#e2ff3a] tracking-wider">ARC AI</span></span>
           </span>
           
           {/* Social Links */}
