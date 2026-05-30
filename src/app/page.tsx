@@ -1726,7 +1726,7 @@ export default function Home() {
                 num: "02.",
                 title: "Build",
                 image: "https://framerusercontent.com/images/pJOiUSAQLtPX4kTdAuk5xtQY0.png",
-                desc: "We custom build and manufacture all system panels, inverters, and switchgear using certified Tier-1 materials to guarantee robust performance."
+                desc: "From permitting to final commissioning, our certified teams manage every detail. Installations are carefully planned to minimize disruption."
               },
               {
                 num: "03.",
