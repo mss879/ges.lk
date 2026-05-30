@@ -1756,24 +1756,24 @@ export default function Home() {
               {/* Center Column: Simplified Main Info Block */}
               <div className="col-span-4 h-full flex flex-col items-center justify-center text-center px-4">
                 <div className="value-center-content flex flex-col items-center max-w-md transform-gpu">
-                  <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-4 block">
-                    Our Values
-                  </span>
-                  <h2 className="font-display text-4xl xl:text-5xl font-black tracking-tight text-stone-950 leading-tight mb-6">
-                    Sustainability is our foundation.
-                  </h2>
-                  <p className="text-stone-500 font-semibold text-xs xl:text-sm leading-relaxed mb-8">
-                    At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
-                  </p>
-                  
                   {/* Solar Panel Showcase Image */}
                   <Image
                     src="/panel.png"
                     alt="High-efficiency solar panel technology"
                     width={280}
                     height={190}
-                    className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-2 transition-transform duration-500 hover:scale-102"
+                    className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mb-6 transition-transform duration-500 hover:scale-102"
                   />
+
+                  <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-4 block">
+                    Our Values
+                  </span>
+                  <h2 className="font-display text-4xl xl:text-5xl font-black tracking-tight text-stone-950 leading-tight mb-6">
+                    Sustainability is our foundation.
+                  </h2>
+                  <p className="text-stone-500 font-semibold text-xs xl:text-sm leading-relaxed">
+                    At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
+                  </p>
                 </div>
               </div>
               
@@ -1846,23 +1846,24 @@ export default function Home() {
             <div className="lg:hidden flex flex-col gap-12 w-full">
               
               <div className="text-center max-w-xl mx-auto flex flex-col items-center">
-                <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-3 block">
-                  Our Values
-                </span>
-                <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 leading-tight mb-4">
-                  Sustainability is our foundation.
-                </h2>
-                <p className="text-stone-500 font-medium text-xs sm:text-sm leading-relaxed mb-6">
-                  At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
-                </p>
                 {/* Solar Panel Showcase Image */}
                 <Image
                   src="/panel.png"
                   alt="High-efficiency solar panel technology"
                   width={280}
                   height={190}
-                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-4"
+                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mb-6"
                 />
+
+                <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-3 block">
+                  Our Values
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-950 leading-tight mb-4">
+                  Sustainability is our foundation.
+                </h2>
+                <p className="text-stone-500 font-medium text-xs sm:text-sm leading-relaxed">
+                  At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
