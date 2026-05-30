@@ -49,7 +49,7 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
-  const [hoveredApproach, setHoveredApproach] = useState<number>(3); // Default to 04. Perform card as opened
+  const [hoveredApproach, setHoveredApproach] = useState<number | null>(null); // Start with all cards closed
 
   const [batteryCharge, setBatteryCharge] = useState(0);
   const [isFilling, setIsFilling] = useState(true);
@@ -1959,7 +1959,7 @@ export default function Home() {
           {/* Header Block */}
           <div className="flex flex-col items-center text-center mb-16">
             <span className="font-mono text-xs font-black text-emerald-700 tracking-[0.25em] uppercase mb-4 block">
-              _ our approach
+              our approach
             </span>
             <h2 className="font-display text-4xl sm:text-5xl md:text-[52px] font-black tracking-tight text-emerald-950 leading-tight max-w-3xl">
               Our process, refined through experience
@@ -1967,7 +1967,7 @@ export default function Home() {
           </div>
 
           {/* Interactive Staggered Flex Accordion Cards */}
-          <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full min-h-[460px] mt-12">
+          <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full min-h-[460px] mt-12" onMouseLeave={() => setHoveredApproach(null)}>
             {[
               {
                 num: "01.",
@@ -1998,13 +1998,29 @@ export default function Home() {
               return (
                 <div 
                   key={idx}
-                  className={`approach-card-anim group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-white/5 min-h-[380px] lg:min-h-[440px] flex flex-col justify-between p-6 sm:p-8 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-y-[40px] bg-[#011612] ${
+                  className={`approach-card-anim group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-white/5 min-h-[380px] lg:min-h-[440px] flex flex-col justify-between p-6 sm:p-8 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-y-[40px] bg-[#022212] ${
                     isHovered 
                       ? "lg:flex-[3.5] flex-[3] shadow-2xl" 
-                      : "lg:flex-[1.2] flex-1 hover:bg-[#02221b]"
+                      : "lg:flex-[1.2] flex-1"
                   }`}
                   onMouseEnter={() => setHoveredApproach(idx)}
                 >
+                  {/* Glassy Leaf Background for collapsed state (Vibrant Green Theme) */}
+                  <div className="absolute inset-0 z-0 select-none pointer-events-none transition-all duration-700">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Green leaf background texture"
+                      fill
+                      sizes="(max-width: 1024px) 300px, 400px"
+                      className={`object-cover transition-opacity duration-700 ${isHovered ? "opacity-0" : "opacity-35"}`}
+                    />
+                    <div className={`absolute inset-0 transition-opacity duration-700 ${
+                      isHovered
+                        ? "opacity-0"
+                        : "bg-gradient-to-b from-[#0b5f3d] via-[#053721] to-[#022212] opacity-100"
+                    }`} />
+                  </div>
+
                   {/* Full-Bleed Image with Radial Mask: visible ONLY when expanded */}
                   <div className={`absolute inset-0 z-0 select-none pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${
                     isHovered ? "opacity-100" : "opacity-0"
@@ -2020,7 +2036,7 @@ export default function Home() {
                     <div 
                       className="absolute inset-0 z-10"
                       style={{
-                        background: 'radial-gradient(60% 60% at 85% 25%, rgba(1, 22, 18, 0) 0%, rgba(1, 22, 18, 0.6) 30%, rgba(1, 22, 18, 1) 75%)'
+                        background: 'radial-gradient(60% 60% at 85% 25%, rgba(2, 34, 18, 0) 0%, rgba(2, 34, 18, 0.6) 30%, rgba(2, 34, 18, 1) 75%)'
                       }}
                     />
                   </div>
