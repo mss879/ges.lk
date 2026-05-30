@@ -1754,17 +1754,8 @@ export default function Home() {
               </div>
               
               {/* Center Column: Simplified Main Info Block */}
-              <div className="col-span-4 h-full flex flex-col items-center justify-center text-center px-4">
-                <div className="value-center-content flex flex-col items-center max-w-md transform-gpu">
-                  {/* Solar Panel Showcase Image */}
-                  <Image
-                    src="/panel.png"
-                    alt="High-efficiency solar panel technology"
-                    width={280}
-                    height={190}
-                    className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mb-6 transition-transform duration-500 hover:scale-102"
-                  />
-
+              <div className="col-span-4 h-full flex flex-col items-center justify-center text-center px-4 relative">
+                <div className="value-center-content flex flex-col items-center max-w-md transform-gpu relative z-10">
                   <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-4 block">
                     Our Values
                   </span>
@@ -1774,6 +1765,17 @@ export default function Home() {
                   <p className="text-stone-500 font-semibold text-xs xl:text-sm leading-relaxed">
                     At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
                   </p>
+                </div>
+
+                {/* Solar Panel Showcase Image - Absolute at the bottom of the center column, perfectly aligned with the bottom cards */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[280px] h-[190px] z-20">
+                  <Image
+                    src="/panel.png"
+                    alt="High-efficiency solar panel technology"
+                    fill
+                    sizes="280px"
+                    className="object-cover rounded-[24px]"
+                  />
                 </div>
               </div>
               
@@ -1846,15 +1848,6 @@ export default function Home() {
             <div className="lg:hidden flex flex-col gap-12 w-full">
               
               <div className="text-center max-w-xl mx-auto flex flex-col items-center">
-                {/* Solar Panel Showcase Image */}
-                <Image
-                  src="/panel.png"
-                  alt="High-efficiency solar panel technology"
-                  width={280}
-                  height={190}
-                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mb-6"
-                />
-
                 <span className="text-emerald-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase mb-3 block">
                   Our Values
                 </span>
@@ -1864,6 +1857,15 @@ export default function Home() {
                 <p className="text-stone-500 font-medium text-xs sm:text-sm leading-relaxed">
                   At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
                 </p>
+
+                {/* Solar Panel Showcase Image - No container, clean styled image */}
+                <Image
+                  src="/panel.png"
+                  alt="High-efficiency solar panel technology"
+                  width={280}
+                  height={190}
+                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-6"
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
