@@ -275,8 +275,8 @@ export default function Home() {
           { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
         )
         .fromTo(".process-line-1",
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.8, ease: "none", transformOrigin: "left" },
+          { scaleY: 0 },
+          { scaleY: 1, duration: 0.8, ease: "none", transformOrigin: "top" },
           "-=0.2"
         )
         .fromTo(".process-step-2",
@@ -285,8 +285,8 @@ export default function Home() {
           "-=0.2"
         )
         .fromTo(".process-line-2",
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.8, ease: "none", transformOrigin: "left" },
+          { scaleY: 0 },
+          { scaleY: 1, duration: 0.8, ease: "none", transformOrigin: "top" },
           "-=0.2"
         )
         .fromTo(".process-step-3",
@@ -1750,13 +1750,13 @@ export default function Home() {
                   </p>
                   
                   {/* Dashed line 1 (Desktop only) */}
-                  <div className="hidden md:flex absolute right-[-48px] lg:right-[-64px] top-4 w-[48px] lg:w-[64px] h-0 items-center justify-center pointer-events-none z-0">
-                    <div className="process-line-1 w-full h-[1.5px] border-t-2 border-dashed border-emerald-500/40 origin-left scale-x-0" />
+                  <div className="hidden md:block absolute right-[-24px] lg:right-[-32px] top-6 bottom-[-128px] w-[1px] pointer-events-none">
+                    <div className="process-line-1 h-full w-[1.5px] border-l-2 border-dashed border-emerald-500/40 origin-top scale-y-0" />
                   </div>
                 </div>
 
                 {/* Step 2 */}
-                <div className="process-step-2 opacity-0 flex flex-col justify-start relative">
+                <div className="process-step-2 opacity-0 flex flex-col justify-start relative md:pt-32">
                   <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">02</span>
                   <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Design & install</h3>
                   <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
@@ -1764,13 +1764,13 @@ export default function Home() {
                   </p>
                   
                   {/* Dashed line 2 (Desktop only) */}
-                  <div className="hidden md:flex absolute right-[-48px] lg:right-[-64px] top-4 w-[48px] lg:w-[64px] h-0 items-center justify-center pointer-events-none z-0">
-                    <div className="process-line-2 w-full h-[1.5px] border-t-2 border-dashed border-emerald-500/40 origin-left scale-x-0" />
+                  <div className="hidden md:block absolute right-[-24px] lg:right-[-32px] top-[152px] bottom-[-128px] w-[1px] pointer-events-none">
+                    <div className="process-line-2 h-full w-[1.5px] border-l-2 border-dashed border-emerald-500/40 origin-top scale-y-0" />
                   </div>
                 </div>
 
                 {/* Step 3 */}
-                <div className="process-step-3 opacity-0 flex flex-col justify-start relative">
+                <div className="process-step-3 opacity-0 flex flex-col justify-start relative md:pt-64">
                   <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">03</span>
                   <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Start & Saving</h3>
                   <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
