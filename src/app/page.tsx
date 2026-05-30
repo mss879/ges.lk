@@ -1767,15 +1767,13 @@ export default function Home() {
                   </p>
                   
                   {/* Solar Panel Showcase Image */}
-                  <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md transition-transform duration-500 hover:scale-102">
-                    <Image
-                      src="/panel.png"
-                      alt="High-efficiency solar panel technology"
-                      fill
-                      sizes="280px"
-                      className="object-cover"
-                    />
-                  </div>
+                  <Image
+                    src="/panel.png"
+                    alt="High-efficiency solar panel technology"
+                    width={280}
+                    height={190}
+                    className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-2 transition-transform duration-500 hover:scale-102"
+                  />
                 </div>
               </div>
               
@@ -1858,15 +1856,13 @@ export default function Home() {
                   At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
                 </p>
                 {/* Solar Panel Showcase Image */}
-                <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md">
-                  <Image
-                    src="/panel.png"
-                    alt="High-efficiency solar panel technology"
-                    fill
-                    sizes="280px"
-                    className="object-cover"
-                  />
-                </div>
+                <Image
+                  src="/panel.png"
+                  alt="High-efficiency solar panel technology"
+                  width={280}
+                  height={190}
+                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-4"
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
