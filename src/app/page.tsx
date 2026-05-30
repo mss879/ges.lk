@@ -287,8 +287,8 @@ export default function Home() {
           scrollTrigger: {
             trigger: ".values-pin-trigger",
             start: "top top",
-            end: "+=150%", // Generous scroll height so each card has its own dedicated scroll space
-            scrub: true, // Perfect direct 1:1 scroll tracking
+            end: "+=200%", // Extended scroll track for granular control
+            scrub: true, // Perfect direct 1:1 scroll tracking with no slide lag
             pin: true,
             pinSpacing: true, // Explicitly enforce spacing on the parent wrapper
             anticipatePin: 1,
@@ -298,6 +298,7 @@ export default function Home() {
         const cardDuration = 1.0;
 
         // Animate each card strictly one after the other to guarantee ONE card at a time
+        // Using ease: "none" maps the motion perfectly, linearly and accurately to the scrollbar distance
         valuesTL
           // Card 1: Comes in immediately as soon as we start scrolling
           .fromTo(
@@ -319,7 +320,7 @@ export default function Home() {
               opacity: 1,
               scale: 1,
               duration: cardDuration,
-              ease: "power2.out",
+              ease: "none",
             }
           )
           // Card 2: Animates only after Card 1 is fully complete
@@ -342,7 +343,7 @@ export default function Home() {
               opacity: 1,
               scale: 1,
               duration: cardDuration,
-              ease: "power2.out",
+              ease: "none",
             }
           )
           // Card 3: Animates only after Card 2 is fully complete
@@ -365,7 +366,7 @@ export default function Home() {
               opacity: 1,
               scale: 1,
               duration: cardDuration,
-              ease: "power2.out",
+              ease: "none",
             }
           )
           // Card 4: Animates only after Card 3 is fully complete
@@ -388,7 +389,7 @@ export default function Home() {
               opacity: 1,
               scale: 1,
               duration: cardDuration,
-              ease: "power2.out",
+              ease: "none",
             }
           );
 
@@ -818,17 +819,6 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Blogs */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/blog"
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
-                      }`}
-                  >
-                    Blogs
-                  </Link>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
-                </div>
               </nav>
 
               {/* Center Section: Logo */}
@@ -846,16 +836,16 @@ export default function Home() {
 
               {/* Right Section: Navigation Links & Contact Button */}
               <nav className="hidden lg:flex items-center gap-4 lg:gap-6 xl:gap-10 2xl:gap-12 flex-1 justify-start pl-4 lg:pl-6 xl:pl-10 whitespace-nowrap">
-                {/* Products */}
+                {/* Blogs */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => setActiveTab("Products")}
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Products" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
+                  <Link
+                    href="/blog"
+                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
                       }`}
                   >
-                    Products
-                  </button>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Products" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                    Blogs
+                  </Link>
+                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
                 </div>
 
                 {/* Projects */}
@@ -1117,9 +1107,8 @@ export default function Home() {
                       {[
                         { name: "Home", href: "/" },
                         { name: "About Us", href: "/#about" },
-                        { name: "Products", href: "/#products" },
-                        { name: "Projects", href: "/#projects" },
                         { name: "News & Blog", href: "/blog" },
+                        { name: "Projects", href: "/#projects" },
                         { name: "Solar Calculator", href: "/#calculator" },
                         { name: "Contact", href: "/#contact" }
                       ].map((item) => (
@@ -1506,7 +1495,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 2.5: Why Solar — Overcoming Sri Lanka's Energy Challenge */}
-      <section id="why-solar" className="bg-white text-stone-900 relative z-30 border-t border-stone-100/50 mt-20 md:mt-32">
+      <section id="why-solar" className="bg-white text-stone-900 relative z-30 border-t border-stone-100/50 pt-20 md:pt-32">
         
         {/* Soft Ambient Green and Blue Glows in Background */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.04] rounded-full blur-[130px] pointer-events-none select-none animate-pulse" />
@@ -1531,28 +1520,60 @@ export default function Home() {
               {/* Sri Lankan Authority & Certification Badges */}
               <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-stone-200/80">
                 {/* ISO 9001 Badge */}
-                <div className="flex items-center gap-3 bg-stone-50 border border-stone-200/80 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.01)] w-full">
-                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                    <svg className="w-5.5 h-5.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <div className="flex items-center gap-4 relative overflow-hidden rounded-2xl p-4 shadow-[0_6px_20px_rgba(4,40,22,0.15)] w-full min-h-[84px]">
+                  {/* Glassy Leaf Background */}
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Green leaf background texture"
+                      fill
+                      sizes="300px"
+                      className="object-cover opacity-35"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] border border-white/5 z-20 pointer-events-none" />
+
+                  {/* Icon */}
+                  <div className="relative z-30 w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                    <svg className="w-5.5 h-5.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                     </svg>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider leading-none">Standardized Quality</span>
-                    <span className="text-xs font-black text-stone-900 mt-1">ISO 9001 : 2015</span>
+                  
+                  {/* Texts */}
+                  <div className="flex flex-col relative z-30">
+                    <span className="text-[10px] font-bold text-emerald-300/90 uppercase tracking-wider leading-none">Standardized Quality</span>
+                    <span className="text-sm font-extrabold text-white mt-1.5 leading-tight">ISO 9001 : 2015</span>
                   </div>
                 </div>
 
                 {/* SLSEA Approved Badge */}
-                <div className="flex items-center gap-3 bg-stone-50 border border-stone-200/80 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.01)] w-full">
-                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                    <svg className="w-5.5 h-5.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <div className="flex items-center gap-4 relative overflow-hidden rounded-2xl p-4 shadow-[0_6px_20px_rgba(4,40,22,0.15)] w-full min-h-[84px]">
+                  {/* Glassy Leaf Background */}
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src="/leaf_drops.png"
+                      alt="Green leaf background texture"
+                      fill
+                      sizes="300px"
+                      className="object-cover opacity-35"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
+                  </div>
+                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] border border-white/5 z-20 pointer-events-none" />
+
+                  {/* Icon */}
+                  <div className="relative z-30 w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                    <svg className="w-5.5 h-5.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider leading-none">Authority Approved</span>
-                    <span className="text-xs font-black text-stone-900 mt-1">SL SEA Certified</span>
+                  
+                  {/* Texts */}
+                  <div className="flex flex-col relative z-30">
+                    <span className="text-[10px] font-bold text-emerald-300/90 uppercase tracking-wider leading-none">Authority Approved</span>
+                    <span className="text-sm font-extrabold text-white mt-1.5 leading-tight">SL SEA Certified</span>
                   </div>
                 </div>
               </div>
@@ -1686,7 +1707,7 @@ export default function Home() {
               <div className="col-span-4 h-full flex flex-col justify-between py-8">
                 
                 {/* Card 1: Top-Left (Human) */}
-                <div className="value-card-1 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                <div className="value-card-1 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 transition-[border-color,box-shadow] duration-350 transform-gpu group">
                   {/* Background Texture and Tint Gradient Overlay */}
                   <div className="absolute inset-0 z-0 select-none pointer-events-none">
                     <Image
@@ -1715,7 +1736,7 @@ export default function Home() {
                 </div>
 
                 {/* Card 3: Bottom-Left (Pragmatic) */}
-                <div className="value-card-3 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                <div className="value-card-3 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 transition-[border-color,box-shadow] duration-350 transform-gpu group">
                   {/* Background Texture and Tint Gradient Overlay */}
                   <div className="absolute inset-0 z-0 select-none pointer-events-none">
                     <Image
@@ -1777,7 +1798,7 @@ export default function Home() {
               <div className="col-span-4 h-full flex flex-col justify-between py-8">
                 
                 {/* Card 2: Top-Right (Curious) */}
-                <div className="value-card-2 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                <div className="value-card-2 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 transition-[border-color,box-shadow] duration-350 transform-gpu group">
                   {/* Background Texture and Tint Gradient Overlay */}
                   <div className="absolute inset-0 z-0 select-none pointer-events-none">
                     <Image
@@ -1806,7 +1827,7 @@ export default function Home() {
                 </div>
 
                 {/* Card 4: Bottom-Right (Impact-Driven) */}
-                <div className="value-card-4 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 hover:-translate-y-1 transition-all duration-350 transform-gpu group">
+                <div className="value-card-4 overflow-hidden relative border border-white/5 rounded-3xl p-7 flex flex-col justify-between min-h-[180px] xl:min-h-[200px] shadow-[0_15px_45px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-8px_rgba(16,185,129,0.15)] hover:border-white/10 transition-[border-color,box-shadow] duration-350 transform-gpu group">
                   {/* Background Texture and Tint Gradient Overlay */}
                   <div className="absolute inset-0 z-0 select-none pointer-events-none">
                     <Image

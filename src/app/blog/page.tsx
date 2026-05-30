@@ -46,9 +46,6 @@ export default function BlogListingPage() {
             <Link href="/#solutions" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
               Solutions
             </Link>
-            <Link href="/blog" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-green-600 pb-1">
-              Blogs
-            </Link>
           </nav>
 
           {/* Logo in Center */}
@@ -67,8 +64,8 @@ export default function BlogListingPage() {
 
           {/* Right Navigation links */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-start pl-12">
-            <Link href="/#products" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
-              Products
+            <Link href="/blog" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-green-600 pb-1">
+              Blogs
             </Link>
             <Link href="/#projects" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
               Projects
@@ -122,7 +119,6 @@ export default function BlogListingPage() {
             <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">About Us</Link>
             <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Solutions</Link>
             <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-green-500 transition-colors">Blogs</Link>
-            <Link href="/#products" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Products</Link>
             <Link href="/#projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Projects</Link>
             <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-green-600 hover:bg-green-700 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
           </div>
