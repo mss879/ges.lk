@@ -1768,13 +1768,14 @@ export default function Home() {
                 </div>
 
                 {/* Solar Panel Showcase Image - Absolute at the bottom of the center column, perfectly aligned with the bottom cards */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[280px] h-[190px] z-20">
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[280px] z-20">
                   <Image
                     src="/panel.png"
                     alt="High-efficiency solar panel technology"
-                    fill
-                    sizes="280px"
-                    className="object-cover rounded-[24px]"
+                    width={280}
+                    height={190}
+                    priority
+                    className="w-full h-auto object-contain rounded-[24px]"
                   />
                 </div>
               </div>
@@ -1864,7 +1865,7 @@ export default function Home() {
                   alt="High-efficiency solar panel technology"
                   width={280}
                   height={190}
-                  className="w-full max-w-[280px] h-auto object-cover rounded-[24px] mt-6"
+                  className="w-full max-w-[280px] h-auto object-contain rounded-[24px] mt-6"
                 />
               </div>
 
