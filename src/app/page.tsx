@@ -1766,18 +1766,16 @@ export default function Home() {
                     At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
                   </p>
                   
-                  {/* Meet our Team pill-button */}
-                  <button 
-                    onClick={() => setActiveTab("About")}
-                    className="inline-flex items-center gap-4 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-6 py-2 border border-stone-200/60 text-stone-800 hover:text-stone-950 cursor-pointer text-xs xl:text-sm font-bold group shadow-sm transition-all duration-300 active:scale-[0.98]"
-                  >
-                    <span className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:scale-105 group-hover:bg-emerald-700 transition-all duration-300">
-                      <svg className="w-4 h-4 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </span>
-                    <span className="relative z-10 select-none">Meet our team</span>
-                  </button>
+                  {/* Solar Panel Showcase Image */}
+                  <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md transition-transform duration-500 hover:scale-102">
+                    <Image
+                      src="/panel"
+                      alt="High-efficiency solar panel technology"
+                      fill
+                      sizes="280px"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
               
@@ -1859,17 +1857,16 @@ export default function Home() {
                 <p className="text-stone-500 font-medium text-xs sm:text-sm leading-relaxed mb-6">
                   At GES, we believe progress comes from blending innovation with responsibility. Our values guide how we work, the impact we create, and the partnerships we build.
                 </p>
-                <button 
-                  onClick={() => setActiveTab("About")}
-                  className="inline-flex items-center gap-3 bg-stone-50 hover:bg-stone-100 rounded-full pl-2 pr-5 py-1.5 border border-stone-200/60 text-stone-800 text-xs sm:text-sm font-bold group shadow-sm active:scale-[0.98] transition-all"
-                >
-                  <span className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0 group-hover:bg-emerald-700 transition-all">
-                    <svg className="w-3.5 h-3.5 text-white stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </span>
-                  <span>Meet our team</span>
-                </button>
+                {/* Solar Panel Showcase Image */}
+                <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md">
+                  <Image
+                    src="/panel"
+                    alt="High-efficiency solar panel technology"
+                    fill
+                    sizes="280px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
