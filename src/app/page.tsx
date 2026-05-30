@@ -1769,7 +1769,7 @@ export default function Home() {
                   {/* Solar Panel Showcase Image */}
                   <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md transition-transform duration-500 hover:scale-102">
                     <Image
-                      src="/panel"
+                      src="/panel.png"
                       alt="High-efficiency solar panel technology"
                       fill
                       sizes="280px"
@@ -1860,7 +1860,7 @@ export default function Home() {
                 {/* Solar Panel Showcase Image */}
                 <div className="relative w-full max-w-[280px] h-[190px] rounded-[24px] overflow-hidden border border-stone-200/50 shadow-md">
                   <Image
-                    src="/panel"
+                    src="/panel.png"
                     alt="High-efficiency solar panel technology"
                     fill
                     sizes="280px"
