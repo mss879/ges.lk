@@ -1621,7 +1621,8 @@ export default function Home() {
                   desc: "Elevate your property asset value by incorporating high-efficiency smart-grid assets directly into real estate portfolios.",
                   icon: (
                     <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V6a2 2 0 10-2 2h2zm0 8V4a2 2 0 112-2h-2zm0 0V2a2 2 0 10-2 2h2zm-8 8a2 2 0 110-4h4v4H4zm16 0a2 2 0 100-4h-4v4h4z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h10M4 21V10l5-4 5 4v6M7 21v-4h2v4" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11l6-6M17 5h4v4" />
                     </svg>
                   )
                 }
