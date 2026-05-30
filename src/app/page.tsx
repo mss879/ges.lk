@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
-import { ArrowUpRight, ArrowRight, Battery, Sun, Wind, Thermometer, Globe } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Battery, Sun, Wind, Thermometer, Globe, Calendar, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { blogPosts } from "@/data/blogs";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -46,7 +48,7 @@ export default function Home() {
   const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(0);
+  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
 
   const [batteryCharge, setBatteryCharge] = useState(0);
   const [isFilling, setIsFilling] = useState(true);
@@ -138,48 +140,6 @@ export default function Home() {
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, stagger: 0.1 },
         "-=0.8"
-      );
-
-      // Performance optimized horizontal progress bars
-      tl.fromTo(
-        ".bar-growth",
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          transformOrigin: "left",
-          duration: 1.2,
-          stagger: 0.08,
-          ease: "power2.inOut",
-        },
-        "-=0.5"
-      );
-
-      // Performance optimized charging column bars
-      tl.fromTo(
-        ".vertical-col-grow",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          transformOrigin: "bottom",
-          duration: 1.1,
-          stagger: 0.015,
-          ease: "elastic.out(1, 0.8)",
-        },
-        "-=0.9"
-      );
-
-      // Weather status pill translations
-      tl.fromTo(
-        ".weather-pill-grow",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          transformOrigin: "bottom",
-          duration: 1.4,
-          stagger: 0.1,
-          ease: "power3.out",
-        },
-        "-=0.9"
       );
 
       // ScrollTrigger scroll-driven text reveal for Section 2 headline
@@ -278,13 +238,82 @@ export default function Home() {
           },
         }
       );
+
+      // Why Solar stacked card rows stagger entry animation
+      gsap.fromTo(
+        ".why-solar-card",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#why-solar",
+            start: "top 80%",
+          },
+        }
+      );
+
+      const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
+
+      const processTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".process-section-trigger",
+          start: isDesktop ? "top top" : "top 70%",
+          end: isDesktop ? "+=150%" : "bottom 80%",
+          scrub: 1,
+          pin: isDesktop,
+          anticipatePin: 1,
+        }
+      });
+
+      processTl
+        .fromTo(".process-step-1", 
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+        )
+        .fromTo(".process-line-1",
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.8, ease: "none", transformOrigin: "left" },
+          "-=0.2"
+        )
+        .fromTo(".process-step-2",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
+          "-=0.2"
+        )
+        .fromTo(".process-line-2",
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.8, ease: "none", transformOrigin: "left" },
+          "-=0.2"
+        )
+        .fromTo(".process-step-3",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
+          "-=0.2"
+        )
+        .fromTo(".process-image-wrap",
+          { opacity: 0, scale: 0.94, y: 40 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out" },
+          "0"
+        );
     }, containerRef);
 
-    return () => ctx.revert();
+    // Ensure ScrollTrigger recalculates layout and heights perfectly after mounting
+    const refreshTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 600);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(refreshTimeout);
+    };
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col overflow-y-auto overflow-x-hidden">
+    <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col">
 
       {/* SECTION 1: Interactive Dashboard (Hero Fold) */}
       <div className="w-full h-screen min-h-[750px] shrink-0 p-[4px] sm:p-[6px] lg:p-[8px] relative flex items-center justify-center">
@@ -693,13 +722,13 @@ export default function Home() {
 
                 {/* Blogs */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => setActiveTab("Blogs")}
+                  <Link
+                    href="/blog"
                     className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Blogs" ? "text-stone-900 font-extrabold" : "text-stone-700 hover:text-primary-green"
                       }`}
                   >
                     Blogs
-                  </button>
+                  </Link>
                   <div className={`absolute bottom-[0px] left-0 h-[3px] bg-primary-green transition-all duration-300 ${activeTab === "Blogs" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
                 </div>
               </nav>
@@ -988,25 +1017,25 @@ export default function Home() {
                     <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Discover</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {[
-                        "Home",
-                        "About Us",
-                        "Products",
-                        "Projects",
-                        "News & Blog",
-                        "Solar Calculator",
-                        "Contact"
+                        { name: "Home", href: "/" },
+                        { name: "About Us", href: "/#about" },
+                        { name: "Products", href: "/#products" },
+                        { name: "Projects", href: "/#projects" },
+                        { name: "News & Blog", href: "/blog" },
+                        { name: "Solar Calculator", href: "/#calculator" },
+                        { name: "Contact", href: "/#contact" }
                       ].map((item) => (
-                        <button
-                          key={item}
+                        <Link
+                          key={item.name}
+                          href={item.href}
                           className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
                           onClick={() => {
-                            setActiveTab(item);
                             setIsMobileMenuOpen(false);
                           }}
                         >
-                          <span>{item}</span>
+                          <span>{item.name}</span>
                           <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -1338,19 +1367,32 @@ export default function Home() {
             ]).map((card) => (
               <div
                 key={card.id}
-                className="group w-[230px] sm:w-[260px] bg-gradient-to-b from-[#093e25]/95 to-[#041d11]/95 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(4,40,22,0.3),inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_6px_rgba(0,0,0,0.3)] transform-gpu shrink-0 relative overflow-hidden will-change-transform"
+                className="group w-[230px] sm:w-[260px] rounded-2xl overflow-hidden relative p-5 flex flex-col justify-between min-h-[130px] cursor-pointer shadow-[0_6px_20px_rgba(4,40,22,0.3)] transform-gpu shrink-0 will-change-transform"
               >
-                {/* 3D Glass Highlights exactly like the Contact Button */}
-                <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.25)] z-0 pointer-events-none" />
+                {/* Background Image: matching leaf_drops texture exactly like the top cards */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="/leaf_drops.png"
+                    alt="Green leaf background texture"
+                    fill
+                    sizes="260px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-55"
+                  />
+                  {/* Rich, matches green-tinted overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/80 via-[#053721]/90 to-[#022212]/95 z-10" />
+                </div>
 
-                <div className="flex justify-between items-center relative z-10">
+                {/* 3D Glass Highlights exactly like the Contact Button */}
+                <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.25)] z-20 pointer-events-none" />
+
+                <div className="flex justify-between items-center relative z-30">
                   <div className={`p-2 bg-white/10 border border-white/15 rounded-2xl shrink-0 ${card.iconClass}`}>
                     {card.icon}
                   </div>
                   {card.graphic}
                 </div>
 
-                <div className="flex flex-col gap-0.5 mt-3 relative z-10">
+                <div className="flex flex-col gap-0.5 mt-3 relative z-30">
                   <h3 className="font-display font-extrabold text-[28px] sm:text-[32px] tracking-tight text-white leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
                     {card.val}
                   </h3>
@@ -1365,12 +1407,174 @@ export default function Home() {
 
       </section>
 
+      {/* SECTION 2.5: Why Solar — Overcoming Sri Lanka's Energy Challenge */}
+      <section id="why-solar" className="bg-white text-stone-900 relative z-30 border-t border-stone-100/50 mt-20 md:mt-32">
+        
+        {/* Soft Ambient Green and Blue Glows in Background */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.04] rounded-full blur-[130px] pointer-events-none select-none animate-pulse" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.04] rounded-full blur-[130px] pointer-events-none select-none animate-pulse delay-1000" />
+
+        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row relative z-20">
+          
+          {/* Left Column: Localized Context & Trust Badges */}
+          <div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-16 flex flex-col justify-start px-6 py-20 md:px-12 lg:px-20 lg:pt-28 lg:border-r border-stone-200/80">
+            <div className="flex flex-col gap-12 max-w-xl">
+              
+              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-stone-950 leading-tight">
+                Why Solar is a Smart Investment in Sri Lanka.
+              </h2>
+              
+              <p className="text-stone-500 font-medium text-sm sm:text-base leading-relaxed text-justify">
+                With national grid electricity tariffs reaching record highs and commercial fuel costs skyrocketing, energy independence is no longer a luxury—it is a business survival strategy. 
+                <br /><br />
+                As Sri Lanka transitions rapidly towards Electric Vehicles (EVs), home and commercial solar serves as the ultimate, grid-independent fuel station, shielding you from rising costs and power instability while generating long-term wealth.
+              </p>
+
+              {/* Sri Lankan Authority & Certification Badges */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-stone-200/80">
+                {/* ISO 9001 Badge */}
+                <div className="flex items-center gap-3 bg-stone-50 border border-stone-200/80 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.01)] w-full">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                    <svg className="w-5.5 h-5.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider leading-none">Standardized Quality</span>
+                    <span className="text-xs font-black text-stone-900 mt-1">ISO 9001 : 2015</span>
+                  </div>
+                </div>
+
+                {/* SLSEA Approved Badge */}
+                <div className="flex items-center gap-3 bg-stone-50 border border-stone-200/80 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.01)] w-full">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                    <svg className="w-5.5 h-5.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider leading-none">Authority Approved</span>
+                    <span className="text-xs font-black text-stone-900 mt-1">SL SEA Certified</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: List of 6 Benefit Cards */}
+          <div className="w-full lg:w-1/2">
+            <div className="flex flex-col">
+              {[
+                {
+                  title: "Cost Savings",
+                  desc: "Dramatically lower your monthly utility bill in Rs. (LKR) from day one and lock in cheap energy yields for over 25 years.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Low Maintenance",
+                  desc: "Built with high-end monocrystalline panels and solid-state solar tracking inverters requiring near-zero active maintenance.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Sustainability",
+                  desc: "Help offset millions of tons of carbon dioxide (CO2) from coal-fired grids, ensuring complete ESG compliance for your firm.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h2a2.5 2.5 0 002.5-2.5V14a2 2 0 012-2h.055M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Energy Independence",
+                  desc: "Protect your commercial operations from Ceylon Electricity Board grid instability, blackouts, and peak-hour load shedding.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Government Incentives",
+                  desc: "Take full advantage of Sri Lanka's CEB Net-Metering, Net-Accounting, or Net-Plus export programs to generate high rupee yield.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  )
+                },
+                {
+                  title: "Increased Property Value",
+                  desc: "Elevate your property asset value by incorporating high-efficiency smart-grid assets directly into real estate portfolios.",
+                  icon: (
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-current stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V6a2 2 0 10-2 2h2zm0 8V4a2 2 0 112-2h-2zm0 0V2a2 2 0 10-2 2h2zm-8 8a2 2 0 110-4h4v4H4zm16 0a2 2 0 100-4h-4v4h4z" />
+                    </svg>
+                  )
+                }
+              ].map((card, idx) => (
+                <div 
+                  key={idx}
+                  className="why-solar-card group border-b border-stone-200/80 p-6 md:p-8 lg:p-10 hover:bg-stone-50 transition-colors duration-300 min-h-[180px] flex flex-col justify-center gap-5 opacity-0 translate-y-[20px] will-change-transform"
+                >
+                  <div className="flex justify-between items-start w-full">
+                    {/* Glowing Icon Wrapper (Glassy Dark Green Leaf Design) */}
+                    <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-2xl relative overflow-hidden text-white shadow-sm shrink-0">
+                      {/* Leaf background texture inside the icon! */}
+                      <div className="absolute inset-0 z-0">
+                        <Image
+                          src="/leaf_drops.png"
+                          alt="Green leaf background texture"
+                          fill
+                          sizes="64px"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500 opacity-60"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/90 to-[#022212]/95 z-10" />
+                      </div>
+                      
+                      {/* Glass reflections */}
+                      <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_8px_rgba(255,255,255,0.35)] border border-white/10 z-20" />
+                      
+                      {/* Actual SVG Icon */}
+                      <div className="relative z-30 w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+                        {card.icon}
+                      </div>
+                    </div>
+                    {/* Index Number */}
+                    <span className="text-stone-300 font-mono text-lg font-bold group-hover:text-emerald-500/60 transition-colors duration-300">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-stone-900 group-hover:text-emerald-600 transition-colors duration-300">
+                      {card.title}
+                    </h3>
+                    <p className="text-stone-500 text-sm sm:text-base leading-relaxed max-w-lg">
+                      {card.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* SECTION 4: Interactive Values Accordion */}
       <section className="w-full bg-white text-stone-900 py-24 border-t border-stone-100 relative">
         {/* Soft Ambient Background Glows */}
         <div className="absolute top-1/2 left-2/3 -translate-y-1/2 w-96 h-96 bg-emerald-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
         <div className="absolute top-1/4 left-1/3 -translate-y-1/2 w-96 h-96 bg-blue-500/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
-
         <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
@@ -1512,7 +1716,211 @@ export default function Home() {
           </div>
         </div>
       </div>
-      </section>      <footer 
+      </section>
+
+      {/* SECTION 4.5: Our Process */}
+      <section className="process-section-trigger w-full bg-white text-stone-900 py-20 lg:py-0 lg:h-screen flex items-center border-t border-stone-100 relative z-20 overflow-hidden">
+        {/* Ambient glowing shapes */}
+        <div className="absolute top-1/3 right-[-100px] w-[500px] h-[500px] bg-emerald-500/[0.02] rounded-full blur-[140px] pointer-events-none select-none" />
+        <div className="absolute bottom-1/4 left-[-100px] w-[500px] h-[500px] bg-emerald-500/[0.02] rounded-full blur-[140px] pointer-events-none select-none" />
+
+        <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Left Column: Staggered Process Steps */}
+            <div className="lg:col-span-7 flex flex-col justify-center">
+              {/* Label */}
+              <span className="font-mono text-xs font-bold text-emerald-600/90 tracking-[0.2em] uppercase mb-4 block">
+                [OUR PROCESS]
+              </span>
+              
+              {/* Title */}
+              <h2 className="font-display text-4xl sm:text-5xl md:text-[54px] font-black tracking-tight text-stone-950 leading-tight mb-16 max-w-xl">
+                Switching To Solar In 3 Easy Steps
+              </h2>
+
+              {/* Steps Container */}
+              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 items-start mt-6">
+                {/* Step 1 */}
+                <div className="process-step-1 opacity-0 flex flex-col justify-start relative">
+                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">01</span>
+                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Free consultation</h3>
+                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
+                    Get a free energy audit and custom solar solution.
+                  </p>
+                  
+                  {/* Dashed line 1 (Desktop only) */}
+                  <div className="hidden md:flex absolute right-[-48px] lg:right-[-64px] top-4 w-[48px] lg:w-[64px] h-0 items-center justify-center pointer-events-none z-0">
+                    <div className="process-line-1 w-full h-[1.5px] border-t-2 border-dashed border-emerald-500/40 origin-left scale-x-0" />
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="process-step-2 opacity-0 flex flex-col justify-start relative">
+                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">02</span>
+                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Design & install</h3>
+                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
+                    We'll plan, customise, and install your solar system.
+                  </p>
+                  
+                  {/* Dashed line 2 (Desktop only) */}
+                  <div className="hidden md:flex absolute right-[-48px] lg:right-[-64px] top-4 w-[48px] lg:w-[64px] h-0 items-center justify-center pointer-events-none z-0">
+                    <div className="process-line-2 w-full h-[1.5px] border-t-2 border-dashed border-emerald-500/40 origin-left scale-x-0" />
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="process-step-3 opacity-0 flex flex-col justify-start relative">
+                  <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600 mb-4 block">03</span>
+                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 mb-2">Start & Saving</h3>
+                  <p className="text-stone-500 text-xs sm:text-sm font-semibold leading-relaxed">
+                    Enjoy clean energy and reduced bills from day one.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Premium Round Image */}
+            <div className="lg:col-span-5 relative mt-8 lg:mt-0">
+              <div className="process-image-wrap opacity-0 scale-95 relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden border border-stone-200/50 shadow-2xl">
+                <Image
+                  src="/solar_process_theme.png"
+                  alt="Eco-villa with premium integrated solar panel array"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover object-center"
+                  priority
+                />
+                {/* Overlay to give a premium depth */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-black/0 to-transparent" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5: Latest Insights (Blog Preview - Redesigned & Widened) */}
+      <section className="w-full bg-[#f8f9fa] text-stone-900 py-28 border-t border-stone-200/40 relative z-10 overflow-hidden">
+        {/* Ambient background glows */}
+        <div className="absolute top-1/2 left-[-100px] -translate-y-1/2 w-[500px] h-[500px] bg-green-500/[0.03] rounded-full blur-[140px] pointer-events-none select-none" />
+        <div className="absolute bottom-[-100px] right-[10%] w-[600px] h-[400px] bg-green-500/[0.02] rounded-full blur-[150px] pointer-events-none select-none" />
+
+        <div className="w-full px-6 sm:px-12 md:px-16 lg:px-24 relative z-10">
+          
+          {/* Header Row */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+            <div className="flex flex-col">
+              <h2 className="font-display text-4xl sm:text-5xl md:text-[52px] font-black tracking-tight text-stone-900 leading-none">
+                Clean Energy & Engineering Insights
+              </h2>
+              <p className="text-stone-500 text-sm sm:text-base md:text-lg font-medium leading-relaxed mt-4 max-w-2xl">
+                Explore our latest deep-dive research, grid compliance frameworks, and sustainable energy calculators from our engineering experts.
+              </p>
+            </div>
+            
+            <Link 
+              href="/blog"
+              className="group flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-stone-200/80 hover:border-green-600/30 hover:bg-white text-stone-700 hover:text-green-600 font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-sm hover:-translate-y-0.5"
+            >
+              <span>View All Insights</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Grid of latest 3 posts (Widened grid with premium gaps) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 xl:gap-12">
+            {blogPosts.slice(0, 3).map((post) => (
+              <article 
+                key={post.slug} 
+                className="bg-white border border-stone-200/50 rounded-[32px] overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.015)] hover:shadow-[0_30px_60px_-15px_rgba(34,197,94,0.08)] transition-all duration-500 group flex flex-col justify-between hover:-translate-y-1.5 relative"
+              >
+                <div className="flex flex-col">
+                  {/* Cover Image */}
+                  <div className="relative h-[200px] sm:h-[220px] overflow-hidden">
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 46vw, 30vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-transparent" />
+                    <span className="absolute top-5 left-5 bg-white/95 backdrop-blur-md border border-stone-200/30 text-stone-700 font-bold text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-xl shadow-sm">
+                      {post.category}
+                    </span>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-6 sm:p-8 flex flex-col gap-4">
+                    {/* Meta */}
+                    <div className="flex items-center gap-3 text-[10px] font-bold text-stone-400 font-mono tracking-wider leading-none">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                        {post.date}
+                      </span>
+                      <span className="w-1 h-1 rounded-full bg-stone-200" />
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-stone-400" />
+                        {post.readTime}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="font-display text-xl sm:text-2xl font-black text-stone-900 group-hover:text-green-600 transition-colors duration-300 leading-snug">
+                      <Link href={`/blog/${post.slug}`}>
+                        {post.title}
+                      </Link>
+                    </h4>
+
+                    {/* Excerpt */}
+                    <p className="text-stone-500 text-xs sm:text-sm leading-relaxed font-semibold line-clamp-3">
+                      {post.excerpt}
+                    </p>
+
+                    {/* Dynamic Technical Metrics (Stunning Engineering Detail) */}
+                    <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-stone-100">
+                      {post.metrics.slice(0, 2).map((m, idx) => (
+                        <div key={idx} className="bg-stone-50 border border-stone-200/30 rounded-xl px-3 py-2 flex flex-col justify-center">
+                          <span className="text-[8px] font-black text-stone-400 uppercase tracking-widest leading-none">{m.label}</span>
+                          <span className="text-xs font-black text-stone-700 tracking-tight mt-1">{m.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer details */}
+                <div className="px-6 sm:px-8 pb-8 pt-4 border-t border-stone-50 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-green-50 border border-green-100 flex items-center justify-center font-bold text-green-700 text-xs shadow-sm">
+                      {post.author.avatar}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-extrabold text-stone-800 leading-none">{post.author.name}</span>
+                      <span className="text-[9px] font-bold text-stone-400 tracking-wider mt-1">{post.author.role.split(",")[0]}</span>
+                    </div>
+                  </div>
+
+                  <Link 
+                    href={`/blog/${post.slug}`}
+                    className="flex items-center gap-1.5 text-xs font-bold text-stone-600 group-hover:text-green-600 transition-colors cursor-pointer"
+                  >
+                    <span>Read Article</span>
+                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </Link>
+                </div>
+
+                {/* Dynamic Animate-on-Hover accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-green-500 to-emerald-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              </article>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      <footer 
         className="w-full text-white pt-[240px] sm:pt-[310px] md:pt-[400px] lg:pt-[470px] xl:pt-[510px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
         style={{
           backgroundImage: 'url("/footer-1.png")',
@@ -1557,12 +1965,12 @@ export default function Home() {
                 Links
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
-                <li><button onClick={() => setActiveTab("Home")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Home</button></li>
-                <li><button onClick={() => setActiveTab("About")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">About Us</button></li>
-                <li><button onClick={() => setActiveTab("Services")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</button></li>
-                <li><button onClick={() => setActiveTab("Projects")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</button></li>
-                <li><button onClick={() => setActiveTab("Blogs")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Blogs</button></li>
-                <li><button onClick={() => setActiveTab("Contact")} className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</button></li>
+                <li><Link href="/" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Home</Link></li>
+                <li><Link href="/#about" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">About Us</Link></li>
+                <li><Link href="/#solutions" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</Link></li>
+                <li><Link href="/#projects" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</Link></li>
+                <li><Link href="/blog" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Blogs</Link></li>
+                <li><Link href="/#contact" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</Link></li>
               </ul>
             </div>
 
@@ -1590,19 +1998,22 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="leading-relaxed font-semibold">No. 45, Galle Road, Colombo 03, Sri Lanka</span>
+                  <span className="leading-relaxed font-semibold">714/1, Thorana Junction, Kandy Road, Kelaniya, Sri Lanka</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-[#e2ff3a] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <a href="mailto:info@ges.lk" className="hover:text-[#e2ff3a] transition-colors">info@ges.lk</a>
+                  <a href="mailto:sales@ges.lk" className="hover:text-[#e2ff3a] transition-colors">sales@ges.lk</a>
                 </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <li className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <a href="tel:+94112543210" className="hover:text-[#e2ff3a] transition-colors">+94 112 543 210</a>
+                  <div className="flex flex-col">
+                    <a href="tel:+94765332332" className="hover:text-[#e2ff3a] transition-colors font-bold">+94 76 533 2332</a>
+                    <a href="tel:0765332332" className="hover:text-[#e2ff3a] transition-colors text-xs text-white/50 font-semibold">076 533 2332</a>
+                  </div>
                 </li>
               </ul>
             </div>

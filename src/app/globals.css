@@ -19,8 +19,6 @@
     min-height: 100%;
     margin: 0;
     padding: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
     scroll-behavior: smooth;
     background-color: #f8f9fa; /* Matches the hero background and is elegant for light-mode scrolling */
     color: #1c1917; /* Slate/stone dark text as base */
