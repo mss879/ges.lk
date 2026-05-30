@@ -1720,19 +1720,19 @@ export default function Home() {
                 num: "01.",
                 title: "Design",
                 image: "https://framerusercontent.com/images/wZRwWZKVYJrfzGLdaj4uc9pa0E.webp",
-                desc: "We perform a comprehensive solar assessment, engineering a system mapped exactly to your site's peak irradiance and grid specs."
+                desc: "We start by understanding your property, energy usage, and long-term goals. Our engineers create a site-specific system that prioritizes efficiency, safety, and future flexibility."
               },
               {
                 num: "02.",
                 title: "Build",
                 image: "https://framerusercontent.com/images/pJOiUSAQLtPX4kTdAuk5xtQY0.png",
-                desc: "Our certified in-house technicians assemble your high-capacity array, using premium Tier-1 smart microgrid components."
+                desc: "We custom build and manufacture all system panels, inverters, and switchgear using certified Tier-1 materials to guarantee robust performance."
               },
               {
                 num: "03.",
                 title: "Install",
                 image: "https://framerusercontent.com/images/9uN2Q1rO2xdB7dxznL79FvhSXag.jpg",
-                desc: "Complete physical mount, grid synchronization, and net-metering integration with Ceylon Electricity Board standard approval."
+                desc: "Our master electricians perform the complete mechanical and electrical installation, safe CEB grid integration, and clean cleanup."
               },
               {
                 num: "04.",
@@ -1745,58 +1745,54 @@ export default function Home() {
               return (
                 <div 
                   key={idx}
-                  className={`approach-card-anim group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-stone-200/50 min-h-[380px] lg:min-h-[440px] flex flex-col justify-between p-6 sm:p-8 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-y-[40px] ${
+                  className={`approach-card-anim group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-white/5 min-h-[380px] lg:min-h-[440px] flex flex-col justify-between p-6 sm:p-8 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-0 translate-y-[40px] bg-[#011612] ${
                     isHovered 
-                      ? "lg:flex-[2.6] flex-1 bg-[#011a14] shadow-2xl" 
-                      : "lg:flex-[1] flex-1 bg-[#011a14] hover:bg-[#02251d]"
+                      ? "lg:flex-[3.5] flex-[3] shadow-2xl" 
+                      : "lg:flex-[1.2] flex-1 hover:bg-[#02221b]"
                   }`}
                   onMouseEnter={() => setHoveredApproach(idx)}
                 >
-                  {/* Background Image & Overlay */}
-                  <div className="absolute inset-0 z-0 select-none pointer-events-none">
+                  {/* Right-aligned Image: visible ONLY when expanded */}
+                  <div className={`absolute right-0 top-0 bottom-0 w-[60%] h-full z-0 select-none pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+                    isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
+                  }`}>
                     <img
                       src={card.image}
                       alt={card.title}
-                      className={`w-full h-full object-cover transition-transform duration-[800ms] ease-out ${
-                        isHovered ? "scale-105 opacity-80" : "scale-100 opacity-30 group-hover:opacity-40"
-                      }`}
+                      className="w-full h-full object-cover object-center"
                     />
-                    {/* Dark radial gradient for premium Framer depth */}
-                    <div 
-                      className="absolute inset-0 z-10 transition-opacity duration-700" 
-                      style={{
-                        background: isHovered
-                          ? 'radial-gradient(circle at 100% 0%, rgba(1, 26, 20, 0.1) 0%, rgba(1, 26, 20, 0.95) 100%)'
-                          : 'radial-gradient(circle at 50% 50%, rgba(1, 26, 20, 0.3) 0%, rgba(1, 26, 20, 0.98) 100%)'
-                      }}
-                    />
+                    {/* Seamless horizontal fade mask into the dark card background */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#011612] via-[#011612]/50 to-transparent z-10 w-[101%]" />
                   </div>
 
                   {/* 3D Glass Highlights */}
-                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_15px_rgba(255,255,255,0.12)] border border-white/5 z-20 pointer-events-none" />
+                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_15px_rgba(255,255,255,0.08)] border border-white/5 z-20 pointer-events-none" />
 
-                  {/* Top: Staged Number */}
-                  <div className="relative z-30">
-                    <h1 className="font-display text-4xl sm:text-5xl font-black text-[#c8f69b] tracking-tight leading-none">
-                      {card.num}
-                    </h1>
-                  </div>
+                  {/* Card content aligned vertically */}
+                  <div className="relative z-30 flex flex-col justify-between h-full w-full">
+                    {/* Top: Number */}
+                    <div>
+                      <h1 className="font-display text-4xl sm:text-5xl font-black text-[#c8f69b] tracking-tight leading-none">
+                        {card.num}
+                      </h1>
+                    </div>
 
-                  {/* Bottom Content Wrap */}
-                  <div className="relative z-30 flex flex-col gap-3">
-                    <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-none">
-                      {card.title}
-                    </h3>
-                    
-                    {/* Subtitle / Description - Fades in and slides up ONLY when the card is expanded! */}
-                    <div 
-                      className={`transition-all duration-500 overflow-hidden ${
-                        isHovered ? "max-h-[140px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"
-                      }`}
-                    >
-                      <p className="text-stone-300 text-xs sm:text-sm font-semibold leading-relaxed max-w-md">
-                        {card.desc}
-                      </p>
+                    {/* Bottom Content: Title + Description */}
+                    <div className="flex flex-col gap-3 max-w-full lg:max-w-[50%]">
+                      <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-none">
+                        {card.title}
+                      </h3>
+                      
+                      {/* Description - expanded only */}
+                      <div 
+                        className={`transition-all duration-500 overflow-hidden ${
+                          isHovered ? "max-h-[160px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"
+                        }`}
+                      >
+                        <p className="text-stone-300 text-xs sm:text-sm font-semibold leading-relaxed">
+                          {card.desc}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
