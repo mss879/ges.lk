@@ -1521,15 +1521,8 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-stone-200/80">
                 {/* ISO 9001 Badge */}
                 <div className="flex items-center gap-4 relative overflow-hidden rounded-2xl p-4 shadow-[0_6px_20px_rgba(4,40,22,0.15)] w-full min-h-[84px]">
-                  {/* Glassy Leaf Background */}
+                  {/* Glassy Background */}
                   <div className="absolute inset-0 z-0">
-                    <Image
-                      src="/leaf_drops.png"
-                      alt="Green leaf background texture"
-                      fill
-                      sizes="300px"
-                      className="object-cover opacity-35"
-                    />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
                   </div>
                   <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] border border-white/5 z-20 pointer-events-none" />
@@ -1550,15 +1543,8 @@ export default function Home() {
 
                 {/* SLSEA Approved Badge */}
                 <div className="flex items-center gap-4 relative overflow-hidden rounded-2xl p-4 shadow-[0_6px_20px_rgba(4,40,22,0.15)] w-full min-h-[84px]">
-                  {/* Glassy Leaf Background */}
+                  {/* Glassy Background */}
                   <div className="absolute inset-0 z-0">
-                    <Image
-                      src="/leaf_drops.png"
-                      alt="Green leaf background texture"
-                      fill
-                      sizes="300px"
-                      className="object-cover opacity-35"
-                    />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0b5f3d]/90 via-[#053721]/95 to-[#022212]/98 z-10" />
                   </div>
                   <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_12px_rgba(255,255,255,0.15)] border border-white/5 z-20 pointer-events-none" />
@@ -2005,15 +1991,8 @@ export default function Home() {
                   }`}
                   onMouseEnter={() => setHoveredApproach(idx)}
                 >
-                  {/* Glassy Leaf Background for collapsed state (Vibrant Green Theme) */}
+                  {/* Vibrant Green Theme Background for collapsed state */}
                   <div className="absolute inset-0 z-0 select-none pointer-events-none transition-all duration-700">
-                    <Image
-                      src="/leaf_drops.png"
-                      alt="Green leaf background texture"
-                      fill
-                      sizes="(max-width: 1024px) 300px, 400px"
-                      className={`object-cover transition-opacity duration-700 ${isHovered ? "opacity-0" : "opacity-35"}`}
-                    />
                     <div className={`absolute inset-0 transition-opacity duration-700 ${
                       isHovered
                         ? "opacity-0"
