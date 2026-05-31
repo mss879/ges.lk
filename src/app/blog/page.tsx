@@ -480,14 +480,35 @@ export default function BlogListingPage() {
 
       {/* Copyright bottom bar */}
       <div className="w-full bg-[#012716] text-white/60 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
-        <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span className="text-xs font-bold text-white/50 flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span>© {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.</span>
-            <span className="hidden sm:inline text-white/25">•</span>
-            <span className="text-white/80">Built and Designed by <span className="text-[#e2ff3a] tracking-wider">ARC AI</span></span>
-          </span>
+        <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-6 text-center md:text-left">
           
-          <div className="flex items-center gap-5 text-white/70">
+          {/* Left: Copyright */}
+          <div className="text-xs font-bold text-white/50 justify-self-center md:justify-self-start">
+            © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.
+          </div>
+
+          {/* Center: Built and Designed by ARC AI */}
+          <div className="text-white/80 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
+            <span>Built and Designed by</span>
+            <a
+              href="https://www.arcai.agency"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center transition-all duration-300 hover:scale-105"
+              title="ARC AI - AI Automation and Software Company"
+            >
+              <Image
+                src="/arc-logo.png"
+                alt="ARC AI | AI Automation & Software Company"
+                width={110}
+                height={32}
+                className="h-7.5 w-auto object-contain translate-y-[2px]"
+              />
+            </a>
+          </div>
+
+          {/* Right: Social Links */}
+          <div className="flex items-center justify-center md:justify-end gap-5 text-white/70 justify-self-center md:justify-self-end">
             <a href="#" className="hover:text-[#e2ff3a] transition-colors">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
