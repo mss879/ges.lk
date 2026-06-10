@@ -4,7 +4,7 @@
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
   --font-mozilla: var(--font-mozilla);
-  --color-primary-green: #22c55e;
+  --color-primary-green: #00AC4E;
 }
 
 @layer base {
@@ -26,7 +26,7 @@
   }
 
   ::selection {
-    background: #22c55e;
+    background: #00AC4E;
     color: white;
   }
 }
@@ -60,12 +60,12 @@
   0%, 100% {
     transform: scale(0.8);
     opacity: 0.3;
-    filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.2));
+    filter: drop-shadow(0 0 2px rgba(0, 172, 78, 0.2));
   }
   50% {
     transform: scale(1.3);
     opacity: 1;
-    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+    filter: drop-shadow(0 0 8px rgba(0, 172, 78, 0.8));
   }
 }
 
@@ -152,8 +152,8 @@
 /* Premium Blueprint Engineering Grid Background for Preloader */
 .grid-background {
   background-image: 
-    linear-gradient(to right, rgba(34, 197, 94, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(34, 197, 94, 0.04) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 172, 78, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 172, 78, 0.04) 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
   background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px;

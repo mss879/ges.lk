@@ -15,6 +15,12 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const gridCellsRef = useRef<SVGSVGElement>(null);
+  const onCompleteRef = useRef(onComplete);
+
+  // Keep callback ref stable to prevent parent re-renders from clearing the exit timeout
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   // High-precision animation frame progress loop: Guarantees exactly 1500ms duration
   useEffect(() => {
@@ -82,7 +88,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         const ctx = gsap.context(() => {
           const exitTl = gsap.timeline({
             onComplete: () => {
-              if (onComplete) onComplete();
+              if (onCompleteRef.current) onCompleteRef.current();
             }
           });
 
@@ -110,7 +116,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
       return () => clearTimeout(exitTimeout);
     }
-  }, [progress, onComplete]);
+  }, [progress]);
 
   // Generate 24 Solar Cells (6 Columns x 4 Rows)
   const cols = 6;
@@ -161,11 +167,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             >
               <defs>
                 <linearGradient id="cell-active-grad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4ade80" />
-                  <stop offset="100%" stopColor="#16a34a" />
+                  <stop offset="0%" stopColor="#00AC4E" />
+                  <stop offset="100%" stopColor="#00AC4E" />
                 </linearGradient>
                 <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
-                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="0%" stopColor="#00AC4E" />
                   <feGaussianBlur stdDeviation="1.5" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
@@ -198,7 +204,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                     rx="3"
                     className="transition-all duration-500 ease-out"
                     fill={isActive ? "url(#cell-active-grad)" : "#ffffff"}
-                    stroke={isActive ? "rgba(34,197,94,0.3)" : "#e2e8f0"}
+                    stroke={isActive ? "rgba(0,172,78,0.3)" : "#e2e8f0"}
                     strokeWidth="1"
                     style={{
                       filter: isActive ? "url(#glow)" : "none",
@@ -230,11 +236,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           {/* Thin Progress Track & Node */}
           <div className="w-full h-[3px] bg-stone-100 rounded-full relative overflow-hidden shadow-inner border-t border-stone-200/20">
             <div
-              className="h-full bg-gradient-to-r from-primary-green to-emerald-500 rounded-full transition-all duration-300 relative"
+              className="h-full bg-gradient-to-r from-primary-green to-primary-green rounded-full transition-all duration-300 relative"
               style={{ width: `${progress}%` }}
             >
               {/* Glowing laser node at progress tip */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#22c55e] animate-ping" />
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#00AC4E] animate-ping" />
             </div>
           </div>
         </div>

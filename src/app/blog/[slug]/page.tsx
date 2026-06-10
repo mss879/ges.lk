@@ -36,7 +36,7 @@ export default function BlogPostDetail({ params }: PageProps) {
   if (!slug) {
     return (
       <div className="w-full h-screen bg-[#f8f9fa] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-[#00AC4E]/25 border-t-[#00AC4E] rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -54,7 +54,7 @@ export default function BlogPostDetail({ params }: PageProps) {
         </p>
         <Link 
           href="/blog"
-          className="bg-green-600 hover:bg-green-700 text-white font-bold text-sm uppercase tracking-widest px-6 py-3.5 rounded-xl shadow-md transition-all duration-300"
+          className="bg-[#00AC4E] hover:bg-[#00AC4E]/90 text-white font-bold text-sm uppercase tracking-widest px-6 py-3.5 rounded-xl shadow-md transition-all duration-300"
         >
           Back to Insights
         </Link>
@@ -118,7 +118,9 @@ export default function BlogPostDetail({ params }: PageProps) {
       // Parse Bold (**text**)
       let parsed = text.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-stone-900">$1</strong>');
       // Parse Code (`code`)
-      parsed = parsed.replace(/`(.*?)`/g, '<code class="bg-stone-100 text-green-700 px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-stone-200/50">$1</code>');
+      parsed = parsed.replace(/`(.*?)`/g, '<code class="bg-stone-100 text-[#00AC4E] px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-stone-200/50">$1</code>');
+      // Parse Links ([text](url))
+      parsed = parsed.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-[#00AC4E] hover:text-[#00AC4E]/90 underline font-semibold transition-colors">$1</a>');
       return parsed;
     };
 
@@ -137,22 +139,29 @@ export default function BlogPostDetail({ params }: PageProps) {
 
       // Handle Headings
       if (line.startsWith("## ")) {
+        const headingText = line.slice(3);
+        const id = headingText.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         elements.push(
           <h2 
+            id={id}
             key={keyIndex++} 
-            className="font-display text-2xl sm:text-3xl font-black tracking-tight text-stone-950 mt-12 mb-6 border-l-4 border-green-600 pl-4 leading-tight"
-            dangerouslySetInnerHTML={{ __html: parseInlineStyles(line.slice(3)) }}
+            className="font-display text-2xl sm:text-3xl font-black tracking-tight text-stone-950 mt-12 mb-6 border-l-4 border-[#00AC4E] pl-4 leading-tight scroll-mt-24"
+            dangerouslySetInnerHTML={{ __html: parseInlineStyles(headingText) }}
           />
         );
       } else if (line.startsWith("### ")) {
+        const headingText = line.slice(4);
+        const id = headingText.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         elements.push(
           <h3 
+            id={id}
             key={keyIndex++} 
-            className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-stone-900 mt-8 mb-4"
-            dangerouslySetInnerHTML={{ __html: parseInlineStyles(line.slice(4)) }}
+            className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-stone-900 mt-8 mb-4 scroll-mt-24"
+            dangerouslySetInnerHTML={{ __html: parseInlineStyles(headingText) }}
           />
         );
       } 
+
       // Handle Horizontal Rules
       else if (line.trim() === "---") {
         elements.push(<hr key={keyIndex++} className="border-stone-200/60 my-10" />);
@@ -192,13 +201,13 @@ export default function BlogPostDetail({ params }: PageProps) {
         }
         i = j - 1;
         elements.push(
-          <div key={keyIndex++} className="my-8 bg-green-50/50 border-l-4 border-green-600 rounded-r-2xl p-5 sm:p-6">
+          <div key={keyIndex++} className="my-8 bg-[#00AC4E]/5 border-l-4 border-[#00AC4E] rounded-r-2xl p-5 sm:p-6">
             <div className="flex gap-3">
-              <svg className="w-5.5 h-5.5 text-green-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <svg className="w-5.5 h-5.5 text-[#00AC4E] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
               <div>
-                <span className="text-xs font-black uppercase tracking-widest text-green-800 leading-none">Professional Tip</span>
+                <span className="text-xs font-black uppercase tracking-widest text-[#00AC4E] leading-none">Professional Tip</span>
                 <p 
                   className="text-stone-700 text-xs sm:text-sm font-semibold leading-relaxed mt-2"
                   dangerouslySetInnerHTML={{ __html: parseInlineStyles(tipText.trim()) }}
@@ -222,7 +231,7 @@ export default function BlogPostDetail({ params }: PageProps) {
       else if (line.startsWith("- ")) {
         elements.push(
           <div key={keyIndex++} className="flex gap-3 items-start my-3 pl-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-600 mt-2.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00AC4E] mt-2.5 shrink-0" />
             <p 
               className="text-stone-600 text-sm sm:text-base font-semibold leading-relaxed"
               dangerouslySetInnerHTML={{ __html: parseInlineStyles(line.slice(2)) }}
@@ -236,7 +245,7 @@ export default function BlogPostDetail({ params }: PageProps) {
         const text = line.replace(/^\d+\.\s/, "");
         elements.push(
           <div key={keyIndex++} className="flex gap-3 items-start my-3 pl-2">
-            <span className="font-mono text-xs font-black text-green-600 mt-1 shrink-0 w-4 text-right">
+            <span className="font-mono text-xs font-black text-[#00AC4E] mt-1 shrink-0 w-4 text-right">
               {num}.
             </span>
             <p 
@@ -245,6 +254,31 @@ export default function BlogPostDetail({ params }: PageProps) {
             />
           </div>
         );
+      }
+      // Handle Markdown Images: ![alt](url)
+      else if (line.trim().startsWith("![")) {
+        const match = line.match(/!\[(.*?)\]\((.*?)\)/);
+        if (match) {
+          const alt = match[1];
+          const src = match[2];
+          elements.push(
+            <div key={keyIndex++} className="my-8 flex flex-col items-center gap-2">
+              <div className="relative w-full aspect-[16/9] max-h-[450px] overflow-hidden rounded-2xl border border-stone-200/50 shadow-sm">
+                <img
+                  src={src}
+                  alt={alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {alt && (
+                <span className="text-xs font-semibold text-stone-400 italic">
+                  {alt}
+                </span>
+              )}
+            </div>
+          );
+          continue;
+        }
       }
       // Handle standard paragraphs
       else if (line.trim() !== "") {
@@ -269,7 +303,7 @@ export default function BlogPostDetail({ params }: PageProps) {
       
       {/* Dynamic Reading Progress Bar */}
       <div 
-        className="fixed top-0 left-0 h-1 bg-green-600 z-[150] transition-all duration-100 ease-out"
+        className="fixed top-0 left-0 h-1 bg-[#00AC4E] z-[150] transition-all duration-100 ease-out"
         style={{ width: `${scrollProgress}%` }}
       />
 
@@ -280,7 +314,7 @@ export default function BlogPostDetail({ params }: PageProps) {
           <div className="flex items-center gap-2">
             <Link 
               href="/blog"
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-stone-500 hover:text-green-600 transition-colors"
+              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-stone-500 hover:text-[#00AC4E] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Insights</span>
@@ -302,7 +336,7 @@ export default function BlogPostDetail({ params }: PageProps) {
 
           {/* Desktop Right action */}
           <div className="hidden lg:flex items-center">
-            <Link href="/#contact" className="bg-stone-900 hover:bg-green-600 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
+            <Link href="/#contact" className="bg-stone-900 hover:bg-[#00AC4E] text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
               Consult an Engineer
             </Link>
           </div>
@@ -326,7 +360,7 @@ export default function BlogPostDetail({ params }: PageProps) {
           <div className="flex flex-col gap-4">
             
             {/* Category tag */}
-            <span className="self-start bg-green-600 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md shadow-md">
+            <span className="self-start bg-[#00AC4E] text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-md shadow-md">
               {post.category}
             </span>
 
@@ -338,12 +372,12 @@ export default function BlogPostDetail({ params }: PageProps) {
             {/* Meta */}
             <div className="flex items-center gap-4 text-xs font-bold text-stone-300 font-mono tracking-wider pt-2">
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-green-400" />
+                <Calendar className="w-4 h-4 text-[#00AC4E]" />
                 {post.date}
               </span>
               <span className="w-1 h-1 rounded-full bg-stone-500" />
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-green-400" />
+                <Clock className="w-4 h-4 text-[#00AC4E]" />
                 {post.readTime}
               </span>
             </div>
@@ -361,7 +395,7 @@ export default function BlogPostDetail({ params }: PageProps) {
             
             {/* Author Profile card at start */}
             <div className="flex items-center gap-4 bg-white border border-stone-200/50 rounded-2xl p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] mb-8">
-              <div className="w-12 h-12 rounded-full bg-green-50 border border-green-100 flex items-center justify-center font-bold text-green-700 text-base shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-[#00AC4E]/5 border border-[#00AC4E]/20 flex items-center justify-center font-bold text-[#00AC4E] text-base shadow-sm">
                 {post.author.avatar}
               </div>
               <div className="flex flex-col">
@@ -378,26 +412,26 @@ export default function BlogPostDetail({ params }: PageProps) {
             {/* Dynamic metrics card deck for credibility */}
             <div className="mt-12 bg-white border border-stone-200/60 rounded-[28px] p-6 sm:p-8 shadow-sm">
               <h4 className="font-display text-lg font-black text-stone-900 mb-6 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+                <CheckCircle className="w-5 h-5 text-[#00AC4E]" />
                 <span>Verified Clean Energy Impact Parameters</span>
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {post.metrics.map((m, idx) => (
                   <div key={idx} className="bg-stone-50/80 border border-stone-200/40 rounded-2xl p-4 flex flex-col text-left">
                     <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest leading-none">{m.label}</span>
-                    <span className="text-xl sm:text-2xl font-black text-green-700 tracking-tight mt-2">{m.value}</span>
+                    <span className="text-xl sm:text-2xl font-black text-[#00AC4E] tracking-tight mt-2">{m.value}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Premium CTA consultative banner */}
-            <div className="mt-12 w-full bg-stone-900 rounded-[32px] p-8 sm:p-10 lg:p-12 text-white relative overflow-hidden shadow-[0_20px_50px_-15px_rgba(16,185,129,0.15)] group border border-stone-800">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent opacity-60"></div>
-              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-green-500/20 rounded-full blur-[60px] group-hover:scale-110 transition-all duration-700"></div>
+            <div className="mt-12 w-full bg-stone-900 rounded-[32px] p-8 sm:p-10 lg:p-12 text-white relative overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,172,78,0.15)] group border border-stone-800">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00AC4E]/10 via-transparent to-transparent opacity-60"></div>
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-[#00AC4E]/20 rounded-full blur-[60px] group-hover:scale-110 transition-all duration-700"></div>
               
               <div className="relative z-10 max-w-xl flex flex-col">
-                <span className="text-green-400 text-xs font-black uppercase tracking-widest mb-3">Consultation Desk</span>
+                <span className="text-[#00AC4E] text-xs font-black uppercase tracking-widest mb-3">Consultation Desk</span>
                 <h3 className="font-display text-2xl sm:text-3xl font-black tracking-tight leading-tight">
                   Design Your High-Yield Energy Infrastructure
                 </h3>
@@ -407,7 +441,7 @@ export default function BlogPostDetail({ params }: PageProps) {
                 <div className="mt-8 flex flex-wrap gap-4 items-center">
                   <Link 
                     href="/#contact"
-                    className="bg-green-600 hover:bg-green-500 text-white font-bold text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl transition-all duration-300 active:scale-[0.98] shadow-md"
+                    className="bg-[#00AC4E] hover:bg-[#00AC4E]/90 text-white font-bold text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl transition-all duration-300 active:scale-[0.98] shadow-md"
                   >
                     Schedule Architecture Review
                   </Link>
@@ -476,7 +510,7 @@ export default function BlogPostDetail({ params }: PageProps) {
                 <li><Link href="/" className="hover:text-[#e2ff3a] transition-colors">Home</Link></li>
                 <li><Link href="/#about" className="hover:text-[#e2ff3a] transition-colors">About Us</Link></li>
                 <li><Link href="/#solutions" className="hover:text-[#e2ff3a] transition-colors">Solutions</Link></li>
-                <li><Link href="/#projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
+                <li><Link href="/projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
                 <li><Link href="/blog" className="hover:text-[#e2ff3a] transition-colors">Blogs</Link></li>
                 <li><Link href="/#contact" className="hover:text-[#e2ff3a] transition-colors">Contact</Link></li>
               </ul>

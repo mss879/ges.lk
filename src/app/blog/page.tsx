@@ -37,13 +37,13 @@ export default function BlogListingPage() {
           
           {/* Left Navigation links */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-end pr-12">
-            <Link href="/" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
+            <Link href="/" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
               Home
             </Link>
-            <Link href="/#about" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
+            <Link href="/#about" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
               About Us
             </Link>
-            <Link href="/#solutions" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
+            <Link href="/#solutions" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
               Solutions
             </Link>
           </nav>
@@ -64,13 +64,13 @@ export default function BlogListingPage() {
 
           {/* Right Navigation links */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-start pl-12">
-            <Link href="/blog" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-green-600 pb-1">
+            <Link href="/blog" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-primary-green pb-1">
               Blogs
             </Link>
-            <Link href="/#projects" className="text-[15px] font-bold text-stone-600 hover:text-green-600 transition-colors">
+            <Link href="/projects" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
               Projects
             </Link>
-            <Link href="/#contact" className="ml-4 bg-stone-900 hover:bg-green-600 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
+            <Link href="/#contact" className="ml-4 bg-stone-900 hover:bg-primary-green text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
               Contact Us
             </Link>
           </nav>
@@ -88,7 +88,7 @@ export default function BlogListingPage() {
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-stone-700 hover:text-green-600 focus:outline-none"
+              className="p-2 text-stone-700 hover:text-primary-green focus:outline-none"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMobileMenuOpen ? (
@@ -108,33 +108,33 @@ export default function BlogListingPage() {
         <div className="lg:hidden fixed inset-0 z-50 bg-stone-950/95 backdrop-blur-lg flex flex-col p-6 pt-24 animate-fade-in">
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
-            className="absolute top-6 right-6 text-white hover:text-green-500 p-2"
+            className="absolute top-6 right-6 text-white hover:text-primary-green p-2"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
           <div className="flex flex-col gap-6 text-center text-white text-xl font-bold font-display mt-8">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Home</Link>
-            <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">About Us</Link>
-            <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Solutions</Link>
-            <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-green-500 transition-colors">Blogs</Link>
-            <Link href="/#projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-green-500 transition-colors">Projects</Link>
-            <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-green-600 hover:bg-green-700 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Home</Link>
+            <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">About Us</Link>
+            <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Solutions</Link>
+            <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-primary-green transition-colors">Blogs</Link>
+            <Link href="/projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Projects</Link>
+            <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-primary-green hover:bg-primary-green/90 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
           </div>
         </div>
       )}
 
       {/* 2. Hero Header Section */}
       <section className="w-full py-16 sm:py-20 bg-gradient-to-b from-stone-50 to-[#f8f9fa] border-b border-stone-200/50 relative overflow-hidden shrink-0">
-        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-green-500/10 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary-green/10 rounded-full blur-[140px] pointer-events-none" />
         <div className="max-w-[1240px] mx-auto px-6 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-200/50 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-green-700 mb-6 shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-green/5 border border-primary-green/20 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-primary-green mb-6 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary-green animate-pulse"></span>
             GES Engineering Insights
           </div>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-stone-900 leading-none">
-            Knowledge & <span className="text-green-600">Green Tech</span>
+            Knowledge & <span className="text-primary-green">Green Tech</span>
           </h1>
           <p className="mt-6 text-stone-500 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             Explore comprehensive analysis, case studies, and strategic engineering frameworks covering solar yields, battery storage, and national grids.
@@ -154,8 +154,8 @@ export default function BlogListingPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 border cursor-pointer ${
                   selectedCategory === cat
-                    ? "bg-green-600 text-white border-green-600 shadow-md shadow-green-600/10 -translate-y-0.5"
-                    : "bg-white text-stone-600 border-stone-200/80 hover:border-green-600/30 hover:text-green-600 hover:-translate-y-0.5"
+                    ? "bg-primary-green text-white border-primary-green shadow-md shadow-primary-green/10 -translate-y-0.5"
+                    : "bg-white text-stone-600 border-stone-200/80 hover:border-primary-green/30 hover:text-primary-green hover:-translate-y-0.5"
                 }`}
               >
                 {cat}
@@ -171,7 +171,7 @@ export default function BlogListingPage() {
               placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-stone-200/80 pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold placeholder-stone-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all duration-300"
+              className="w-full bg-white border border-stone-200/80 pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold placeholder-stone-400 focus:outline-none focus:border-primary-green focus:ring-1 focus:ring-primary-green transition-all duration-300"
             />
           </div>
 
@@ -332,7 +332,7 @@ export default function BlogListingPage() {
                       </div>
 
                       {/* Title */}
-                      <h4 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 group-hover:text-green-600 transition-colors duration-300 leading-snug">
+                      <h4 className="font-display text-lg sm:text-xl font-extrabold text-stone-900 group-hover:text-primary-green transition-colors duration-300 leading-snug">
                         <Link href={`/blog/${post.slug}`}>
                           {post.title}
                         </Link>
@@ -350,7 +350,7 @@ export default function BlogListingPage() {
                   <div className="px-5 sm:px-6 pb-6 pt-4 border-t border-stone-100 flex items-center justify-between">
                     
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-green-50 border border-green-100 flex items-center justify-center font-bold text-green-700 text-xs">
+                      <div className="w-8 h-8 rounded-full bg-primary-green/5 border border-primary-green/20 flex items-center justify-center font-bold text-primary-green text-xs">
                         {post.author.avatar}
                       </div>
                       <div className="flex flex-col">
@@ -361,7 +361,7 @@ export default function BlogListingPage() {
 
                     <Link 
                       href={`/blog/${post.slug}`}
-                      className="flex items-center gap-1 text-xs font-bold text-stone-600 group-hover:text-green-600 transition-colors cursor-pointer"
+                      className="flex items-center gap-1 text-xs font-bold text-stone-600 group-hover:text-primary-green transition-colors cursor-pointer"
                     >
                       <span>Read Insight</span>
                       <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -427,7 +427,7 @@ export default function BlogListingPage() {
                 <li><Link href="/" className="hover:text-[#e2ff3a] transition-colors">Home</Link></li>
                 <li><Link href="/#about" className="hover:text-[#e2ff3a] transition-colors">About Us</Link></li>
                 <li><Link href="/#solutions" className="hover:text-[#e2ff3a] transition-colors">Solutions</Link></li>
-                <li><Link href="/#projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
+                <li><Link href="/projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
                 <li><Link href="/blog" className="hover:text-[#e2ff3a] transition-colors">Blogs</Link></li>
                 <li><Link href="/#contact" className="hover:text-[#e2ff3a] transition-colors">Contact</Link></li>
               </ul>
