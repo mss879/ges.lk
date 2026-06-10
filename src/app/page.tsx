@@ -254,9 +254,9 @@ export default function Home() {
         }
       ],
       images: [
-        "/blogs/off_grid_vs_hybrid.png",
-        "/blogs/home_energy_storage.png",
-        "/blogs/solar_battery_cabinet.png"
+        "/blogs/off_grid_vs_hybrid.webp",
+        "/blogs/home_energy_storage.webp",
+        "/blogs/solar_battery_cabinet.webp"
       ]
     },
     {
@@ -282,9 +282,9 @@ export default function Home() {
         }
       ],
       images: [
-        "/blogs/smart_microgrids_ci.png",
-        "/blogs/solar_carport_canopy.png",
-        "/blogs/solar_substation_infra.png"
+        "/blogs/smart_microgrids_ci.webp",
+        "/blogs/solar_carport_canopy.webp",
+        "/blogs/solar_substation_infra.webp"
       ]
     },
     {
@@ -314,9 +314,9 @@ export default function Home() {
         }
       ],
       images: [
-        "/blogs/solar_panel_cleaning.png",
-        "/blogs/solar_shading_soiling.png",
-        "/blogs/future_solar_sri_lanka.png"
+        "/blogs/solar_panel_cleaning.webp",
+        "/blogs/solar_shading_soiling.webp",
+        "/blogs/future_solar_sri_lanka.webp"
       ]
     },
     {
@@ -342,9 +342,9 @@ export default function Home() {
         }
       ],
       images: [
-        "/blogs/agrivoltaics_farming.png",
-        "/blogs/floating_solar_farm.png",
-        "/blogs/utility_scale_solar.png"
+        "/blogs/agrivoltaics_farming.webp",
+        "/blogs/floating_solar_farm.webp",
+        "/blogs/utility_scale_solar.webp"
       ]
     }
   ];
@@ -669,7 +669,7 @@ export default function Home() {
               {/* Left Section: Logo */}
               <div className="nav-item-anim opacity-0 relative z-50 transform-gpu flex items-center justify-start shrink-0">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="GES Logo"
                   width={190}
                   height={55}
@@ -889,7 +889,7 @@ export default function Home() {
             <div className="absolute inset-0 z-[100] bg-[#0c120c]/95 backdrop-blur-3xl flex flex-col p-6 sm:p-10 justify-between overflow-y-auto rounded-[20px] sm:rounded-[28px]">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="SolarTech Logo"
                   width={140}
                   height={38}
@@ -1113,7 +1113,7 @@ export default function Home() {
             <div className="space-y-6 about-img-left">
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_office_v4.png"
+                  src="/about_us_office_v4.webp"
                   alt="Solar Design and Office Engineering Team"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1122,7 +1122,7 @@ export default function Home() {
               </div>
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_engineers_v4.png"
+                  src="/about_us_engineers_v4.webp"
                   alt="Engineers inspecting solar fields"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1134,7 +1134,7 @@ export default function Home() {
             <div className="space-y-6 pt-12 md:pt-16 about-img-right">
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_tech_v4.png"
+                  src="/about_us_tech_v4.webp"
                   alt="Advanced Lithium BESS and Inverters Room"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1143,7 +1143,7 @@ export default function Home() {
               </div>
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_building_v4.png"
+                  src="/about_us_building_v4.webp"
                   alt="Modern sustainable office with rooftop solar"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1192,7 +1192,7 @@ export default function Home() {
                   {/* Leaf background texture */}
                   <div className="absolute inset-0 z-0">
                     <Image
-                      src="/leaf_drops.png"
+                      src="/leaf_drops.webp"
                       alt="Green leaf background texture"
                       fill
                       sizes="48px"
@@ -1230,15 +1230,15 @@ export default function Home() {
                 <div className="relative overflow-hidden rounded-2xl border border-stone-200 bg-white/50 pt-2 pb-4 px-3.5 backdrop-blur-sm w-full">
                   <div className="flex min-w-max gap-3 animate-marquee hover:[animation-play-state:paused]" aria-hidden="true">
                     {[
-                      { src: "/about_solar_rooftop_v3.png", label: "Rooftop Solar" },
-                      { src: "/about_solar_installers_v3.png", label: "Certified Installers" },
-                      { src: "/about_solar_details_v3.png", label: "Precision Tech" },
-                      { src: "/about_solar_farm_v3.png", label: "Commercial Scale" },
+                      { src: "/about_solar_rooftop_v3.webp", label: "Rooftop Solar" },
+                      { src: "/about_solar_installers_v3.webp", label: "Certified Installers" },
+                      { src: "/about_solar_details_v3.webp", label: "Precision Tech" },
+                      { src: "/about_solar_farm_v3.webp", label: "Commercial Scale" },
                       // Duplicate for infinite scroll
-                      { src: "/about_solar_rooftop_v3.png", label: "Rooftop Solar" },
-                      { src: "/about_solar_installers_v3.png", label: "Certified Installers" },
-                      { src: "/about_solar_details_v3.png", label: "Precision Tech" },
-                      { src: "/about_solar_farm_v3.png", label: "Commercial Scale" }
+                      { src: "/about_solar_rooftop_v3.webp", label: "Rooftop Solar" },
+                      { src: "/about_solar_installers_v3.webp", label: "Certified Installers" },
+                      { src: "/about_solar_details_v3.webp", label: "Precision Tech" },
+                      { src: "/about_solar_farm_v3.webp", label: "Commercial Scale" }
                     ].map((item, idx) => (
                       <div key={idx} className="group relative flex w-[220px] shrink-0 flex-col gap-2 cursor-pointer">
                         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-stone-100 border border-stone-200 shadow-sm">
@@ -1275,7 +1275,7 @@ export default function Home() {
             <div className="col-span-1 md:col-span-1 md:row-span-2 relative rounded-[32px] overflow-hidden bg-stone-50 text-stone-900 p-6 flex flex-col justify-end group shadow-lg shadow-stone-100/50 border border-stone-200 bento-card-anim min-h-[290px] md:min-h-0">
               <div className="absolute inset-0 z-0 top-0 h-[48%] overflow-hidden rounded-t-[32px]">
                 <video
-                  src="/%22Cinematic%20drone%20flyby%20shot%20of%20a%20luxury%20solar%20roof%20home%20with%20modern%20sleek%20blue%20solar%20modules%20during%20midday%2C%20clear%20blue%20sky%2C%20hyperrealistic%208k%22.mp4"
+                  src="/drone_flyby_solar.mp4"
                   autoPlay
                   loop
                   muted
@@ -1302,7 +1302,7 @@ export default function Home() {
                   {/* Leaf background texture */}
                   <div className="absolute inset-0 z-0">
                     <Image
-                      src="/leaf_drops.png"
+                      src="/leaf_drops.webp"
                       alt="Green leaf background texture"
                       fill
                       sizes="44px"
@@ -1336,7 +1336,7 @@ export default function Home() {
                   {/* Leaf background texture */}
                   <div className="absolute inset-0 z-0">
                     <Image
-                      src="/leaf_drops.png"
+                      src="/leaf_drops.webp"
                       alt="Green leaf background texture"
                       fill
                       sizes="44px"
@@ -1367,7 +1367,7 @@ export default function Home() {
             <div className="col-span-1 md:col-span-2 md:row-span-1 relative rounded-[32px] overflow-hidden bg-zinc-950 text-white p-6 py-8 px-8 md:py-10 md:px-10 md:min-h-[185px] flex flex-col sm:flex-row items-center sm:justify-between gap-6 group shadow-xl border border-zinc-800 bento-card-anim text-center sm:text-left">
               <div className="absolute inset-0 z-0">
                 <video
-                  src="/%22Cinematic%20sunset%20sliding%20shot%20of%20premium%20black%20monocrystalline%20solar%20panels%20on%20a%20luxury%20architectural%20home%20roof%20reflecting%20orange%20and%20pink%20skies%2C%20photorealistic%204k%22.mp4"
+                  src="/sunset_solar_panels.mp4"
                   autoPlay
                   loop
                   muted
@@ -1552,7 +1552,7 @@ export default function Home() {
                       {/* Leaf background texture inside the icon! */}
                       <div className="absolute inset-0 z-0">
                         <Image
-                          src="/leaf_drops.png"
+                          src="/leaf_drops.webp"
                           alt="Green leaf background texture"
                           fill
                           sizes="64px"
@@ -1962,7 +1962,7 @@ export default function Home() {
         id="contact"
         className="w-full text-white pt-[240px] sm:pt-[310px] md:pt-[400px] lg:pt-[470px] xl:pt-[510px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
         style={{
-          backgroundImage: 'url("/footer-1.png")',
+          backgroundImage: 'url("/footer-1.webp")',
           backgroundSize: '100% auto',
           backgroundPosition: 'center -35%',
           backgroundRepeat: 'no-repeat',
@@ -1976,7 +1976,7 @@ export default function Home() {
             <div className="lg:col-span-5 flex flex-col items-start">
               <div className="mb-6 flex items-center">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="GES Logo"
                   width={150}
                   height={42}
@@ -2083,7 +2083,7 @@ export default function Home() {
               title="ARC AI - AI Automation and Software Company"
             >
               <Image
-                src="/arc-logo.png"
+                src="/arc-logo.webp"
                 alt="ARC AI | AI Automation & Software Company"
                 width={110}
                 height={32}

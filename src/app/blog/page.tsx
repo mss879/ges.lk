@@ -52,7 +52,7 @@ export default function BlogListingPage() {
           <div className="flex justify-center shrink-0">
             <Link href="/">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="GES Logo"
                 width={160}
                 height={46}
@@ -79,7 +79,7 @@ export default function BlogListingPage() {
           <div className="flex lg:hidden w-full justify-between items-center">
             <Link href="/">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="GES Logo"
                 width={120}
                 height={35}
@@ -381,7 +381,7 @@ export default function BlogListingPage() {
       <footer 
         className="w-full text-white pt-[160px] sm:pt-[220px] md:pt-[280px] lg:pt-[320px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
         style={{
-          backgroundImage: 'url("/footer-1.png")',
+          backgroundImage: 'url("/footer-1.webp")',
           backgroundSize: '100% auto',
           backgroundPosition: 'center -10%',
           backgroundRepeat: 'no-repeat',
@@ -395,7 +395,7 @@ export default function BlogListingPage() {
             <div className="lg:col-span-5 flex flex-col items-start">
               <div className="mb-6 flex items-center">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="GES Logo"
                   width={150}
                   height={42}
@@ -498,7 +498,7 @@ export default function BlogListingPage() {
               title="ARC AI - AI Automation and Software Company"
             >
               <Image
-                src="/arc-logo.png"
+                src="/arc-logo.webp"
                 alt="ARC AI | AI Automation & Software Company"
                 width={110}
                 height={32}
