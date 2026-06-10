@@ -1,78 +1,82 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  ArrowRight, 
-  ArrowUpRight, 
-  Search, 
-  ChevronRight, 
-  X, 
-  ChevronLeft, 
-  Folder, 
-  Image as ImageIcon,
-  Calendar,
-  MapPin,
-  ChevronDown
-} from "lucide-react";
+import { ArrowRight, Search, BookOpen, ChevronDown, HelpCircle, ArrowUpRight, MessageSquare } from "lucide-react";
 
-interface Project {
-  name: string;
-  folderName: string;
-  images: string[];
-}
+const faqs = [
+  {
+    question: "How does a solar system work?",
+    answer: "Solar panels capture sunlight and convert it into DC electricity, which an inverter converts into AC electricity to power your home or business. Excess energy can be stored in batteries or fed back to the grid depending on your system configuration.",
+    category: "General"
+  },
+  {
+    question: "What type of system is right for me?",
+    answer: "The ideal system depends on your energy consumption patterns, roof space, and local grid stability. Our engineers conduct a feasibility study and recommend either an On-Grid system (best for cost offsets), Off-Grid (complete independence), or a Hybrid system (best for backup power and savings).",
+    category: "General"
+  },
+  {
+    question: "What is the warranty period?",
+    answer: "We offer premium warranty coverage: a 25-year linear performance warranty on solar PV modules, a 5-to-10-year warranty on smart grid-tied or hybrid inverters, and up to a 10-year warranty on Lithium LFP battery cells. Specific terms vary by product to ensure long-term peace of mind.",
+    category: "General"
+  },
+  {
+    question: "How much can I save on electricity?",
+    answer: "Savings vary based on your average consumption tariff, roof orientation, and system capacity. With recent tariff adjustments in Sri Lanka, most residential and commercial owners see a reduction of 70% to 100% in their utility bills, turning electricity from an ongoing operational cost into a self-funding asset.",
+    category: "Financial"
+  },
+  {
+    question: "What happens on cloudy days?",
+    answer: "Solar panels do not require direct hot sunlight and continue to generate electricity using ambient daylight even on overcast or rainy days, though generation efficiency is reduced. In a hybrid or grid-connected system, battery storage or utility power automatically bridges any deficit seamlessly.",
+    category: "Technical"
+  },
+  {
+    question: "How do I maintain my solar system?",
+    answer: "Solar PV installations require minimal upkeep. We recommend dry cleaning or soft washing with low-TDS water every 3 to 6 months to prevent monsoonal dust or soot buildup from reducing yields. Our operations and maintenance (O&M) packages include regular thermal imaging and string diagnostics.",
+    category: "Technical"
+  },
+  {
+    question: "What grid-connection schemes are available in Sri Lanka?",
+    answer: "Under the Ceylon Electricity Board (CEB) and LECO 'Soorya Bala Sangramaya' program, three options are available: Net Metering (offset imports; surplus exports carry forward as energy credits), Net Accounting (surplus exports are purchased by the utility at a fixed tariff), and Net Plus (100% of solar generation is exported directly to the grid).",
+    category: "Grid Connection"
+  },
+  {
+    question: "Can solar power my home or office during a blackout?",
+    answer: "Yes, provided you install a Hybrid or Off-Grid solar system configured with battery storage. Standard On-Grid systems are legally required to shut down during grid outages (anti-islanding protection) to prevent feeding live currents back into dead utility lines, ensuring grid repair technicians are safe.",
+    category: "Technical"
+  },
+  {
+    question: "How long does the installation and CEB grid clearance take?",
+    answer: "A standard residential installation is completed by our technicians in 2 to 3 days on-site. The grid interconnection approvals—including feasibility study, power purchase agreements (PPA), and bi-directional smart meter installation by the CEB/LECO—typically take between 3 to 6 weeks. Our team manages this entire workflow for you.",
+    category: "General"
+  },
+  {
+    question: "What is the typical payback period for a solar installation in Sri Lanka?",
+    answer: "With current commercial and domestic utility rates, typical simple payback periods are between 2.5 to 4 years. Given a performance life exceeding 25 years, a solar system represents an extremely secure financial investment, offering an average Internal Rate of Return (IRR) of 20% to 25%.",
+    category: "Financial"
+  }
+];
 
-interface ProjectsClientProps {
-  projects: Project[];
-}
-
-export default function ProjectsClient({ projects }: ProjectsClientProps) {
+export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  // Lightbox State
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Filter projects by search
-  const filteredProjects = projects.filter((project) =>
-    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.folderName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const categories = ["All", "General", "Technical", "Financial", "Grid Connection"];
 
-  // Keyboard navigation for Lightbox
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedProject) return;
-      if (e.key === "ArrowRight") {
-        setCurrentImageIndex((prev) => (prev + 1) % selectedProject.images.length);
-      } else if (e.key === "ArrowLeft") {
-        setCurrentImageIndex((prev) => (prev - 1 + selectedProject.images.length) % selectedProject.images.length);
-      } else if (e.key === "Escape") {
-        setSelectedProject(null);
-      }
-    };
+  // Filter FAQs based on category and search query
+  const filteredFaqs = faqs.filter((faq) => {
+    const matchesCategory = selectedCategory === "All" || faq.category === selectedCategory;
+    const matchesSearch = 
+      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedProject]);
-
-  const openProject = (project: Project) => {
-    setSelectedProject(project);
-    setCurrentImageIndex(0);
-  };
-
-  const nextImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!selectedProject) return;
-    setCurrentImageIndex((prev) => (prev + 1) % selectedProject.images.length);
-  };
-
-  const prevImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!selectedProject) return;
-    setCurrentImageIndex((prev) => (prev - 1 + selectedProject.images.length) % selectedProject.images.length);
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
   return (
@@ -84,18 +88,18 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
           
           {/* Left Navigation links */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-end pr-12">
-            <Link href="/" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+            <Link href="/" className="text-[15px] font-bold text-stone-600 hover:text-[#00AC4E] transition-colors">
               Home
             </Link>
-            <Link href="/#about" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+            <Link href="/#about" className="text-[15px] font-bold text-stone-600 hover:text-[#00AC4E] transition-colors">
               About Us
             </Link>
-            <Link href="/#solutions" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+            <Link href="/#solutions" className="text-[15px] font-bold text-stone-600 hover:text-[#00AC4E] transition-colors">
               Solutions
             </Link>
           </nav>
 
-          {/* Logo in Center */}
+          {/* Logo Center */}
           <div className="flex justify-center shrink-0">
             <Link href="/">
               <Image
@@ -111,21 +115,21 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
 
           {/* Right Navigation links */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-start pl-12">
-            <Link href="/blog" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+            <Link href="/blog" className="text-[15px] font-bold text-stone-600 hover:text-[#00AC4E] transition-colors">
               Blogs
             </Link>
-            <Link href="/projects" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-primary-green pb-1">
+            <Link href="/projects" className="text-[15px] font-bold text-stone-600 hover:text-[#00AC4E] transition-colors">
               Projects
             </Link>
-            <Link href="/faq" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+            <Link href="/faq" className="text-[15px] font-extrabold text-stone-900 border-b-2 border-[#00AC4E] pb-1">
               FAQ
             </Link>
-            <Link href="/#contact" className="ml-4 bg-stone-900 hover:bg-primary-green text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
+            <Link href="/#contact" className="ml-4 bg-stone-900 hover:bg-[#00AC4E] text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
               Contact Us
             </Link>
           </nav>
 
-          {/* Mobile Hamburger trigger */}
+          {/* Mobile Hamburguer trigger */}
           <div className="flex lg:hidden w-full justify-between items-center">
             <Link href="/">
               <Image
@@ -138,7 +142,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-stone-700 hover:text-primary-green focus:outline-none"
+              className="p-2 text-stone-700 hover:text-[#00AC4E] focus:outline-none"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMobileMenuOpen ? (
@@ -158,20 +162,20 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         <div className="lg:hidden fixed inset-0 z-50 bg-stone-950/95 backdrop-blur-lg flex flex-col p-6 pt-24 animate-fade-in">
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
-            className="absolute top-6 right-6 text-white hover:text-primary-green p-2"
+            className="absolute top-6 right-6 text-white hover:text-[#00AC4E] p-2"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
           <div className="flex flex-col gap-6 text-center text-white text-xl font-bold font-display mt-8">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Home</Link>
-            <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">About Us</Link>
-            <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Solutions</Link>
-            <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Blogs</Link>
-            <Link href="/projects" onClick={() => setIsMobileMenuOpen(false)} className="text-primary-green transition-colors">Projects</Link>
-            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">FAQ</Link>
-            <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-primary-green hover:bg-primary-green/90 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#00AC4E] transition-colors">Home</Link>
+            <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#00AC4E] transition-colors">About Us</Link>
+            <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#00AC4E] transition-colors">Solutions</Link>
+            <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#00AC4E] transition-colors">Blogs</Link>
+            <Link href="/projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#00AC4E] transition-colors">Projects</Link>
+            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00AC4E] transition-colors">FAQ</Link>
+            <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-[#00AC4E] hover:bg-[#00AC4E]/90 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
           </div>
         </div>
       )}
@@ -182,24 +186,39 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         <div className="max-w-[1240px] mx-auto px-6 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00AC4E]/5 border border-[#00AC4E]/20 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-[#00AC4E] mb-6 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00AC4E] animate-pulse"></span>
-            GES Project Gallery
+            GES Help & Support Center
           </div>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-stone-900 leading-none">
-            Completed <span className="text-[#00AC4E]">Installations</span>
+            Frequently Asked <span className="text-[#00AC4E]">Questions</span>
           </h1>
           <p className="mt-6 text-stone-500 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
-            Browse through our portfolio of engineering excellence. Our certified clean energy configurations deliver reliable solar yields across residential and commercial sectors in Sri Lanka.
+            Find answers to common questions about solar technology, installation workflows, CEB grid connectivity schemes, and commercial ROI metrics.
           </p>
         </div>
       </section>
 
-      {/* 3. Filter & Search Panel */}
+      {/* 3. Search and Category Filter Panel */}
       <section className="w-full py-8 border-b border-stone-200/40 sticky top-[72px] lg:top-[80px] z-40 bg-[#f8f9fa]/90 backdrop-blur-md shrink-0">
         <div className="max-w-[1240px] mx-auto px-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-stone-500 font-mono uppercase tracking-widest">
-              Total Installations: {projects.length}
-            </span>
+          
+          {/* Category Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none whitespace-nowrap">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setOpenFaqIndex(null); // Reset accordion on category switch
+                }}
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 border cursor-pointer ${
+                  selectedCategory === cat
+                    ? "bg-[#00AC4E] text-white border-[#00AC4E] shadow-md shadow-[#00AC4E]/10 -translate-y-0.5"
+                    : "bg-white text-stone-600 border-stone-200/80 hover:border-[#00AC4E]/30 hover:text-[#00AC4E] hover:-translate-y-0.5"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
 
           {/* Search bar */}
@@ -207,201 +226,128 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
             <Search className="w-4 h-4 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by client or town..."
+              placeholder="Search FAQs..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setOpenFaqIndex(null); // Reset accordion on search
+              }}
               className="w-full bg-white border border-stone-200/80 pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold placeholder-stone-400 focus:outline-none focus:border-[#00AC4E] focus:ring-1 focus:ring-[#00AC4E] transition-all duration-300"
             />
           </div>
+
         </div>
       </section>
 
-      {/* 4. Projects Folder Grid */}
-      <main className="flex-1 w-full max-w-[1240px] mx-auto px-6 py-12 relative">
-        {/* Soft background ambient blobs to enhance glassmorphic layout */}
-        <div className="absolute top-[20%] left-[-8%] w-[350px] h-[350px] bg-[#00AC4E]/[0.025] rounded-full blur-[110px] pointer-events-none -z-10" />
-        <div className="absolute bottom-[30%] right-[-8%] w-[400px] h-[400px] bg-[#00AC4E]/[0.02] rounded-full blur-[120px] pointer-events-none -z-10" />
+      {/* 4. Accordion Grid Section */}
+      <main className="flex-1 w-full max-w-[940px] mx-auto px-6 py-12 flex flex-col gap-6 relative">
+        <div className="absolute top-[20%] left-[-15%] w-[350px] h-[350px] bg-[#00AC4E]/[0.02] rounded-full blur-[120px] pointer-events-none -z-10" />
 
-        {filteredProjects.length === 0 ? (
+        {filteredFaqs.length === 0 ? (
           <div className="w-full text-center py-20 bg-white border border-stone-200/50 rounded-[28px] shadow-sm">
-            <Folder className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-            <h3 className="font-display text-xl font-bold text-stone-800">No projects found</h3>
+            <HelpCircle className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+            <h3 className="font-display text-xl font-bold text-stone-800">No FAQs found</h3>
             <p className="text-stone-500 text-sm mt-2 max-w-sm mx-auto">
-              We couldn't find any installation matches for "{searchQuery}". Try adjusting your keywords.
+              We couldn't find any questions matching "{searchQuery}" under category "{selectedCategory}". Try resetting your filter.
             </p>
             <button
-              onClick={() => setSearchQuery("")}
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("All");
+              }}
               className="mt-6 bg-stone-900 hover:bg-[#00AC4E] text-white font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-xl transition-all duration-300 cursor-pointer"
             >
-              Reset Search
+              Reset Filters
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 pt-8">
-            {filteredProjects.map((project, index) => (
-              <div 
-                key={project.folderName}
-                onClick={() => openProject(project)}
-                className="group relative flex flex-col justify-start cursor-pointer w-full"
-                style={{ perspective: "1000px" }}
-              >
-                
-                {/* 3D Paper Stack Background Layer 2 (Bottom-most sheet, rotated right) */}
-                <div className="absolute inset-x-4 bottom-14 top-4 bg-white/10 backdrop-blur-xs border border-white/20 rounded-[28px] transform rotate-3 translate-y-3.5 translate-x-1.5 scale-[0.97] transition-all duration-500 group-hover:rotate-6 group-hover:translate-y-6 group-hover:translate-x-3 shadow-sm z-0" />
-                
-                {/* 3D Paper Stack Background Layer 1 (Middle sheet, rotated left) */}
-                <div className="absolute inset-x-2 bottom-14 top-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-[28px] transform -rotate-2 -translate-y-2.5 -translate-x-1.5 scale-[0.99] transition-all duration-500 group-hover:-rotate-4 group-hover:-translate-y-4 group-hover:-translate-x-3 shadow-md z-10" />
-
-                {/* Asymmetric Folder Header Tab */}
-                <div className="relative z-20 flex items-end transform transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-1">
-                  <div className="bg-white/40 backdrop-blur-md border-t border-r border-l border-white/30 rounded-t-2xl px-5 py-2.5 w-fit min-w-[130px] font-mono text-[9px] font-extrabold uppercase tracking-widest text-[#00AC4E] flex items-center gap-1.5 shadow-[0_-3px_10px_rgba(0,0,0,0.01)] translate-y-[1px] border-b-2 border-white/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00AC4E] animate-pulse shrink-0"></span>
-                    GES Portfolio
-                  </div>
-                </div>
-
-                {/* Main Folder Body */}
-                <div className="relative z-20 bg-white/40 backdrop-blur-md border border-white/30 rounded-b-[28px] rounded-tr-[28px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_60px_-12px_rgba(0,172,78,0.22)] hover:border-[#00AC4E]/40 transition-all duration-500 group flex flex-col justify-between aspect-[4/3.2] w-full transform group-hover:-translate-y-3 group-hover:rotate-1">
-                  
-                  {/* Green Accent Line along the top interface */}
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#00AC4E] z-30" />
-
-                  {/* Folder Preview Cover (Large First Image) */}
-                  <div className="relative w-full h-[62%] overflow-hidden bg-stone-100/50 border-b border-white/20">
-                    <Image
-                      src={project.images[0]}
-                      alt={project.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 30vw"
-                      className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
-                    />
-                    
-                    {/* Glassy Overlay with Photos Count Badge */}
-                    <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
-                      <ImageIcon className="w-3.5 h-3.5 text-[#00AC4E]" />
-                      <span>{project.images.length} {project.images.length === 1 ? 'Photo' : 'Photos'}</span>
-                    </div>
-                  </div>
-
-                  {/* Folder Card Description Bottom Panel */}
-                  <div className="p-5 flex flex-col justify-between flex-1 bg-white/20">
-                    <div className="flex flex-col gap-1">
-                      {/* Project Name / Client & Location */}
-                      <h3 className="font-display text-[15px] sm:text-[16px] font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug line-clamp-2">
-                        {project.name}
-                      </h3>
-                    </div>
-
-                    <div className="flex items-center justify-end border-t border-white/20 pt-3.5 mt-2">
-                      <span className="text-[11px] font-extrabold text-[#00AC4E] flex items-center gap-1.5 transition-all duration-300">
-                        <span>View Project Images</span>
-                        <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1.5 transition-transform" />
-                      </span>
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
-
-      {/* 5. IMMERSIVE LIGHTBOX GALLERY MODAL */}
-      {selectedProject && (
-        <div 
-          className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-lg flex flex-col justify-between select-none animate-fade-in"
-          onClick={() => setSelectedProject(null)}
-        >
-          {/* Top Panel: Title & Close */}
-          <div className="w-full px-6 py-5 flex items-center justify-between border-b border-white/5 relative z-30 bg-black/30 backdrop-blur-sm">
-            <div className="flex flex-col text-left">
-              <span className="text-[#00AC4E] font-mono text-[10px] font-extrabold uppercase tracking-widest">
-                PROJECT GALLERY
-              </span>
-              <h2 className="text-white text-base sm:text-lg font-black tracking-tight mt-1 leading-tight">
-                {selectedProject.name}
-              </h2>
-            </div>
-            
-            <button 
-              onClick={() => setSelectedProject(null)}
-              className="w-11 h-11 rounded-full bg-white/5 border border-white/10 hover:bg-white/15 text-white flex items-center justify-center transition-all duration-300 active:scale-90 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Center Content: Main Image with Nav Buttons */}
-          <div className="flex-1 w-full max-w-7xl mx-auto px-4 flex items-center justify-between relative z-10 py-6">
-            
-            {/* Left Navigate Button */}
-            <button 
-              onClick={prevImage}
-              className="absolute left-6 z-30 w-12 h-12 rounded-full bg-black/60 border border-white/10 hover:bg-[#00AC4E] hover:border-[#00AC4E] text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-90 cursor-pointer"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            {/* Main Active Image Container */}
-            <div 
-              className="w-full h-full max-h-[70vh] relative flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img 
-                src={selectedProject.images[currentImageIndex]} 
-                alt={`${selectedProject.name} - ${currentImageIndex + 1}`}
-                className="max-w-full max-h-full object-contain rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] border border-white/5 animate-fade-in"
-              />
-            </div>
-
-            {/* Right Navigate Button */}
-            <button 
-              onClick={nextImage}
-              className="absolute right-6 z-30 w-12 h-12 rounded-full bg-black/60 border border-white/10 hover:bg-[#00AC4E] hover:border-[#00AC4E] text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-90 cursor-pointer"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-          </div>
-
-          {/* Bottom Panel: Image Selector Grid & Image counter */}
-          <div 
-            className="w-full bg-black/40 border-t border-white/5 backdrop-blur-md p-6 flex flex-col gap-4 relative z-30"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Slide Index Counter */}
-            <div className="text-white/60 text-xs font-bold font-mono text-center">
-              Image {currentImageIndex + 1} of {selectedProject.images.length}
-            </div>
-
-            {/* Horizontal Thumbnail Strip */}
-            <div className="flex items-center justify-center gap-2.5 overflow-x-auto py-1.5 px-4 max-w-4xl mx-auto scrollbar-thin scrollbar-thumb-white/10 select-none">
-              {selectedProject.images.map((img, idx) => (
-                <button
-                  key={img}
-                  onClick={() => setCurrentImageIndex(idx)}
-                  className={`relative w-14 h-10 sm:w-16 sm:h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all duration-300 cursor-pointer ${
-                    currentImageIndex === idx 
-                      ? "border-[#00AC4E] scale-105 shadow-md shadow-[#00AC4E]/20" 
-                      : "border-white/10 hover:border-white/30 opacity-60 hover:opacity-90"
+          <div className="flex flex-col gap-4">
+            {filteredFaqs.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div 
+                  key={idx}
+                  className={`bg-white border transition-all duration-300 rounded-2xl md:rounded-[20px] overflow-hidden ${
+                    isOpen 
+                      ? "border-[#00AC4E]/40 shadow-[0_12px_24px_rgba(0,172,78,0.04)]" 
+                      : "border-stone-200/80 hover:border-[#00AC4E]/20 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)]"
                   }`}
                 >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
+                  <button
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full flex items-center justify-between p-5 md:p-6 text-left cursor-pointer focus:outline-none"
+                  >
+                    <div className="flex gap-4 items-start pr-4">
+                      <span className="text-sm font-extrabold text-[#00AC4E] font-mono select-none pt-0.5">
+                        Q{(idx + 1).toString().padStart(2, "0")}
+                      </span>
+                      <h3 className="text-[15px] sm:text-base md:text-[17px] font-bold tracking-tight text-stone-900 leading-snug group-hover:text-[#00AC4E]">
+                        {faq.question}
+                      </h3>
+                    </div>
+                    
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isOpen 
+                        ? "bg-[#00AC4E]/15 border-[#00AC4E]/20 text-[#00AC4E]" 
+                        : "bg-stone-50 border-stone-200 text-stone-400 group-hover:text-stone-900"
+                    }`}>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "transform rotate-180" : ""}`} />
+                    </div>
+                  </button>
+
+                  {/* Accordion Expansion Container with smooth transition */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    isOpen ? "max-h-[500px] border-t border-stone-100 opacity-100" : "max-h-0 opacity-0"
+                  }`}>
+                    <div className="p-5 md:p-6 bg-stone-50/50 flex gap-4 text-left leading-relaxed">
+                      <span className="text-xs font-mono font-black text-stone-400 select-none pt-0.5">
+                        ANS
+                      </span>
+                      <div className="flex flex-col gap-3">
+                        <p className="text-stone-600 text-[13.5px] sm:text-[14.5px] md:text-sm font-medium">
+                          {faq.answer}
+                        </p>
+                        <span className="self-start text-[10px] font-extrabold uppercase tracking-widest text-[#00AC4E] bg-[#00AC4E]/5 px-2.5 py-1 rounded-md">
+                          Category: {faq.category}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 4.5 Consultative CTA section */}
+        <div className="mt-12 bg-white border border-stone-200/60 rounded-[28px] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm text-left">
+          <div className="flex gap-4 items-start">
+            <div className="w-12 h-12 rounded-2xl bg-[#00AC4E]/10 flex items-center justify-center shrink-0 text-[#00AC4E]">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="font-display text-lg font-black text-stone-950">
+                Still have questions?
+              </h4>
+              <p className="text-xs sm:text-sm text-stone-500 font-medium">
+                Our solar engineers are here to help. Reach out directly for personalized system dimensions and savings details.
+              </p>
             </div>
           </div>
-
+          
+          <Link 
+            href="/#contact"
+            className="self-start md:self-auto bg-stone-900 hover:bg-[#00AC4E] text-white font-bold text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl transition-all duration-300 shrink-0 flex items-center gap-1.5"
+          >
+            <span>Consult an Engineer</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-      )}
 
-      {/* 6. Footer (Standard Matching) */}
+      </main>
+
+      {/* 5. Footer */}
       <footer 
         className="w-full text-white pt-[160px] sm:pt-[220px] md:pt-[280px] lg:pt-[320px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
         style={{
@@ -415,7 +361,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         <div className="max-w-[1360px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
             
-            {/* Column 1: Brand details & Newsletter Subscription */}
+            {/* Column 1: Brand & Newsletter */}
             <div className="lg:col-span-5 flex flex-col items-start">
               <div className="mb-6 flex items-center">
                 <Image

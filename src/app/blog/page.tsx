@@ -70,6 +70,9 @@ export default function BlogListingPage() {
             <Link href="/projects" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
               Projects
             </Link>
+            <Link href="/faq" className="text-[15px] font-bold text-stone-600 hover:text-primary-green transition-colors">
+              FAQ
+            </Link>
             <Link href="/#contact" className="ml-4 bg-stone-900 hover:bg-primary-green text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all duration-300">
               Contact Us
             </Link>
@@ -120,6 +123,7 @@ export default function BlogListingPage() {
             <Link href="/#solutions" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Solutions</Link>
             <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-primary-green transition-colors">Blogs</Link>
             <Link href="/projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">Projects</Link>
+            <Link href="/faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-green transition-colors">FAQ</Link>
             <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-primary-green hover:bg-primary-green/90 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl transition-all duration-300">Contact Us</Link>
           </div>
         </div>
@@ -429,6 +433,7 @@ export default function BlogListingPage() {
                 <li><Link href="/#solutions" className="hover:text-[#e2ff3a] transition-colors">Solutions</Link></li>
                 <li><Link href="/projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
                 <li><Link href="/blog" className="hover:text-[#e2ff3a] transition-colors">Blogs</Link></li>
+                <li><Link href="/faq" className="hover:text-[#e2ff3a] transition-colors">FAQ</Link></li>
                 <li><Link href="/#contact" className="hover:text-[#e2ff3a] transition-colors">Contact</Link></li>
               </ul>
             </div>

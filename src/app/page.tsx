@@ -752,18 +752,13 @@ export default function Home() {
 
                 {/* FAQ */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => {
-                      const element = document.getElementById("faq") || document.getElementById("services");
-                      element?.scrollIntoView({ behavior: "smooth" });
-                      setActiveTab("FAQ");
-                    }}
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "FAQ" ? "text-stone-950 font-extrabold" : "text-stone-700 hover:text-[#00AC4E]"
-                      }`}
+                  <Link
+                    href="/faq"
+                    className="text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
                   >
                     FAQ
-                  </button>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 ${activeTab === "FAQ" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                  </Link>
+                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
                 </div>
               </nav>
 
@@ -943,6 +938,7 @@ export default function Home() {
                         { name: "About Us", href: "/#about" },
                         { name: "News & Blog", href: "/blog" },
                         { name: "Projects", href: "/projects" },
+                        { name: "FAQ", href: "/faq" },
                         { name: "Solar Calculator", href: "/#calculator" },
                         { name: "Contact", href: "/#contact" }
                       ].map((item) => (
@@ -2011,6 +2007,7 @@ export default function Home() {
                 <li><Link href="/#solutions" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</Link></li>
                 <li><Link href="/projects" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</Link></li>
                 <li><Link href="/blog" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Blogs</Link></li>
+                <li><Link href="/faq" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">FAQ</Link></li>
                 <li><Link href="/#contact" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</Link></li>
               </ul>
             </div>

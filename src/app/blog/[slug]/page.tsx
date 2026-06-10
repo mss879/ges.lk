@@ -512,6 +512,7 @@ export default function BlogPostDetail({ params }: PageProps) {
                 <li><Link href="/#solutions" className="hover:text-[#e2ff3a] transition-colors">Solutions</Link></li>
                 <li><Link href="/projects" className="hover:text-[#e2ff3a] transition-colors">Projects</Link></li>
                 <li><Link href="/blog" className="hover:text-[#e2ff3a] transition-colors">Blogs</Link></li>
+                <li><Link href="/faq" className="hover:text-[#e2ff3a] transition-colors">FAQ</Link></li>
                 <li><Link href="/#contact" className="hover:text-[#e2ff3a] transition-colors">Contact</Link></li>
               </ul>
             </div>
