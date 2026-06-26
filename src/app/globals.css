@@ -31,6 +31,59 @@
   }
 }
 
+/* Animated energy-flow lines for the Solutions diagrams */
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+.flow-line {
+  stroke-dasharray: 4 14;
+  animation: flowDash 1.4s linear infinite;
+}
+
+.flow-line-rev {
+  animation-direction: reverse;
+}
+
+.flow-line-slow {
+  animation-duration: 2.2s;
+}
+
+@keyframes nodePulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes dropdownFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease both;
+}
+
 @keyframes logo-scroll {
   0% {
     transform: translateX(0);

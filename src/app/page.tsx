@@ -9,15 +9,27 @@ import { motion } from "framer-motion";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { blogPosts } from "@/data/blogs";
 import Preloader from "@/app/components/Preloader";
+import { solutionsData } from "@/app/components/SiteNav";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const titleWords = "Solar energy that moves the world forward".split(" ");
+const titleWords = "Renewable Energy with Green Engineering Systems".split(" ");
 const descLines = [
   "Powering homes and businesses with clean, renewable solar".split(" "),
   "solutions. Reduce your carbon footprint and energy costs today.".split(" ")
+];
+
+const partnerLogos = [
+  { src: "/logos-carosel/Asset-1@4x-3-scaled.webp", alt: "Partner Logo 1" },
+  { src: "/logos-carosel/Asset-3@4x-4-scaled.webp", alt: "Partner Logo 2" },
+  { src: "/logos-carosel/Asset-4-2@4x-scaled.webp", alt: "Partner Logo 3" },
+  { src: "/logos-carosel/Asset-3@4x-4-copy-scaled.webp", alt: "Partner Logo 4" },
+  { src: "/logos-carosel/Asset-1@4x-3-scaled.webp", alt: "Partner Logo 1" },
+  { src: "/logos-carosel/Asset-3@4x-4-scaled.webp", alt: "Partner Logo 2" },
+  { src: "/logos-carosel/Asset-4-2@4x-scaled.webp", alt: "Partner Logo 3" },
+  { src: "/logos-carosel/Asset-3@4x-4-copy-scaled.webp", alt: "Partner Logo 4" }
 ];
 
 const containerVariants = {
@@ -108,6 +120,7 @@ export default function Home() {
   const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("Solar");
   const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
 
   // Values 3D Cylinder Interactive Drag & Infinite Rotation Refs and Handlers
@@ -156,25 +169,7 @@ export default function Home() {
 
   const [batteryCharge, setBatteryCharge] = useState(0);
   const [isFilling, setIsFilling] = useState(true);
-  const [activeService, setActiveService] = useState<number | null>(null);
-  const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const isInitialServiceMount = useRef(true);
-
-  useEffect(() => {
-    if (activeService !== null) {
-      if (isInitialServiceMount.current) {
-        isInitialServiceMount.current = false;
-        return;
-      }
-      const timer = setTimeout(() => {
-        serviceRefs.current[activeService]?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 150);
-      return () => clearTimeout(timer);
-    }
-  }, [activeService]);
+  const [activeService, setActiveService] = useState<number>(0);
 
   const valuesData = [
     {
@@ -229,123 +224,15 @@ export default function Home() {
   const servicesData = [
     {
       number: "01",
-      title: "Residential Solar Solutions",
-      description: "We help homeowners reduce energy costs, increase energy independence and contribute to a sustainable future. Our solutions are designed for efficiency, reliability and long term performance.",
-      subItems: [
-        {
-          title: "1. On-Grid Systems",
-          desc: "Connect your home to the main power grid while harnessing solar energy. Our on-grid solar systems allow you to reduce electricity bills, feed excess energy back to the grid, and enjoy a cost-effective, eco-friendly power solution."
-        },
-        {
-          title: "2. Off-Grid Systems",
-          desc: "Ideal for remote locations or areas with unreliable utility power, our off-grid solar systems provide complete energy independence. With battery storage, you can enjoy uninterrupted electricity even in areas without grid access."
-        },
-        {
-          title: "3. Hybrid Systems",
-          desc: "Combine the best of both worlds with hybrid solar systems. These systems integrate grid connection with battery storage, ensuring uninterrupted power supply while maximizing energy savings and sustainability."
-        },
-        {
-          title: "4. Battery Backup Option",
-          desc: "Protect your home from power outages with our battery backup solutions. Designed for residential solar systems, they store excess energy for use during grid failures, ensuring comfort, safety and energy security."
-        },
-        {
-          title: "5. Energy Audit & Site Inspection",
-          desc: "Our expert team conducts a thorough energy audit and site inspection to assess your home’s energy needs, roof suitability and optimal system design. This ensures maximum efficiency, performance and return on investment for your solar installation."
-        }
-      ],
-      images: [
-        "/blogs/off_grid_vs_hybrid.webp",
-        "/blogs/home_energy_storage.webp",
-        "/blogs/solar_battery_cabinet.webp"
-      ]
+      title: "Solar Installation",
+      description: "We offer end-to-end solar installation services, including system design, supply, installation and maintenance of high-quality solar power solutions for homes, businesses and industries, promoting sustainable and cost-effective energy use.",
+      image: "/service_installation.webp"
     },
     {
       number: "02",
-      title: "Commercial & Industrial Solar Solutions",
-      description: "Green Engineering Systems (Pvt) Ltd. provides advanced solar solutions for commercial and industrial clients, helping businesses reduce energy costs, increase efficiency and achieve sustainability goals. Our systems are designed for reliability, scalability and long-term performance.",
-      subItems: [
-        {
-          title: "1. Large-Scale Solar Installation",
-          desc: "We design and install large-scale solar systems for commercial and industrial facilities, delivering significant energy savings, high efficiency and compliance with regulatory standards. Our turnkey solutions are tailored to meet the energy demands of your operations."
-        },
-        {
-          title: "2. Three-Phase Hybrid System",
-          desc: "Our three-phase hybrid solar systems combine grid connection with battery storage for uninterrupted, stable power supply. Ideal for industrial applications, they ensure operational continuity while optimizing energy consumption and costs."
-        },
-        {
-          title: "3. Power Backup Integration",
-          desc: "Ensure seamless operations with our power backup solutions, integrated with solar systems. These setups protect your business from outages, reduce downtime and maintain critical functions without interruption."
-        },
-        {
-          title: "4. Solar Maintenance Services",
-          desc: "We offer comprehensive solar maintenance services to maximize system efficiency and lifespan. Regular inspections, performance monitoring, and preventive maintenance ensure your solar investment continues to deliver reliable, long-term energy benefits."
-        }
-      ],
-      images: [
-        "/blogs/smart_microgrids_ci.webp",
-        "/blogs/solar_carport_canopy.webp",
-        "/blogs/solar_substation_infra.webp"
-      ]
-    },
-    {
-      number: "03",
-      title: "Technical & Support Services",
-      description: "We offer end-to-end technical and support services to ensure your solar systems operate efficiently, reliably and sustainably.",
-      subItems: [
-        {
-          title: "1. System Design & Consultation",
-          desc: "Our experts provide custom system design and consultation, evaluating your energy needs, site conditions and sustainability objectives to deliver optimized solar solutions."
-        },
-        {
-          title: "2. Installation & Commissioning",
-          desc: "We handle complete installation and commissioning, ensuring safe, efficient and seamless integration of solar systems with your existing infrastructure."
-        },
-        {
-          title: "3. Monitoring & Maintenance",
-          desc: "Our monitoring and maintenance services maximize system performance with regular inspections, diagnostics and preventive care to ensure long-term reliability."
-        },
-        {
-          title: "4. Warranty Support",
-          desc: "We provide comprehensive warranty support, protecting your investment with prompt service and resolution of any system issues."
-        },
-        {
-          title: "5. Energy Performance Report",
-          desc: "Receive detailed energy performance reports that track system efficiency, energy output and operational metrics, enabling data-driven decisions and optimized energy management."
-        }
-      ],
-      images: [
-        "/blogs/solar_panel_cleaning.webp",
-        "/blogs/solar_shading_soiling.webp",
-        "/blogs/future_solar_sri_lanka.webp"
-      ]
-    },
-    {
-      number: "04",
-      title: "Custom Solutions",
-      description: "We deliver tailored energy solutions designed to meet the unique needs of each client. From efficiency improvements to sustainable corporate initiatives, our custom services help maximize performance and drive long-term value.",
-      subItems: [
-        {
-          title: "1. Energy Audits",
-          desc: "We conduct comprehensive energy audits to evaluate energy consumption, identify inefficiencies, and recommend solutions that reduce costs and environmental impact."
-        },
-        {
-          title: "2. System Upgrades",
-          desc: "Our team provides system upgrades to optimize existing solar or energy infrastructure, enhancing efficiency, reliability and overall performance."
-        },
-        {
-          title: "3. Solar Financing Assistance",
-          desc: "We offer solar financing assistance to help clients access cost-effective funding options, making sustainable energy solutions more affordable and accessible."
-        },
-        {
-          title: "4. Corporate Sustainability Projects",
-          desc: "We partner with businesses to implement corporate sustainability projects, from renewable energy installations to environmental initiatives, helping organizations meet their sustainability goals and ESG commitments."
-        }
-      ],
-      images: [
-        "/blogs/agrivoltaics_farming.webp",
-        "/blogs/floating_solar_farm.webp",
-        "/blogs/utility_scale_solar.webp"
-      ]
+      title: "Service & Repair",
+      description: "We offer professional service and repair solutions for electrical and solar power systems. Our skilled technicians inspect, diagnose and repair faults to ensure reliable performance and safe operation. We also provide preventive maintenance services to reduce downtime, improve efficiency and extend the lifespan of your equipment and systems.",
+      image: "/service_repair.webp"
     }
   ];
 
@@ -680,72 +567,188 @@ export default function Home() {
               </div>
 
               {/* Center Section: Navigation Links */}
-              <nav className="hidden lg:flex items-center gap-6 xl:gap-8 2xl:gap-10 justify-center whitespace-nowrap">
+              <nav className="hidden lg:flex items-center gap-4 xl:gap-6 2xl:gap-8 justify-center whitespace-nowrap">
                 {/* Home */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => setActiveTab("Home")}
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Home" ? "text-stone-950 font-extrabold" : "text-stone-700 hover:text-[#00AC4E]"
+                  <Link
+                    href="/"
+                    className={`text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Home" ? "text-stone-950 font-extrabold" : "text-stone-700 hover:text-[#00AC4E]"
                       }`}
                   >
                     Home
-                  </button>
+                  </Link>
                   <div className={`absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 ${activeTab === "Home" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
                 </div>
 
                 {/* About */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <button
-                    onClick={() => setActiveTab("About Us")}
-                    className={`text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "About Us" ? "text-stone-950 font-extrabold" : "text-stone-700 hover:text-[#00AC4E]"
-                      }`}
+                  <Link
+                    href="/about"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
                   >
                     About
-                  </button>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 ${activeTab === "About Us" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
+                  </Link>
+                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
                 </div>
 
-                {/* Solution Dropdown */}
+                {/* Solutions Dropdown */}
                 <div
                   className="nav-item-anim opacity-0 relative py-4 -my-2 group"
                   onMouseEnter={() => setActiveDropdown("Solutions")}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  <span className="text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer text-stone-700 hover:text-[#00AC4E] transition-colors duration-300">
-                    Solution
-                  </span>
+                  <Link
+                    href="/solutions"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer text-stone-700 hover:text-[#00AC4E] transition-colors duration-300 inline-flex items-center gap-1"
+                  >
+                    Solutions
+                    <svg className="w-3 h-3 text-stone-500 group-hover:text-[#00AC4E] transition-all duration-300 transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </Link>
                   <div className="absolute bottom-[8px] left-0 w-0 h-[3px] bg-[#00AC4E] transition-all duration-300 group-hover:w-full group-hover:opacity-50" />
 
                   {/* Solutions Mega Menu Dropdown */}
                   {activeDropdown === "Solutions" && (
-                    <div className="absolute top-[52px] left-1/2 -translate-x-1/2 w-[500px] bg-white/95 backdrop-blur-3xl border border-white/60 rounded-[28px] p-2.5 flex shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] z-[200] animate-dropdown-fade">
-                      <div className="grid grid-cols-2 gap-1.5 w-full">
-                        {servicesData.map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="p-4 rounded-[22px] hover:bg-stone-50/60 active:bg-stone-100/50 cursor-pointer transition-colors duration-200 flex flex-col gap-1 text-left relative group/opt"
-                            onClick={() => {
-                              setActiveTab(item.title);
-                              setActiveDropdown(null);
-                            }}
+                    <div className="absolute top-[52px] left-1/2 -translate-x-1/2 flex w-[680px] bg-white/95 backdrop-blur-3xl border border-stone-200/50 rounded-[28px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] z-[200] animate-dropdown-fade">
+                      {/* Left Panel: Categories */}
+                      <div className="w-[260px] bg-stone-50/50 p-4 flex flex-col gap-1 border-r border-stone-100 shrink-0">
+                        <span className="text-[10px] font-extrabold text-stone-400 tracking-widest font-mono uppercase px-3 mb-2 block">Categories</span>
+                        {solutionsData.map((cat) => (
+                          <Link
+                            key={cat.id}
+                            href={cat.href}
+                            onMouseEnter={() => setActiveCategory(cat.category)}
+                            onClick={() => setActiveDropdown(null)}
+                            className={`px-3 py-2.5 rounded-[14px] flex items-center justify-between text-left group/cat transition-all duration-200 ${
+                              activeCategory === cat.category
+                                ? "bg-white text-[#00AC4E] shadow-[0_4px_12px_rgba(0,0,0,0.04)] font-bold border border-stone-100"
+                                : "text-stone-600 hover:text-[#00AC4E] hover:bg-white/50 border border-transparent"
+                            }`}
                           >
-                            <span className="text-[10px] font-extrabold text-[#00AC4E] tracking-widest font-mono uppercase">{item.number}</span>
-                            <span className="text-sm font-bold text-stone-900 group-hover/opt:text-[#00AC4E] transition-colors">{item.title}</span>
-                            <span className="text-[11px] text-stone-500 font-medium leading-normal mt-0.5 line-clamp-2">{item.description}</span>
-                          </div>
+                            <span className="text-sm font-semibold">{cat.category}</span>
+                            <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                              activeCategory === cat.category ? "translate-x-0.5 text-[#00AC4E] opacity-100" : "opacity-0 -translate-x-1 group-hover/cat:opacity-100 group-hover/cat:translate-x-0 text-stone-400"
+                            }`} />
+                          </Link>
                         ))}
+                        <div className="mt-auto pt-4">
+                          <Link
+                            href="/solutions"
+                            onClick={() => setActiveDropdown(null)}
+                            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-[14px] bg-stone-950 hover:bg-[#00AC4E] text-white text-[11px] font-bold uppercase tracking-widest transition-colors duration-200"
+                          >
+                            All Solutions <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Right Panel: Sub-items */}
+                      <div className="flex-1 p-5 bg-white flex flex-col justify-between min-h-[320px]">
+                        <div className="flex flex-col gap-3">
+                          <span className="text-[10px] font-extrabold text-stone-400 tracking-widest font-mono uppercase px-2 mb-1 block">
+                            {activeCategory} Options
+                          </span>
+                          <div className="flex flex-col gap-1">
+                            {solutionsData.find(cat => cat.category === activeCategory)?.subItems.map((sub, idx) => (
+                              <Link
+                                key={sub.title}
+                                href={sub.href}
+                                onClick={() => setActiveDropdown(null)}
+                                className="p-3 rounded-[16px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/sub"
+                              >
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[10px] font-bold font-mono tracking-wider text-[#00AC4E] opacity-70">0{idx + 1}</span>
+                                  <span className="text-sm font-bold text-stone-900 group-hover/sub:text-[#00AC4E] transition-colors">{sub.title}</span>
+                                  <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-0.5 group-hover/sub:-translate-y-0.5 transition-all text-[#00AC4E]" />
+                                </div>
+                                <span className="text-xs text-stone-500 font-medium leading-relaxed pl-4">{sub.desc}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Projects */}
+                {/* Products */}
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
                   <Link
+                    href="/products"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
+                  >
+                    Products
+                  </Link>
+                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
+                </div>
+
+                {/* Projects Dropdown */}
+                <div
+                  className="nav-item-anim opacity-0 relative py-4 -my-2 group"
+                  onMouseEnter={() => setActiveDropdown("Projects")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <Link
                     href="/projects"
-                    className="text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer text-stone-700 hover:text-[#00AC4E] transition-colors duration-300 inline-flex items-center gap-1"
                   >
                     Projects
+                    <svg className="w-3 h-3 text-stone-500 group-hover:text-[#00AC4E] transition-all duration-300 transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </Link>
+                  <div className="absolute bottom-[8px] left-0 w-0 h-[3px] bg-[#00AC4E] transition-all duration-300 group-hover:w-full group-hover:opacity-50" />
+
+                  {/* Projects Dropdown Menu */}
+                  {activeDropdown === "Projects" && (
+                    <div className="absolute top-[52px] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 backdrop-blur-3xl border border-stone-200/50 rounded-[24px] p-2 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] z-[200] animate-dropdown-fade">
+                      <div className="flex flex-col gap-1">
+                        <Link
+                          href="/projects?filter=residential"
+                          onClick={() => setActiveDropdown(null)}
+                          className="p-3.5 rounded-[18px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/proj"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Residential</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/proj:opacity-100 group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all text-[#00AC4E]" />
+                          </div>
+                          <span className="text-[11px] text-stone-500 font-medium leading-relaxed pl-1">Photos and details of our home solar setups.</span>
+                        </Link>
+                        <Link
+                          href="/projects?filter=commercial"
+                          onClick={() => setActiveDropdown(null)}
+                          className="p-3.5 rounded-[18px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/proj"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Industrial & Commercial</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/proj:opacity-100 group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all text-[#00AC4E]" />
+                          </div>
+                          <span className="text-[11px] text-stone-500 font-medium leading-relaxed pl-1">Photos and details of commercial energy systems.</span>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Services */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <Link
+                    href="/services"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
+                  >
+                    Maintenance
+                  </Link>
+                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
+                </div>
+
+                {/* Careers */}
+                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
+                  <Link
+                    href="/careers"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
+                  >
+                    Careers
                   </Link>
                   <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
                 </div>
@@ -754,7 +757,7 @@ export default function Home() {
                 <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
                   <Link
                     href="/faq"
-                    className="text-sm lg:text-[15px] xl:text-base 2xl:text-[17px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
+                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
                   >
                     FAQ
                   </Link>
@@ -764,15 +767,15 @@ export default function Home() {
 
               {/* Right Section: Consultation Button */}
               <div className="hidden lg:flex items-center justify-end z-50 transform-gpu shrink-0">
-                <button
-                  onClick={() => setActiveTab("Contact")}
+                <Link
+                  href="/contact"
                   className="inline-flex items-center gap-3.5 bg-white/40 hover:bg-white/60 text-stone-900 font-bold rounded-full pl-5 pr-1.5 py-1.5 border border-white/60 shadow-[0_4px_18px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-all duration-300 group cursor-pointer backdrop-blur-md"
                 >
                   <span className="tracking-wide text-[14px]">Get Consultation</span>
                   <div className="w-7 h-7 rounded-full bg-stone-950 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:translate-x-0.5">
                     <ArrowRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
                   </div>
-                </button>
+                </Link>
               </div>
 
               {/* Mobile hamburger menu (visible strictly below lg) */}
@@ -840,8 +843,8 @@ export default function Home() {
                 animate={isLoading ? "hidden" : "visible"}
                 className="mt-8"
               >
-                <button
-                  onClick={() => setActiveTab("Contact")}
+                <Link
+                  href="/contact"
                   className="inline-flex items-center gap-2.5 bg-[#111111] hover:bg-[#1c1c1c] text-white font-bold rounded-xl pl-4.5 pr-1.5 py-1 border border-white/10 shadow-lg active:scale-[0.98] transition-all duration-300 group cursor-pointer"
                 >
                   <span className="tracking-wide text-[14px]">Get Consultation</span>
@@ -855,7 +858,7 @@ export default function Home() {
                       <ArrowUpRight className="w-3.5 h-3.5 text-stone-950 stroke-[2.5]" />
                     </div>
                   </div>
-                </button>
+                </Link>
               </motion.div>
             </div>
 
@@ -929,8 +932,29 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Category 2: Direct Links */}
+                  {/* Category 2: Projects Portfolio */}
                   <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Projects Portfolio</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                      {[
+                        { name: "Residential Projects", href: "/projects?filter=residential" },
+                        { name: "Industrial & Commercial", href: "/projects?filter=commercial" }
+                      ].map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <span>{item.name}</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Category 2: Direct Links */}
                     <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Discover</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {[
@@ -998,40 +1022,17 @@ export default function Home() {
               {/* Double array to make infinite loop seamless */}
               {[...Array(2)].map((_, loopIdx) => (
                 <div key={loopIdx} className="flex shrink-0 justify-around w-1/2 gap-16 md:gap-24 items-center">
-                  
-                  {/* Brand 1: Jinko */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-lg font-black tracking-tighter uppercase">Jinko</span>
-                    <span className="text-[10px] font-mono font-bold tracking-widest bg-stone-200/50 px-1.5 py-0.5 rounded text-stone-500">SOLAR</span>
-                  </div>
-
-                  {/* Brand 2: Huawei */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-lg font-black tracking-tight uppercase">Huawei</span>
-                    <span className="text-[10px] font-mono font-bold tracking-widest bg-stone-200/50 px-1.5 py-0.5 rounded text-stone-500">SMART PV</span>
-                  </div>
-
-                  {/* Brand 3: Growatt */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-lg font-black tracking-tight uppercase">Growatt</span>
-                  </div>
-
-                  {/* Brand 4: Trina */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-lg font-black tracking-tighter uppercase">Trina</span>
-                    <span className="text-[10px] font-mono font-bold tracking-widest bg-stone-200/50 px-1.5 py-0.5 rounded text-stone-500">SOLAR</span>
-                  </div>
-
-                  {/* Brand 5: SMA */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-xl font-black tracking-widest uppercase italic">SMA</span>
-                  </div>
-
-                  {/* Brand 6: Solis */}
-                  <div className="flex items-center gap-2 text-stone-400 hover:text-[#00AC4E] transition-colors duration-300">
-                    <span className="font-display text-lg font-black tracking-tight uppercase">Solis</span>
-                  </div>
-
+                  {partnerLogos.map((logo, idx) => (
+                    <div key={idx} className="flex items-center justify-center h-7 md:h-9 w-24 md:w-32 transition-transform duration-300 hover:scale-105">
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={140}
+                        height={50}
+                        className="max-h-full max-w-full object-contain filter-none"
+                      />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
@@ -1109,7 +1110,7 @@ export default function Home() {
             <div className="space-y-6 about-img-left">
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_office_v4.webp"
+                  src="/about_us_office_v6.webp"
                   alt="Solar Design and Office Engineering Team"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1118,7 +1119,7 @@ export default function Home() {
               </div>
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_engineers_v4.webp"
+                  src="/about_us_engineers_v6.webp"
                   alt="Engineers inspecting solar fields"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1130,7 +1131,7 @@ export default function Home() {
             <div className="space-y-6 pt-12 md:pt-16 about-img-right">
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_tech_v4.webp"
+                  src="/about_us_tech_v7.webp"
                   alt="Advanced Lithium BESS and Inverters Room"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1139,7 +1140,7 @@ export default function Home() {
               </div>
               <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
                 <Image
-                  src="/about_us_building_v4.webp"
+                  src="/about_us_building_v7.webp"
                   alt="Modern sustainable office with rooftop solar"
                   fill
                   sizes="(max-width: 1024px) 50vw, 300px"
@@ -1159,9 +1160,6 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto">
           {/* Header */}
           <div className="mb-8 flex flex-col items-center text-center">
-            <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase mb-3">
-              / ADVANTAGES /
-            </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.1] text-stone-900 font-display font-black bento-card-anim">
               Why <span className="text-[#00AC4E]">Choose Us</span>
             </h2>
@@ -1587,126 +1585,144 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 4.4: Services Accordion Section */}
-      <section id="services" className="w-full bg-[#085EAC] text-white py-16 md:py-20 relative overflow-hidden z-20 border-t border-white/10">
+      {/* SECTION 4.4: Services Image Slider Section */}
+      <section id="services" className="w-full bg-[#08150c] text-white py-24 md:py-32 relative overflow-hidden z-20 border-t border-white/10">
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-[#00AC4E]/[0.03] rounded-full blur-[120px] pointer-events-none select-none" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00AC4E]/[0.02] rounded-full blur-[100px] pointer-events-none select-none" />
+
         <div className="max-w-[1360px] mx-auto px-6 sm:px-12 lg:px-24">
 
-          {/* Header layout: 2-column split on desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 md:mb-16 items-center">
-
-            {/* Title column with vertical green tag stroke */}
-            <div className="lg:col-span-8 flex items-center gap-4">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-20 gap-6">
+            <div className="flex items-center gap-4">
               <div className="w-[3px] h-8 sm:h-10 bg-[#00AC4E] shrink-0" />
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight leading-none text-white">
-                Services.
-              </h2>
+              <div className="flex flex-col gap-1">
+                <span className="text-[#00AC4E] font-mono text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">
+                  / WHAT WE DO /
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight leading-none text-white">
+                  Our Services Overview
+                </h2>
+              </div>
             </div>
-
-            {/* Description column */}
-            <div className="lg:col-span-4 lg:pt-1">
-              <p className="text-white text-sm sm:text-base font-semibold leading-relaxed">
-                Explore how our advanced solar systems, smart microgrids, and end-to-end technical services deliver clean energy, operational savings, and lasting environmental impact.
-              </p>
-            </div>
-
+            <p className="text-stone-400 text-sm sm:text-base font-semibold max-w-md md:text-right font-display uppercase tracking-wider leading-relaxed">
+              (Solar installations, service & repair)
+            </p>
           </div>
 
-          {/* Accordion List */}
-          <div className="border-b border-white/10">
-            {servicesData.map((service, idx) => {
-              const isOpen = activeService === idx;
-              return (
-                <div
-                  key={idx}
-                  ref={(el) => { serviceRefs.current[idx] = el; }}
-                  className="border-t border-white/10 py-6 sm:py-7 md:py-8 transition-all duration-300"
-                >
-
-                  {/* Header (Trigger) */}
-                  <div
-                    onClick={() => setActiveService(isOpen ? null : idx)}
-                    className="flex items-center justify-between cursor-pointer group select-none"
+          {/* Slider Container */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+            {/* Left Column: Text & Navigation */}
+            <div className="lg:col-span-5 flex flex-col justify-between min-h-[350px]">
+              {/* Navigation Tabs (Quick Switch) */}
+              <div className="flex gap-4 border-b border-white/10 pb-6 mb-8">
+                {servicesData.map((service, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveService(idx)}
+                    className={`pb-2 text-sm sm:text-base font-bold relative transition-colors duration-300 cursor-pointer ${
+                      activeService === idx ? "text-white font-black" : "text-stone-500 hover:text-stone-300"
+                    }`}
                   >
-                    <div className="flex items-baseline gap-4 sm:gap-6 transform group-hover:translate-x-2 transition-transform duration-300">
-                      <span className="font-mono text-xs sm:text-sm font-black text-white">
-                        {service.number} <span className="text-white font-extrabold">/</span>
-                      </span>
-                      <h3 className="font-display text-lg sm:text-2xl md:text-[28px] font-black text-white group-hover:text-white transition-colors duration-300 leading-tight">
-                        {service.title}
-                      </h3>
-                    </div>
+                    <span>{service.title}</span>
+                    {activeService === idx && (
+                      <motion.div
+                        layoutId="activeServiceTabUnderline"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00AC4E]"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
 
-                    <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/10 group-hover:border-white/30 text-white transition-all duration-300 shrink-0 ${isOpen ? 'bg-[#00AC4E] text-white border-transparent' : ''}`}>
-                      <svg
-                        className={`w-3.5 h-3.5 sm:w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m-8-8h16" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Collapsible content body */}
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      height: isOpen ? "auto" : 0,
-                      opacity: isOpen ? 1 : 0
-                    }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 pt-4 pb-4">
-
-                      {/* Left Column: Description & Action */}
-                      <div className="lg:col-span-5 flex flex-col justify-start lg:pb-2">
-                        <p className="text-white text-base sm:text-lg font-semibold leading-relaxed max-w-md">
-                          {service.description}
-                        </p>
-                        <div className="mt-6">
-                          <Link
-                            href="#contact"
-                            className="inline-flex items-center gap-3 bg-white text-[#085EAC] hover:bg-white/90 font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all duration-300 group/btn border border-white/10"
-                          >
-                            <span>Get started</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 text-[#085EAC] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Right Column: Detailed Sub-items */}
-                      <div className="lg:col-span-7 flex flex-col gap-4">
-                        {service.subItems.map((sub, sIdx) => {
-                          const titleParts = sub.title.match(/^(\d+)\.\s*(.*)$/);
-                          const subNum = titleParts ? titleParts[1].padStart(2, '0') : `0${sIdx + 1}`;
-                          const subTitle = titleParts ? titleParts[2] : sub.title;
-                          return (
-                            <div key={sIdx} className="flex gap-4 border-b border-white/10 last:border-b-0 pb-4 last:pb-0">
-                              <span className="font-mono text-sm sm:text-base font-bold text-white tracking-widest shrink-0 mt-0.5 select-none">
-                                {subNum}
-                              </span>
-                              <div className="flex flex-col gap-1.5">
-                                <h4 className="text-white font-bold text-base sm:text-lg tracking-tight leading-snug">
-                                  {subTitle}
-                                </h4>
-                                <p className="text-white text-sm sm:text-base font-medium leading-relaxed">
-                                  {sub.desc}
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                    </div>
-                  </motion.div>
-
+              {/* Content (Active Slide Text) */}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs font-black text-[#00AC4E] bg-[#00AC4E]/10 px-2.5 py-1 rounded">
+                    SERVICE {servicesData[activeService].number}
+                  </span>
                 </div>
-              );
-            })}
+
+                <motion.div
+                  key={activeService}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.4 }}
+                  className="flex flex-col gap-4"
+                >
+                  <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-tight">
+                    {servicesData[activeService].title}
+                  </h3>
+                  <p className="text-stone-300 text-sm sm:text-base md:text-base font-medium leading-relaxed">
+                    {servicesData[activeService].description}
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* Action Button & Slide Navigation Arrows */}
+              <div className="flex items-center justify-between mt-12 pt-8 border-t border-white/5">
+                <Link
+                  href="#contact"
+                  className="inline-flex items-center gap-3 bg-[#00AC4E] text-white hover:bg-[#00c258] font-bold text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl active:scale-[0.98] transition-all duration-300 group cursor-pointer"
+                >
+                  <span>Book service</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                </Link>
+
+                {/* Nav arrows */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setActiveService((prev) => (prev === 0 ? servicesData.length - 1 : prev - 1))}
+                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 active:bg-white/10 text-white cursor-pointer transition-all duration-200"
+                    aria-label="Previous service"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setActiveService((prev) => (prev === servicesData.length - 1 ? 0 : prev + 1))}
+                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 active:bg-white/10 text-white cursor-pointer transition-all duration-200"
+                    aria-label="Next service"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Image Slider */}
+            <div className="lg:col-span-7 relative aspect-[16/10] w-full rounded-[32px] overflow-hidden shadow-2xl border border-white/10 bg-[#0d140e] group/slider">
+              {/* Animated image container */}
+              <motion.div
+                key={activeService}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <Image
+                  src={servicesData[activeService].image}
+                  alt={servicesData[activeService].title}
+                  fill
+                  priority
+                  className="object-cover transition-transform duration-700 ease-out group-hover/slider:scale-[1.03]"
+                  sizes="(max-width: 1024px) 100vw, 800px"
+                />
+                {/* Overlay gradient to blend nicely */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+              </motion.div>
+
+              {/* Small floating counter in corner */}
+              <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs font-mono font-bold tracking-widest text-white z-10">
+                {servicesData[activeService].number} / {String(servicesData.length).padStart(2, '0')}
+              </div>
+            </div>
           </div>
 
         </div>
