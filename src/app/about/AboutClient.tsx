@@ -510,17 +510,30 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
             clean energy across Sri Lanka.
           </p>
 
-          {/* Empty group-photo frame to be supplied later */}
-          <div className="mt-12 w-full relative rounded-[36px] overflow-hidden border-2 border-dashed border-stone-200 bg-stone-50/60 aspect-[16/7] flex flex-col items-center justify-center gap-4 group">
-            <div className="absolute inset-0 grid-background opacity-60" />
-            <div className="relative z-10 w-16 h-16 rounded-2xl bg-white border border-stone-200 shadow-sm flex items-center justify-center text-[#00AC4E]">
-              <Icon name="users" className="w-8 h-8" />
+          {/* Group photo, uploaded from the admin. Falls back to a placeholder
+              frame while no photograph has been supplied. */}
+          {img.about_team ? (
+            <div className="mt-12 w-full relative rounded-[36px] overflow-hidden border border-stone-200/60 shadow-lg aspect-[16/7]">
+              <Image
+                src={img.about_team}
+                alt="The GES team"
+                fill
+                sizes="(min-width: 1024px) 1240px, 92vw"
+                className="object-cover"
+              />
             </div>
-            <div className="relative z-10 flex flex-col items-center gap-1">
-              <span className="font-display font-black text-stone-700 text-lg">Team Group Photo</span>
-              <span className="text-stone-400 text-xs font-bold uppercase tracking-widest">Coming Soon</span>
+          ) : (
+            <div className="mt-12 w-full relative rounded-[36px] overflow-hidden border-2 border-dashed border-stone-200 bg-stone-50/60 aspect-[16/7] flex flex-col items-center justify-center gap-4 group">
+              <div className="absolute inset-0 grid-background opacity-60" />
+              <div className="relative z-10 w-16 h-16 rounded-2xl bg-white border border-stone-200 shadow-sm flex items-center justify-center text-[#00AC4E]">
+                <Icon name="users" className="w-8 h-8" />
+              </div>
+              <div className="relative z-10 flex flex-col items-center gap-1">
+                <span className="font-display font-black text-stone-700 text-lg">Team Group Photo</span>
+                <span className="text-stone-400 text-xs font-bold uppercase tracking-widest">Coming Soon</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

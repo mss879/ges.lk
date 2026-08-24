@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { Upload, Loader2, RotateCcw, ExternalLink } from "lucide-react";
+import { Upload, Loader2, RotateCcw, ExternalLink, ImagePlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { slotsForPage, type SiteImageSlot, type SitePage } from "@/data/siteImageSlots";
 import type { StoredSiteImage } from "./page";
@@ -18,6 +18,7 @@ const ASPECT: Record<SiteImageSlot["aspect"], string> = {
   wide: "aspect-video",
   portrait: "aspect-[4/5]",
   banner: "aspect-[16/8]",
+  team: "aspect-[16/7]",
 };
 
 export default function ContentClient({ stored }: { stored: StoredSiteImage[] }) {
@@ -35,6 +36,8 @@ export default function ContentClient({ stored }: { stored: StoredSiteImage[] })
 
   const currentUrl = (slot: SiteImageSlot) => rowFor(slot)?.url ?? slot.defaultUrl;
   const isCustom = (slot: SiteImageSlot) => Boolean(rowFor(slot)?.storage_path);
+  /** Only offer "revert" where there is a shipped image to revert to. */
+  const canRevert = (slot: SiteImageSlot) => isCustom(slot) && slot.defaultUrl !== "";
 
   /** Upload a replacement and point the slot at it. */
   const replace = async (slot: SiteImageSlot, file: File | undefined) => {
@@ -187,14 +190,22 @@ export default function ContentClient({ stored }: { stored: StoredSiteImage[] })
               className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm"
             >
               <div className={`relative ${ASPECT[slot.aspect]} bg-stone-100`}>
-                <Image
-                  src={url}
-                  alt={slot.label}
-                  fill
-                  sizes="(min-width:1024px) 300px, 45vw"
-                  className="object-cover"
-                  unoptimized={url.startsWith("http")}
-                />
+                {url ? (
+                  <Image
+                    src={url}
+                    alt={slot.label}
+                    fill
+                    sizes="(min-width:1024px) 300px, 45vw"
+                    className="object-cover"
+                    unoptimized={url.startsWith("http")}
+                  />
+                ) : (
+                  // Slot with no shipped image — nothing uploaded yet.
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-stone-200 text-stone-400">
+                    <ImagePlus className="h-6 w-6" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Not set</span>
+                  </div>
+                )}
                 {custom && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-[#00AC4E] px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white">
                     Replaced
@@ -217,7 +228,7 @@ export default function ContentClient({ stored }: { stored: StoredSiteImage[] })
                     {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
                     Replace
                   </button>
-                  {custom && (
+                  {canRevert(slot) && (
                     <button
                       onClick={() => revert(slot)}
                       disabled={busy}

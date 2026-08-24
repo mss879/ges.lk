@@ -17,10 +17,14 @@ export interface SiteImageSlot {
   label: string;
   /** Where it appears, for context in the admin. */
   section: string;
-  /** Shipped image used when nothing has been uploaded yet. */
+  /**
+   * Shipped image used when nothing has been uploaded yet.
+   * Empty string means there is no shipped image — the page renders its own
+   * placeholder until something is uploaded.
+   */
   defaultUrl: string;
   /** Roughly how the slot renders, so the admin can preview at the right shape. */
-  aspect: "wide" | "portrait" | "banner";
+  aspect: "wide" | "portrait" | "banner" | "team";
   position: number;
 }
 
@@ -146,13 +150,24 @@ export const SITE_IMAGE_SLOTS: SiteImageSlot[] = [
     position: 5,
   },
   {
+    key: "about_team",
+    page: "about",
+    label: "Our Team — group photo",
+    section: "Our team",
+    // No shipped asset: this should be a real photograph of the GES team, so
+    // the section shows a placeholder frame until one is uploaded.
+    defaultUrl: "",
+    aspect: "team",
+    position: 6,
+  },
+  {
     key: "about_sustainability",
     page: "about",
     label: "Sustainability — engineer at dusk",
     section: "Sustainability commitment",
     defaultUrl: "/about_values_2026.webp",
     aspect: "portrait",
-    position: 6,
+    position: 7,
   },
 ];
 
