@@ -649,21 +649,31 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 reveal-group">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 reveal-group max-w-[860px] mx-auto">
             {awards.map((a, i) => (
               <div
                 key={i}
                 className="reveal-item group relative rounded-[28px] bg-gradient-to-b from-stone-50 to-white border border-stone-200/60 shadow-lg overflow-hidden hover:-translate-y-2 transition-all duration-500 flex flex-col"
               >
-                <div className="absolute top-5 left-5 z-10 flex items-center gap-2 bg-white/90 backdrop-blur-md border border-stone-200/50 rounded-full px-3 py-1.5 shadow-sm">
+                <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5 bg-white/90 backdrop-blur-md border border-stone-200/50 rounded-full px-3 py-1.5 shadow-sm">
                   <span className="text-[#e2c200]"><Icon name="award" className="w-3.5 h-3.5" /></span>
                   <span className="text-[9px] font-black uppercase tracking-widest text-stone-700">{a.tag}</span>
                 </div>
-                <div className="relative w-full aspect-[3/4] bg-stone-100/60 flex items-center justify-center p-6">
-                  <Image src={a.src} alt={`GES Award ${i + 1}`} width={500} height={650} className="max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-500 drop-shadow-md" />
+                {/* Fixed-height well: the certificates have slightly different
+                    aspect ratios, so sizing by height keeps all three the same
+                    visual size and keeps the card footers on one line. */}
+                <div className="relative w-full h-[230px] sm:h-[270px] bg-stone-100/60 flex items-center justify-center overflow-hidden p-4 sm:p-5">
+                  <Image
+                    src={a.src}
+                    alt={`GES Award ${i + 1}`}
+                    width={460}
+                    height={1090}
+                    sizes="(min-width: 640px) 160px, 40vw"
+                    className="h-full w-auto max-w-full object-contain group-hover:scale-[1.03] transition-transform duration-500 drop-shadow-md"
+                  />
                 </div>
-                <div className="p-6 border-t border-stone-100 flex items-center justify-between">
-                  <span className="font-display font-black text-stone-800">Award 0{i + 1}</span>
+                <div className="p-4 sm:p-5 border-t border-stone-100 flex items-center justify-between">
+                  <span className="font-display text-sm font-black text-stone-800">Award 0{i + 1}</span>
                   <span className="font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">GES</span>
                 </div>
               </div>
