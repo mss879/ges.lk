@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -20,7 +21,11 @@ export default function AdminLoginPage() {
           </p>
 
           {configured ? (
-            <LoginForm />
+            // LoginForm reads ?next= via useSearchParams, which needs a boundary
+            // because this page is prerendered.
+            <Suspense fallback={<div className="mt-6 h-52 animate-pulse rounded-xl bg-stone-100" />}>
+              <LoginForm />
+            </Suspense>
           ) : (
             <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
               <p className="text-sm font-bold text-amber-900">Backend not connected yet</p>

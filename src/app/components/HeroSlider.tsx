@@ -58,7 +58,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative w-full h-[clamp(460px,68vh,720px)] overflow-hidden bg-[#08150c] outline-none"
+      className="relative w-full h-[clamp(540px,78vh,860px)] overflow-hidden bg-[#08150c] outline-none"
     >
       {slides.map((slide, i) => {
         const isActive = i === index;
