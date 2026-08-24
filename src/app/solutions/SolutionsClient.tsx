@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import SiteNav from "@/app/components/SiteNav";
 import SiteFooter from "@/app/components/SiteFooter";
 import WebGLBackground from "@/app/components/WebGLBackground";
+import SolarDiagram from "@/app/components/SolarDiagram";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -54,7 +56,7 @@ const ic = {
 };
 
 const categories = [
-  { icon: ic.solar, name: "Solar", items: ["On-Grid", "Off-Grid", "Hybrid", "BESS"], href: "/solutions/solar" },
+  { icon: ic.solar, name: "Solar", items: ["On-Grid", "Hybrid", "BESS", "Off-Grid"], href: "/solutions/solar" },
   { icon: ic.power, name: "Power Generation", items: ["MTG"], href: "/solutions/power" },
   { icon: ic.hydrogen, name: "Hydrogen Energy", items: ["Fuel Cell (SFC)"], href: "/solutions/hydrogen" },
   { icon: ic.waste, name: "Waste Management", items: ["Composting Machine"], href: "/solutions/waste" },
@@ -71,16 +73,8 @@ const solarSolutions = [
     features: ["Use solar power by day", "Draw from grid at night", "Net-metering & export ready", "Lowest upfront investment"],
   },
   {
-    id: "off-grid",
-    tag: "02 / Solar",
-    title: "Off-Grid Solar",
-    desc: "A standalone solar system with battery storage that operates independently of the utility grid — providing power in remote or grid-unavailable locations.",
-    diagram: "off-grid" as const,
-    features: ["Battery storage included", "Complete grid independence", "Ideal for remote sites", "Uninterrupted day & night supply"],
-  },
-  {
     id: "hybrid",
-    tag: "03 / Solar",
+    tag: "02 / Solar",
     title: "Hybrid Solar",
     desc: "A smart solar solution that combines grid connectivity with battery storage — ensuring reliable power supply and enhanced energy independence.",
     diagram: "hybrid" as const,
@@ -88,17 +82,26 @@ const solarSolutions = [
   },
   {
     id: "bess",
-    tag: "04 / Solar",
+    tag: "03 / Solar",
     title: "BESS — Battery Energy Storage",
     desc: "An advanced energy storage solution that stores excess electricity for later use — improving energy efficiency, backup power availability and grid stability.",
     diagram: "bess" as const,
     features: ["Store excess electricity", "Backup power on demand", "Improved grid stability", "Higher self-consumption"],
+  },
+  {
+    id: "off-grid",
+    tag: "04 / Solar",
+    title: "Off-Grid Solar",
+    desc: "A standalone solar system with battery storage that operates independently of the utility grid — providing power in remote or grid-unavailable locations.",
+    diagram: "off-grid" as const,
+    features: ["Battery storage included", "Complete grid independence", "Ideal for remote sites", "Uninterrupted day & night supply"],
   },
 ];
 
 const mediaSolutions = [
   {
     id: "mtg",
+    image: "/solution-mtg.webp",
     icon: ic.power,
     eyebrow: "Power Generation",
     title: "MTG — Micro Turbine Generator",
@@ -107,6 +110,7 @@ const mediaSolutions = [
   },
   {
     id: "fuel-cell",
+    image: "/solution-fuel-cell.webp",
     icon: ic.hydrogen,
     eyebrow: "Hydrogen Energy",
     title: "Fuel Cell (SFC)",
@@ -115,6 +119,7 @@ const mediaSolutions = [
   },
   {
     id: "composting",
+    image: "/solution-composting.webp",
     icon: ic.waste,
     eyebrow: "Waste Management",
     title: "Composting Machine",
@@ -123,6 +128,7 @@ const mediaSolutions = [
   },
   {
     id: "ev-charging",
+    image: "/solution-ev-charging.webp",
     icon: ic.ev,
     eyebrow: "EV Charging",
     title: "Moreday EV Charger",
@@ -237,8 +243,14 @@ export default function SolutionsClient() {
               <div
                 key={s.id}
                 id={s.id}
-                className="reveal flex flex-col justify-between rounded-[28px] bg-white border border-stone-200/60 hover:border-[#00AC4E]/30 hover:shadow-xl transition-all duration-300 p-8 sm:p-10 shadow-sm"
+                className="reveal flex flex-col rounded-[28px] bg-white border border-stone-200/60 hover:border-[#00AC4E]/30 hover:shadow-xl transition-all duration-300 shadow-sm overflow-hidden"
               >
+                {/* Vector single-line diagram */}
+                <div className="bg-gradient-to-br from-stone-50 to-white border-b border-stone-200/60 px-4 sm:px-6 pt-7 pb-6">
+                  <SolarDiagram type={s.diagram} uniform />
+                </div>
+
+                <div className="flex flex-col justify-between flex-1 p-8 sm:p-10">
                 <div className="flex flex-col gap-4">
                   <span className="font-mono text-[11px] font-extrabold text-[#00AC4E] tracking-widest uppercase">{s.tag}</span>
                   <h3 className="font-display text-xl sm:text-2xl font-black tracking-tight text-stone-950 leading-tight">{s.title}</h3>
@@ -261,6 +273,7 @@ export default function SolutionsClient() {
                   Explore {s.title}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
                 </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -282,8 +295,13 @@ export default function SolutionsClient() {
               <div
                 key={m.id}
                 id={m.id}
-                className="reveal flex flex-col justify-between rounded-[28px] bg-white border border-stone-200/60 hover:border-[#00AC4E]/30 hover:shadow-xl transition-all duration-300 p-8 sm:p-10 shadow-sm"
+                className="reveal flex flex-col rounded-[28px] bg-white border border-stone-200/60 hover:border-[#00AC4E]/30 hover:shadow-xl transition-all duration-300 shadow-sm overflow-hidden"
               >
+                <div className="relative w-full aspect-video border-b border-stone-200/60 bg-stone-100">
+                  <Image src={m.image} alt={m.title} fill sizes="(min-width: 768px) 620px, 92vw" className="object-cover" />
+                </div>
+
+                <div className="flex flex-col justify-between flex-1 p-8 sm:p-10">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-[#00AC4E]/10 border border-[#00AC4E]/15 flex items-center justify-center text-[#00AC4E]">
@@ -306,6 +324,7 @@ export default function SolutionsClient() {
                   Explore {m.title}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
                 </Link>
+                </div>
               </div>
             ))}
           </div>

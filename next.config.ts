@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
         hostname: 'framerusercontent.com',
         pathname: '/images/**',
       },
+      {
+        // Project photographs uploaded through /admin into Supabase Storage.
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };

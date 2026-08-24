@@ -1,231 +1,418 @@
 "use client";
 
 /**
- * SolarDiagram — animated SVG energy-flow diagrams for the four solar
- * solution types. Energy "marches" along the connections via the
- * .flow-line CSS animation (stroke-dashoffset). Nodes are simple glyphs.
+ * SolarDiagram — clean vector single-line diagrams for the four solar
+ * solution types (On-Grid, Hybrid, BESS, Off-Grid).
+ *
+ * Everything is laid out on a fixed 3x3 grid and connected with orthogonal
+ * (right-angle) runs so the result reads like an engineering single-line
+ * drawing rather than a scatter of diagonal lines. Flow direction is shown
+ * with static arrow heads — the diagrams are deliberately not animated.
  */
 
-type DiagramType = "on-grid" | "off-grid" | "hybrid" | "bess";
+export type DiagramType = "on-grid" | "hybrid" | "bess" | "off-grid";
 
-type NodeKind = "sun" | "panels" | "inverter" | "battery" | "grid" | "home" | "solar";
+type NodeKind = "panels" | "inverter" | "battery" | "grid" | "home";
+type FlowKind = "solar" | "grid" | "battery";
 
-interface Node {
+/* ---------------------------------------------------------------- canvas */
+
+const W = 900;
+const PAD = 26; // vertical breathing room above/below the outermost cards
+
+const CARD_W = 132;
+const CARD_H = 96;
+const HW = CARD_W / 2;
+const HH = CARD_H / 2;
+const GAP = 10; // breathing room between a card edge and its connector
+
+const COL = [110, 450, 790]; // x centres
+const ROW = [70, 240, 410]; // y centres
+
+const FLOW: Record<FlowKind, { color: string; label: string }> = {
+  solar: { color: "#00AC4E", label: "Solar generation" },
+  grid: { color: "#E0A000", label: "Utility grid" },
+  battery: { color: "#6BAA1E", label: "Battery storage" },
+};
+
+/* ----------------------------------------------------------------- model */
+
+interface DNode {
   id: string;
   kind: NodeKind;
-  x: number;
-  y: number;
+  col: 0 | 1 | 2;
+  row: 0 | 1 | 2;
   label: string;
+  sub?: string;
+  /** render larger / filled — used for the hero node of a diagram */
+  hero?: boolean;
+  /** greyed out, e.g. the grid on an off-grid system */
+  muted?: boolean;
 }
 
-interface Edge {
+interface DEdge {
   from: string;
   to: string;
-  reverse?: boolean; // flow visually travels target -> source
-  accent?: "green" | "lime" | "amber";
-  slow?: boolean;
+  flow: FlowKind;
+  /** energy moves both ways (import + export) */
+  both?: boolean;
+  /** not connected at all — drawn as a broken link */
+  severed?: boolean;
 }
 
-const W = 780;
-const H = 280;
-
-const NW = 60; // node box half-width reference (visual chip ~ 52)
-
-function glyph(kind: NodeKind) {
-  switch (kind) {
-    case "sun":
-    case "solar":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none">
-          <circle cx="0" cy="0" r="6" />
-          <path d="M0 -11V-14M0 11V14M-11 0H-14M11 0H14M-8 -8L-10 -10M8 8L10 10M8 -8L10 -10M-8 8L-10 10" />
-        </g>
-      );
-    case "panels":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <rect x="-12" y="-11" width="24" height="16" rx="1.5" />
-          <path d="M-4 -11V5M4 -11V5M-12 -3H12M0 5V12M-6 12H6" />
-        </g>
-      );
-    case "inverter":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <rect x="-11" y="-12" width="22" height="24" rx="3" />
-          <path d="M-6 2C-6 -3 -2 -3 0 0S6 3 6 -2" />
-        </g>
-      );
-    case "battery":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <rect x="-12" y="-8" width="22" height="16" rx="2.5" />
-          <path d="M10 -3V3" />
-          <path d="M-4 -2L1 -2M-4 2L1 2" />
-        </g>
-      );
-    case "grid":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <path d="M-8 12L-4 -10H4L8 12M-7 -2H7M-9 5H9M0 -10V-13" />
-        </g>
-      );
-    case "home":
-      return (
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <path d="M-11 0L0 -11L11 0" />
-          <path d="M-8 -2V11H8V-2" />
-          <path d="M-2 11V4H2V11" />
-        </g>
-      );
-  }
+interface Config {
+  nodes: DNode[];
+  edges: DEdge[];
+  caption: string;
 }
 
-const configs: Record<DiagramType, { nodes: Node[]; edges: Edge[]; boundary?: boolean }> = {
+const configs: Record<DiagramType, Config> = {
   "on-grid": {
+    caption: "Solar powers the building by day; surplus is exported and the grid covers the shortfall.",
     nodes: [
-      { id: "sun", kind: "sun", x: 110, y: 70, label: "Sunlight" },
-      { id: "panels", kind: "panels", x: 110, y: 200, label: "Solar Panels" },
-      { id: "inverter", kind: "inverter", x: 340, y: 200, label: "Inverter" },
-      { id: "grid", kind: "grid", x: 545, y: 70, label: "Utility Grid" },
-      { id: "home", kind: "home", x: 680, y: 200, label: "Home / Load" },
+      { id: "grid", kind: "grid", col: 1, row: 0, label: "Utility Grid", sub: "Import / Export" },
+      { id: "panels", kind: "panels", col: 0, row: 1, label: "Solar Array", sub: "DC generation" },
+      { id: "inverter", kind: "inverter", col: 1, row: 1, label: "Grid-Tie Inverter", sub: "DC → AC", hero: true },
+      { id: "home", kind: "home", col: 2, row: 1, label: "Home / Load", sub: "AC consumption" },
     ],
     edges: [
-      { from: "sun", to: "panels" },
-      { from: "panels", to: "inverter" },
-      { from: "inverter", to: "home" },
-      { from: "inverter", to: "grid", accent: "lime" },
-      { from: "grid", to: "home", accent: "amber", slow: true },
+      { from: "panels", to: "inverter", flow: "solar" },
+      { from: "inverter", to: "home", flow: "solar" },
+      { from: "inverter", to: "grid", flow: "grid", both: true },
     ],
   },
-  "off-grid": {
-    nodes: [
-      { id: "sun", kind: "sun", x: 110, y: 70, label: "Sunlight" },
-      { id: "panels", kind: "panels", x: 110, y: 200, label: "Solar Panels" },
-      { id: "inverter", kind: "inverter", x: 300, y: 200, label: "Inverter" },
-      { id: "battery", kind: "battery", x: 480, y: 200, label: "Battery" },
-      { id: "home", kind: "home", x: 660, y: 200, label: "Home / Load" },
-    ],
-    edges: [
-      { from: "sun", to: "panels" },
-      { from: "panels", to: "inverter" },
-      { from: "inverter", to: "battery" },
-      { from: "battery", to: "home" },
-    ],
-    boundary: true,
-  },
+
   hybrid: {
+    caption: "Grid connection and battery storage combined — solar first, battery next, grid as backup.",
     nodes: [
-      { id: "sun", kind: "sun", x: 100, y: 70, label: "Sunlight" },
-      { id: "panels", kind: "panels", x: 100, y: 205, label: "Solar Panels" },
-      { id: "battery", kind: "battery", x: 335, y: 70, label: "Battery" },
-      { id: "inverter", kind: "inverter", x: 335, y: 205, label: "Hybrid Inverter" },
-      { id: "grid", kind: "grid", x: 565, y: 70, label: "Utility Grid" },
-      { id: "home", kind: "home", x: 690, y: 205, label: "Home / Load" },
+      { id: "grid", kind: "grid", col: 1, row: 0, label: "Utility Grid", sub: "Import / Export" },
+      { id: "panels", kind: "panels", col: 0, row: 1, label: "Solar Array", sub: "DC generation" },
+      { id: "inverter", kind: "inverter", col: 1, row: 1, label: "Hybrid Inverter", sub: "Smart routing", hero: true },
+      { id: "home", kind: "home", col: 2, row: 1, label: "Home / Load", sub: "Always supplied" },
+      { id: "battery", kind: "battery", col: 1, row: 2, label: "Battery Bank", sub: "Charge / Discharge" },
     ],
     edges: [
-      { from: "sun", to: "panels" },
-      { from: "panels", to: "inverter" },
-      { from: "inverter", to: "battery", accent: "lime" },
-      { from: "inverter", to: "grid", accent: "amber", slow: true },
-      { from: "inverter", to: "home" },
+      { from: "panels", to: "inverter", flow: "solar" },
+      { from: "inverter", to: "home", flow: "solar" },
+      { from: "inverter", to: "grid", flow: "grid", both: true },
+      { from: "inverter", to: "battery", flow: "battery", both: true },
     ],
   },
+
   bess: {
+    caption: "Stores surplus solar and cheap off-peak grid energy, then releases it on demand.",
     nodes: [
-      { id: "solar", kind: "solar", x: 110, y: 70, label: "Solar Input" },
-      { id: "grid", kind: "grid", x: 110, y: 210, label: "Grid Input" },
-      { id: "battery", kind: "battery", x: 400, y: 140, label: "BESS Storage" },
-      { id: "home", kind: "home", x: 680, y: 140, label: "Backup / Load" },
+      { id: "panels", kind: "panels", col: 0, row: 0, label: "Solar Input", sub: "Surplus generation" },
+      { id: "battery", kind: "battery", col: 1, row: 1, label: "BESS", sub: "Energy storage", hero: true },
+      { id: "home", kind: "home", col: 2, row: 1, label: "Backup / Load", sub: "On-demand supply" },
+      { id: "grid", kind: "grid", col: 0, row: 2, label: "Grid Input", sub: "Off-peak charging" },
     ],
     edges: [
-      { from: "solar", to: "battery", accent: "lime" },
-      { from: "grid", to: "battery", accent: "amber", slow: true },
-      { from: "battery", to: "home" },
+      { from: "panels", to: "battery", flow: "solar" },
+      { from: "grid", to: "battery", flow: "grid" },
+      { from: "battery", to: "home", flow: "battery" },
+    ],
+  },
+
+  "off-grid": {
+    caption: "Fully independent — no utility connection. Solar charges the battery, the battery runs the load.",
+    nodes: [
+      { id: "grid", kind: "grid", col: 1, row: 0, label: "Utility Grid", sub: "Not connected", muted: true },
+      { id: "panels", kind: "panels", col: 0, row: 1, label: "Solar Array", sub: "DC generation" },
+      { id: "inverter", kind: "inverter", col: 1, row: 1, label: "Inverter / Charger", sub: "Off-grid control", hero: true },
+      { id: "home", kind: "home", col: 2, row: 1, label: "Home / Load", sub: "Day & night supply" },
+      { id: "battery", kind: "battery", col: 1, row: 2, label: "Battery Bank", sub: "Full autonomy" },
+    ],
+    edges: [
+      { from: "panels", to: "inverter", flow: "solar" },
+      { from: "inverter", to: "home", flow: "solar" },
+      { from: "inverter", to: "battery", flow: "battery", both: true },
+      { from: "grid", to: "inverter", flow: "grid", severed: true },
     ],
   },
 };
 
-const accentColor = { green: "#00AC4E", lime: "#a9d80c", amber: "#e0a000" } as const;
+/* ----------------------------------------------------------------- icons */
+/* Drawn on a ~48px box centred on the origin, stroked with currentColor. */
 
-export default function SolarDiagram({ type }: { type: DiagramType }) {
+function glyph(kind: NodeKind) {
+  switch (kind) {
+    case "panels":
+      return (
+        <>
+          <rect x="-16" y="-14" width="32" height="21" rx="2.5" />
+          <path d="M-16 -7H16M-16 0H16M-5.4 -14V7M5.4 -14V7" />
+          <path d="M0 7v8M-7 15h14" />
+        </>
+      );
+    case "inverter":
+      return (
+        <>
+          <rect x="-13" y="-15" width="26" height="30" rx="4.5" />
+          <path d="M-7.5 5c0-7 4.5-7 7.5-2.5S7.5 2 7.5 -5" />
+          <path d="M-6 -9.5h12" />
+        </>
+      );
+    case "battery":
+      return (
+        <>
+          <rect x="-16" y="-10.5" width="28" height="21" rx="4" />
+          <path d="M14.5 -4.5v9" />
+          <path d="M1.5 -6 -4 1h5l-2 6" />
+        </>
+      );
+    case "grid":
+      return (
+        <>
+          <path d="M-11 15 -5.5 -10h11L11 15" />
+          <path d="M-9 -10h18M0 -10v-4.5" />
+          <path d="M-7.4 -3h14.8M-9.4 6h18.8" />
+        </>
+      );
+    case "home":
+      return (
+        <>
+          <path d="M-14 -1 0 -14l14 13" />
+          <path d="M-10.5 -3.5V14h21V-3.5" />
+          <path d="M-3.2 14V6h6.4v8" />
+        </>
+      );
+  }
+}
+
+/* ------------------------------------------------------------- geometry */
+
+interface Pos {
+  cx: number;
+  cy: number;
+  col: number;
+  row: number;
+}
+
+const ARC = 18; // corner radius on elbow runs
+
+/**
+ * Orthogonal run between two cards: straight when they share a row or a
+ * column, otherwise leave horizontally and turn once into the target's face.
+ */
+function connector(a: Pos, b: Pos, offset = 0): string {
+  // same row -> straight horizontal
+  if (a.row === b.row) {
+    const dir = b.cx > a.cx ? 1 : -1;
+    const x1 = a.cx + dir * (HW + GAP);
+    const x2 = b.cx - dir * (HW + GAP);
+    const y = a.cy + offset;
+    return `M ${x1} ${y} H ${x2}`;
+  }
+
+  // same column -> straight vertical
+  if (a.col === b.col) {
+    const dir = b.cy > a.cy ? 1 : -1;
+    const y1 = a.cy + dir * (HH + GAP);
+    const y2 = b.cy - dir * (HH + GAP);
+    const x = a.cx + offset;
+    return `M ${x} ${y1} V ${y2}`;
+  }
+
+  // elbow: out the side of `a`, turn once, into the top/bottom of `b`
+  const hDir = b.cx > a.cx ? 1 : -1;
+  const vDir = b.cy > a.cy ? 1 : -1;
+  const x1 = a.cx + hDir * (HW + GAP);
+  const turnX = b.cx;
+  const yEnd = b.cy - vDir * (HH + GAP);
+  // sweep: right-then-down and left-then-up are clockwise
+  const sweep = hDir === vDir ? 1 : 0;
+  return [
+    `M ${x1} ${a.cy}`,
+    `H ${turnX - hDir * ARC}`,
+    `A ${ARC} ${ARC} 0 0 ${sweep} ${turnX} ${a.cy + vDir * ARC}`,
+    `V ${yEnd}`,
+  ].join(" ");
+}
+
+/* --------------------------------------------------------------- render */
+
+export default function SolarDiagram({
+  type,
+  uniform = false,
+}: {
+  type: DiagramType;
+  /** pad every diagram to the same height so a grid of them lines up */
+  uniform?: boolean;
+}) {
   const cfg = configs[type];
-  const byId = Object.fromEntries(cfg.nodes.map((n) => [n.id, n]));
+  const uid = `d-${type}`;
+  const pos: Record<string, Pos> = Object.fromEntries(
+    cfg.nodes.map((n) => [n.id, { cx: COL[n.col], cy: ROW[n.row], col: n.col, row: n.row }])
+  );
+
+  const usedFlows = Array.from(
+    new Set(cfg.edges.filter((e) => !e.severed).map((e) => e.flow))
+  ) as FlowKind[];
+
+  const rows = cfg.nodes.map((n) => n.row);
+  const contentTop = ROW[Math.min(...rows)] - HH - PAD;
+  const contentHeight = ROW[Math.max(...rows)] + HH + PAD - contentTop;
+  // In `uniform` mode every diagram gets the full three-row box, with its
+  // own content centred inside it, so cards in a grid stay aligned.
+  const fullHeight = ROW[2] + HH + PAD - (ROW[0] - HH - PAD);
+  const vbHeight = uniform ? fullHeight : contentHeight;
+  const vbTop = uniform ? contentTop - (fullHeight - contentHeight) / 2 : contentTop;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label={`${type} system diagram`}>
-      <defs>
-        <marker id={`arrow-${type}`} markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto">
-          <path d="M0 0L6 3L0 6Z" fill="#94a3b8" />
-        </marker>
-      </defs>
+    <figure className="w-full">
+      <svg
+        viewBox={`0 ${vbTop} ${W} ${vbHeight}`}
+        className="w-full h-auto"
+        role="img"
+        aria-labelledby={`${uid}-title ${uid}-desc`}
+      >
+        <title id={`${uid}-title`}>{type.replace("-", " ")} system diagram</title>
+        <desc id={`${uid}-desc`}>{cfg.caption}</desc>
 
-      {/* off-grid boundary */}
-      {cfg.boundary && (
-        <rect
-          x="58"
-          y="150"
-          width="660"
-          height="100"
-          rx="20"
-          fill="none"
-          stroke="#00AC4E"
-          strokeOpacity="0.25"
-          strokeWidth="1.5"
-          strokeDasharray="6 6"
-        />
-      )}
+        <defs>
+          <filter id={`${uid}-shadow`} x="-25%" y="-25%" width="150%" height="150%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3.5" floodColor="#0f172a" floodOpacity="0.07" />
+          </filter>
+          {(Object.keys(FLOW) as FlowKind[]).map((f) => (
+            <marker
+              key={f}
+              id={`${uid}-arw-${f}`}
+              markerWidth="9"
+              markerHeight="9"
+              refX="6.4"
+              refY="3"
+              orient="auto"
+              markerUnits="userSpaceOnUse"
+            >
+              <path d="M0 0 6.5 3 0 6Z" fill={FLOW[f].color} />
+            </marker>
+          ))}
+        </defs>
 
-      {/* edges */}
-      {cfg.edges.map((e, i) => {
-        const a = byId[e.from];
-        const b = byId[e.to];
-        const color = accentColor[e.accent ?? "green"];
-        return (
-          <g key={i}>
-            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" markerEnd={`url(#arrow-${type})`} />
-            <line
-              x1={a.x}
-              y1={a.y}
-              x2={b.x}
-              y2={b.y}
-              stroke={color}
-              strokeWidth="3"
-              strokeLinecap="round"
-              className={`flow-line${e.slow ? " flow-line-slow" : ""}`}
-            />
-          </g>
-        );
-      })}
+        {/* ---- connectors ---- */}
+        {cfg.edges.map((e, i) => {
+          const a = pos[e.from];
+          const b = pos[e.to];
+          const { color } = FLOW[e.flow];
 
-      {/* nodes */}
-      {cfg.nodes.map((n) => {
-        const big = type === "bess" && n.kind === "battery";
-        const w = big ? 76 : 52;
-        const h = big ? 60 : 52;
-        return (
-          <g key={n.id}>
-            {/* pulse glow */}
-            <circle cx={n.x} cy={n.y} r={big ? 40 : 30} fill="#00AC4E" opacity="0.06" />
-            {/* chip */}
-            <rect x={n.x - w / 2} y={n.y - h / 2} width={w} height={h} rx="14" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
-            <g transform={`translate(${n.x} ${n.y - (big ? 4 : 0)})`} className="text-[#00AC4E]">
-              {glyph(n.kind)}
+          if (e.severed) {
+            const d = connector(a, b);
+            const midX = (a.cx + b.cx) / 2;
+            const midY = (a.cy + b.cy) / 2;
+            return (
+              <g key={i}>
+                <path d={d} fill="none" stroke="#cbd5e1" strokeWidth="3" strokeLinecap="round" strokeDasharray="2 9" />
+                <circle cx={midX} cy={midY} r="13" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1.5" />
+                <path
+                  d={`M ${midX - 4.5} ${midY - 4.5} l 9 9 M ${midX + 4.5} ${midY - 4.5} l -9 9`}
+                  stroke="#94a3b8"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </g>
+            );
+          }
+
+          // bidirectional links are drawn as a pair of offset runs
+          const lanes = e.both
+            ? [
+                { off: -6, rev: false },
+                { off: 6, rev: true },
+              ]
+            : [{ off: 0, rev: false }];
+
+          return (
+            <g key={i}>
+              {lanes.map((lane, li) => {
+                const d = lane.rev ? connector(b, a, lane.off) : connector(a, b, lane.off);
+                return (
+                  <g key={li}>
+                    <path d={d} fill="none" stroke="#eef2f6" strokeWidth="6" strokeLinecap="round" />
+                    <path
+                      d={d}
+                      fill="none"
+                      stroke={color}
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      markerEnd={`url(#${uid}-arw-${e.flow})`}
+                    />
+                  </g>
+                );
+              })}
             </g>
-            {/* bess charge bar */}
-            {big && (
-              <>
-                <rect x={n.x - 26} y={n.y + 14} width="52" height="7" rx="3.5" fill="#e2e8f0" />
-                <rect x={n.x - 26} y={n.y + 14} width="36" height="7" rx="3.5" fill="#00AC4E">
-                  <animate attributeName="width" values="6;48;6" dur="4s" repeatCount="indefinite" />
-                </rect>
-              </>
-            )}
-            <text x={n.x} y={n.y + (big ? 44 : 40)} textAnchor="middle" fontSize="12" fontWeight="700" fill="#475569">
-              {n.label}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+          );
+        })}
+
+        {/* ---- nodes ---- */}
+        {cfg.nodes.map((n) => {
+          const { cx, cy } = pos[n.id];
+          const accent = n.muted ? "#94a3b8" : n.hero ? "#00AC4E" : "#0f172a";
+          return (
+            <g key={n.id} opacity={n.muted ? 0.55 : 1}>
+              <rect
+                x={cx - HW}
+                y={cy - HH}
+                width={CARD_W}
+                height={CARD_H}
+                rx="18"
+                fill={n.hero ? "#f6fdf9" : "#ffffff"}
+                stroke={n.hero ? "#00AC4E" : "#e2e8f0"}
+                strokeWidth={n.hero ? 2 : 1.5}
+                strokeDasharray={n.muted ? "5 5" : undefined}
+                filter={`url(#${uid}-shadow)`}
+              />
+              <g
+                transform={`translate(${cx} ${cy - 21}) scale(0.7)`}
+                stroke={accent}
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+              >
+                {glyph(n.kind)}
+              </g>
+              <text
+                x={cx}
+                y={cy + 18}
+                textAnchor="middle"
+                fontSize="14"
+                fontWeight="800"
+                fill={n.muted ? "#64748b" : "#0f172a"}
+              >
+                {n.label}
+              </text>
+              {n.sub && (
+                <text x={cx} y={cy + 34} textAnchor="middle" fontSize="11" fontWeight="600" fill="#94a3b8">
+                  {n.sub}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* ---- legend ---- */}
+      <figcaption className="mt-5 flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          {usedFlows.map((f) => (
+            <span key={f} className="inline-flex items-center gap-2 text-[11px] font-bold text-stone-500">
+              <span className="w-5 h-[3px] rounded-full" style={{ backgroundColor: FLOW[f].color }} />
+              {FLOW[f].label}
+            </span>
+          ))}
+          {cfg.edges.some((e) => e.severed) && (
+            <span className="inline-flex items-center gap-2 text-[11px] font-bold text-stone-400">
+              <span className="w-5 h-[3px] rounded-full bg-stone-300" />
+              No grid connection
+            </span>
+          )}
+        </div>
+        <p className="text-center text-xs text-stone-500 font-medium leading-relaxed max-w-xl mx-auto">
+          {cfg.caption}
+        </p>
+      </figcaption>
+    </figure>
   );
 }

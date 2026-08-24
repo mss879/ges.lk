@@ -12,6 +12,8 @@ import {
   Image as ImageIcon,
   Home,
   Building2,
+  MapPin,
+  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import SiteNav from "@/app/components/SiteNav";
@@ -19,6 +21,8 @@ import SiteFooter from "@/app/components/SiteFooter";
 
 interface Project {
   name: string;
+  location: string | null;
+  capacity: string | null;
   folderName: string;
   images: string[];
   category: "residential" | "commercial";
@@ -124,9 +128,25 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
           </div>
         </div>
         <div className="p-5 flex flex-col justify-between flex-1 bg-white/20">
-          <h3 className="font-display text-[15px] sm:text-[16px] font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug line-clamp-2">
-            {project.name}
-          </h3>
+          <div className="flex flex-col gap-1.5">
+            <h3 className="font-display text-[15px] sm:text-[16px] font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug line-clamp-2">
+              {project.name}
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              {project.location && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-stone-500">
+                  <MapPin className="w-3 h-3 text-stone-400 shrink-0" />
+                  {project.location}
+                </span>
+              )}
+              {project.capacity && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#00AC4E]">
+                  <Zap className="w-3 h-3 shrink-0" />
+                  {project.capacity}
+                </span>
+              )}
+            </div>
+          </div>
           <div className="flex items-center justify-end border-t border-white/20 pt-3.5 mt-2">
             <span className="text-[11px] font-extrabold text-[#00AC4E] flex items-center gap-1.5">
               <span>View Project Images</span>
@@ -188,7 +208,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
             {([
               { k: "all", label: `All (${projects.length})` },
               { k: "residential", label: `Residential (${projects.filter((p) => p.category === "residential").length})` },
-              { k: "commercial", label: `Industrial & Commercial (${projects.filter((p) => p.category === "commercial").length})` },
+              { k: "commercial", label: `Commercial (${projects.filter((p) => p.category === "commercial").length})` },
             ] as { k: Filter; label: string }[]).map((t) => (
               <button
                 key={t.k}
@@ -239,10 +259,10 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         ) : (
           <div className="pt-4">
             {(filter === "all" || filter === "residential") && (
-              <Section title="Residential" subtitle="Homes powered by solar" icon={<Home className="w-6 h-6" />} items={residential} />
+              <Section title="Residential Projects" subtitle="Homes powered by solar" icon={<Home className="w-6 h-6" />} items={residential} />
             )}
             {(filter === "all" || filter === "commercial") && (
-              <Section title="Industrial & Commercial" subtitle="Businesses & institutions" icon={<Building2 className="w-6 h-6" />} items={commercial} />
+              <Section title="Commercial Projects" subtitle="Businesses & institutions" icon={<Building2 className="w-6 h-6" />} items={commercial} />
             )}
           </div>
         )}

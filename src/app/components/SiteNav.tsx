@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
 
 type ActiveKey =
   | "home"
@@ -33,9 +33,9 @@ export const solutionsData = [
     href: "/solutions/solar",
     subItems: [
       { title: "On-Grid", desc: "Use solar by day, draw from the grid at night.", href: "/solutions/on-grid" },
-      { title: "Off-Grid", desc: "Standalone system with battery storage.", href: "/solutions/off-grid" },
       { title: "Hybrid", desc: "Grid plus battery for full independence.", href: "/solutions/hybrid" },
       { title: "BESS", desc: "Store excess energy & backup power.", href: "/solutions/bess" },
+      { title: "Off-Grid", desc: "Standalone system with battery storage.", href: "/solutions/off-grid" },
     ],
   },
   {
@@ -77,6 +77,66 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("Solar");
+  const [openSection, setOpenSection] = useState<ActiveKey>(null);
+
+  const closeMobile = () => setIsMobileMenuOpen(false);
+
+  // While the mobile drawer is open, freeze the page behind it and allow Escape to dismiss.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isMobileMenuOpen]);
+
+  /**
+   * Mobile menu model. Sections with `children` collapse by default so the
+   * drawer stays short and scannable instead of listing every sub-page at once.
+   */
+  const mobileNav: {
+    label: string;
+    href: string;
+    key: ActiveKey;
+    children?: { label: string; items: { title: string; href: string }[] }[];
+  }[] = [
+    { label: "Home", href: "/", key: "home" },
+    { label: "About", href: "/about", key: "about" },
+    {
+      label: "Solutions",
+      href: "/solutions",
+      key: "solutions",
+      children: solutionsData.map((c) => ({
+        label: c.category,
+        items: c.subItems.map((sub) => ({ title: sub.title, href: sub.href })),
+      })),
+    },
+    { label: "Products", href: "/products", key: "products" },
+    {
+      label: "Projects",
+      href: "/projects",
+      key: "projects",
+      children: [
+        {
+          label: "Portfolio",
+          items: [
+            { title: "Residential", href: "/projects?filter=residential" },
+            { title: "Commercial", href: "/projects?filter=commercial" },
+          ],
+        },
+      ],
+    },
+    { label: "Maintenance", href: "/services", key: "services" },
+    { label: "Careers", href: "/careers", key: "careers" },
+    { label: "FAQ", href: "/faq", key: "faq" },
+    { label: "Contact", href: "/contact", key: "contact" },
+  ];
 
   const linkClass = (isActive: boolean) =>
     `text-sm lg:text-[15px] xl:text-base font-bold cursor-pointer transition-colors duration-300 ${
@@ -242,7 +302,7 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
                       className="p-3.5 rounded-[18px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/proj"
                     >
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Industrial & Commercial</span>
+                        <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Commercial</span>
                         <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/proj:opacity-100 group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all text-[#00AC4E]" />
                       </div>
                       <span className="text-[11px] text-stone-500 font-medium leading-relaxed">Photos and details of commercial energy systems.</span>
@@ -289,106 +349,111 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
         </div>
       </header>
 
-      {/* Mobile fullscreen glass drawer */}
+      {/* Mobile drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[300] bg-[#0c120c]/95 backdrop-blur-3xl flex flex-col p-6 sm:p-10 justify-between overflow-y-auto animate-[dropdownFade_0.25s_ease]">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10">
-            <Image src="/logo.webp" alt="GES Logo" width={140} height={38} className="h-8 w-auto object-contain brightness-0 invert" />
+        <div
+          className="lg:hidden fixed inset-0 z-[300] flex flex-col animate-[dropdownFade_0.22s_ease]"
+          style={{ background: "linear-gradient(160deg, #0b2a1b 0%, #061a10 46%, #030d07 100%)" }}
+        >
+          {/* ambient brand glow */}
+          <div className="pointer-events-none absolute -top-28 -right-20 w-80 h-80 rounded-full bg-[#00AC4E]/25 blur-[100px]" />
+          <div className="pointer-events-none absolute -bottom-16 -left-24 w-72 h-72 rounded-full bg-[#e2ff3a]/[0.07] blur-[110px]" />
+
+          {/* header */}
+          <div className="relative z-10 shrink-0 flex items-center justify-between px-5 py-3.5 border-b border-white/10">
+            <Link href="/" onClick={closeMobile} className="flex items-center">
+              <Image
+                src="/logo.webp"
+                alt="GES Logo"
+                width={140}
+                height={38}
+                className="h-8 w-auto object-contain brightness-0 invert"
+              />
+            </Link>
             <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/10 w-9 h-9 rounded-full flex items-center justify-center text-white cursor-pointer transition-colors duration-200"
+              onClick={closeMobile}
               aria-label="Close menu"
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/25 border border-white/15 flex items-center justify-center text-white transition-colors duration-200 cursor-pointer"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
-          <div className="flex-1 my-6 overflow-y-auto flex flex-col gap-7 justify-center">
-            <div className="w-full max-w-[600px] mx-auto flex flex-col gap-7">
-              {/* Primary links */}
-              <div className="flex flex-col gap-1">
-                {[
-                  { label: "Home", href: "/", key: "home" },
-                  { label: "About", href: "/about", key: "about" },
-                  { label: "Solutions", href: "/solutions", key: "solutions" },
-                  { label: "Products", href: "/products", key: "products" },
-                  { label: "Projects", href: "/projects", key: "projects" },
-                  ...navLinks.slice(3)
-                ].map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-2xl font-display font-black py-1.5 transition-colors ${active === l.key ? "text-[#00AC4E]" : "text-white hover:text-[#00AC4E]"}`}
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
+          {/* links — top aligned so nothing is ever clipped out of reach */}
+          <nav className="relative z-10 flex-1 overflow-y-auto overscroll-contain px-5 py-1">
+            <ul className="flex flex-col">
+              {mobileNav.map((item) => {
+                const isActive = active === item.key;
+                const isOpen = openSection === item.key;
+                return (
+                  <li key={item.label} className="border-b border-white/[0.07]">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={item.href}
+                        onClick={closeMobile}
+                        className={`flex-1 font-display text-[19px] font-black tracking-tight py-3.5 transition-colors ${
+                          isActive ? "text-[#00E676]" : "text-white active:text-[#00E676]"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                      {item.children && (
+                        <button
+                          onClick={() => setOpenSection(isOpen ? null : item.key)}
+                          aria-expanded={isOpen}
+                          aria-label={`${isOpen ? "Collapse" : "Expand"} ${item.label}`}
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-white/45 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                        >
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                      )}
+                    </div>
 
-              {/* Solutions quick links grouped by category */}
-              <div className="flex flex-col gap-4">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#00AC4E]/80 font-bold px-1 block">Solutions</span>
-                <div className="flex flex-col gap-4">
-                  {solutionsData.map((cat) => (
-                    <div key={cat.id} className="flex flex-col gap-2 pl-1">
-                      <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">{cat.category}</span>
-                      <div className="grid grid-cols-2 gap-2">
-                        {cat.subItems.map((item) => (
-                          <Link
-                            key={item.title}
-                            href={item.href}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-[#00AC4E]/30 hover:bg-white/10 text-left text-xs font-bold text-white flex items-center justify-between group transition-colors duration-200"
-                          >
-                            <span>{item.title}</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#00AC4E] transition-colors duration-200" />
-                          </Link>
+                    {item.children && isOpen && (
+                      <div className="pb-3.5 flex flex-col gap-3.5">
+                        {item.children.map((group) => (
+                          <div key={group.label} className="flex flex-col gap-1.5">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#00E676]/70 px-0.5">
+                              {group.label}
+                            </span>
+                            {group.items.map((sub) => (
+                              <Link
+                                key={sub.href}
+                                href={sub.href}
+                                onClick={closeMobile}
+                                className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-[13px] font-bold text-white/85 active:bg-white/10 active:border-[#00AC4E]/40 transition-colors"
+                              >
+                                <span>{sub.title}</span>
+                                <ArrowUpRight className="w-3.5 h-3.5 text-white/35 shrink-0" />
+                              </Link>
+                            ))}
+                          </div>
                         ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-              {/* Projects quick links */}
-              <div className="flex flex-col gap-4">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#00AC4E]/80 font-bold px-1 block">Projects Portfolio</span>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link
-                    href="/projects?filter=residential"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-[#00AC4E]/30 hover:bg-white/10 text-left text-xs font-bold text-white flex items-center justify-between group transition-colors duration-200"
-                  >
-                    <span>Residential</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#00AC4E] transition-colors duration-200" />
-                  </Link>
-                  <Link
-                    href="/projects?filter=commercial"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-[#00AC4E]/30 hover:bg-white/10 text-left text-xs font-bold text-white flex items-center justify-between group transition-colors duration-200"
-                  >
-                    <span>Industrial & Commercial</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#00AC4E] transition-colors duration-200" />
-                  </Link>
-                </div>
-              </div>
-
-              <Link
-                href="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-[#00AC4E] hover:bg-[#00c258] text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl text-center transition-all"
-              >
-                Get Consultation
-              </Link>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] text-stone-500 font-mono">
-            <span>Green Engineering Systems</span>
-            <span>GES.lk</span>
+          {/* pinned call to action */}
+          <div className="relative z-10 shrink-0 px-5 pt-4 pb-5 border-t border-white/10 bg-black/25 backdrop-blur-sm">
+            <Link
+              href="/contact"
+              onClick={closeMobile}
+              className="flex items-center justify-center gap-2 w-full bg-[#00AC4E] active:bg-[#019544] text-white font-bold text-xs uppercase tracking-[0.15em] py-4 rounded-full transition-colors"
+            >
+              Get Consultation
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <p className="mt-3 text-center text-[10px] font-mono tracking-wider text-white/35">
+              Green Engineering Systems · GES.lk
+            </p>
           </div>
         </div>
       )}

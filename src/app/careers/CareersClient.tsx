@@ -55,7 +55,10 @@ export default function CareersClient() {
     return () => { ctx.revert(); clearTimeout(t); };
   }, []);
 
-  const applyHref = "mailto:info@ges.lk?subject=" + encodeURIComponent("Career Application — GES");
+  // Applications are handled entirely over email — no form, no portal.
+  const careersEmail = "info@ges.lk";
+  const applyHref =
+    `mailto:${careersEmail}?subject=` + encodeURIComponent("Career Application — GES");
 
   return (
     <div ref={root} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col text-stone-900 font-sans antialiased overflow-x-hidden">
@@ -85,7 +88,7 @@ export default function CareersClient() {
               </span>
             </a>
             <a href={applyHref} className="inline-flex items-center gap-2 text-white/80 hover:text-white font-bold text-sm border border-white/20 hover:border-white/40 rounded-full px-6 py-3 transition-all">
-              Send your CV <ArrowUpRight className="w-4 h-4" />
+              Email your CV to {careersEmail} <ArrowUpRight className="w-4 h-4" />
             </a>
           </div>
         </div>
@@ -125,24 +128,21 @@ export default function CareersClient() {
               </div>
             </div>
             <p className="text-stone-500 text-sm sm:text-base font-semibold max-w-md md:text-right leading-relaxed">
-              We&rsquo;re always growing across these teams. Apply and tell us where you&rsquo;d fit best.
+              We&rsquo;re always growing across these teams. Email your CV and tell us where you&rsquo;d fit best.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 reveal-group">
             {areas.map((a) => (
-              <a key={a.name} href={applyHref} className="reveal-item group relative rounded-[24px] bg-white border border-stone-200/60 p-7 shadow-lg shadow-stone-100/50 hover:border-[#00AC4E]/30 hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 min-h-[180px]">
+              <div key={a.name} className="reveal-item rounded-[24px] bg-white border border-stone-200/60 p-7 shadow-lg shadow-stone-100/50 transition-all duration-300 flex flex-col gap-4 min-h-[180px]">
                 <div className="w-12 h-12 rounded-2xl bg-[#00AC4E]/10 border border-[#00AC4E]/15 flex items-center justify-center text-[#00AC4E]">
                   <Icon d={a.icon} className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col gap-1.5 mt-auto">
-                  <h3 className="font-display text-lg font-black tracking-tight text-stone-900 group-hover:text-[#00AC4E] transition-colors">{a.name}</h3>
+                  <h3 className="font-display text-lg font-black tracking-tight text-stone-900">{a.name}</h3>
                   <p className="text-stone-500 text-sm font-medium">{a.roles}</p>
                 </div>
-                <span className="absolute top-7 right-7 text-stone-300 group-hover:text-[#00AC4E] transition-colors flex items-center gap-1 text-xs font-bold">
-                  Apply <ArrowUpRight className="w-4 h-4" />
-                </span>
-              </a>
+              </div>
             ))}
           </div>
         </div>
@@ -158,15 +158,20 @@ export default function CareersClient() {
                 Don&rsquo;t see your exact role? We still want to hear from you.
               </h3>
               <p className="text-white/70 font-medium text-sm sm:text-base max-w-xl">
-                Send your CV to <span className="text-[#e2ff3a] font-bold">info@ges.lk</span> and tell us how you&rsquo;d like to contribute.
+                Email your CV, along with a note on how you&rsquo;d like to contribute, to:
               </p>
             </div>
-            <a href={applyHref} className="relative z-10 inline-flex items-center gap-3 bg-[#e2ff3a] text-[#012716] hover:bg-white font-bold rounded-full pl-7 pr-2 py-2.5 shadow-lg active:scale-[0.98] transition-all duration-300 group shrink-0">
-              <span className="tracking-wide">Send your CV</span>
-              <span className="w-9 h-9 rounded-full bg-[#012716] flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                <ArrowRight className="w-4 h-4 text-[#e2ff3a] stroke-[2.5]" />
+            <div className="relative z-10 flex flex-col items-center gap-2 shrink-0">
+              <a
+                href={applyHref}
+                className="font-display text-2xl sm:text-3xl font-black tracking-tight text-[#e2ff3a] hover:text-white transition-colors break-all"
+              >
+                {careersEmail}
+              </a>
+              <span className="text-white/50 text-[11px] font-bold uppercase tracking-widest">
+                Attach your CV
               </span>
-            </a>
+            </div>
           </div>
         </div>
       </section>

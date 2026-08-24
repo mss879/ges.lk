@@ -383,14 +383,8 @@ export default function BlogListingPage() {
 
       {/* 5. Match Brand Footer Section */}
       <footer 
-        className="w-full text-white pt-[160px] sm:pt-[220px] md:pt-[280px] lg:pt-[320px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
-        style={{
-          backgroundImage: 'url("/footer-1.webp")',
-          backgroundSize: '100% auto',
-          backgroundPosition: 'center -10%',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: '#012716'
-        }}
+        className="w-full text-white pt-20 md:pt-24 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
+        style={{ backgroundColor: '#00612C' }}
       >
         <div className="max-w-[1360px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
@@ -406,7 +400,7 @@ export default function BlogListingPage() {
                   className="h-9 w-auto object-contain brightness-0 invert"
                 />
               </div>
-              <p className="text-white/70 font-medium text-sm leading-relaxed max-w-sm">
+              <p className="text-white/85 font-medium text-sm leading-relaxed max-w-sm">
                 We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
               </p>
               
@@ -424,7 +418,7 @@ export default function BlogListingPage() {
 
             {/* Column 2: Navigation Links */}
             <div className="lg:col-span-2 lg:col-start-7 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Links
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
@@ -440,7 +434,7 @@ export default function BlogListingPage() {
 
             {/* Column 3: Legal */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Legal
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
@@ -453,10 +447,10 @@ export default function BlogListingPage() {
 
             {/* Column 4: Contact info */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Contact Us
               </h4>
-              <ul className="flex flex-col gap-4 font-bold text-sm text-white/80">
+              <ul className="flex flex-col gap-4 font-bold text-sm text-white/90">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -484,16 +478,16 @@ export default function BlogListingPage() {
       </footer>
 
       {/* Copyright bottom bar */}
-      <div className="w-full bg-[#012716] text-white/60 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
+      <div className="w-full bg-[#00612C] border-t border-white/10 text-white/80 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
         <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-6 text-center md:text-left">
           
           {/* Left: Copyright */}
-          <div className="text-xs font-bold text-white/50 justify-self-center md:justify-self-start">
+          <div className="text-xs font-bold text-white/80 justify-self-center md:justify-self-start">
             © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.
           </div>
 
           {/* Center: Built and Designed by ARC AI */}
-          <div className="text-white/80 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
+          <div className="text-white/90 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
             <span>Built and Designed by</span>
             <a
               href="https://www.arcai.agency"
@@ -503,17 +497,17 @@ export default function BlogListingPage() {
               title="ARC AI - AI Automation and Software Company"
             >
               <Image
-                src="/arc-logo.webp"
+                src="/arclogo.webp"
                 alt="ARC AI | AI Automation & Software Company"
-                width={110}
-                height={32}
-                className="h-7.5 w-auto object-contain translate-y-[2px]"
+                width={350}
+                height={180}
+                className="h-8 w-auto object-contain"
               />
             </a>
           </div>
 
           {/* Right: Social Links */}
-          <div className="flex items-center justify-center md:justify-end gap-5 text-white/70 justify-self-center md:justify-self-end">
+          <div className="flex items-center justify-center md:justify-end gap-5 text-white/85 justify-self-center md:justify-self-end">
             <a href="#" className="hover:text-[#e2ff3a] transition-colors">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />

@@ -4,7 +4,7 @@ import ProductsClient from "./ProductsClient";
 export const metadata: Metadata = {
   title: "Products — Installation & Retail | Green Engineering Systems",
   description:
-    "GES supplies and installs premium renewable-energy products: solar panels (JA Solar, TW Solar), inverters (SAJ, Sunways, Solis), switchgears, cables, aluminum structures and enclosures.",
+    "GES supplies and installs premium renewable-energy products: SAJ inverters, Haitai Solar panels and Solen cables, plus switchgear, enclosures and aluminium accessories.",
 };
 
 export default function ProductsPage() {

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MapPin, Mail, Phone, Clock, Send, Building2, Home } from "lucide-react";
@@ -35,6 +37,8 @@ export default function ContactClient() {
   const root = useRef<HTMLDivElement>(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -50,11 +54,41 @@ export default function ContactClient() {
     return () => { ctx.revert(); clearTimeout(t); };
   }, []);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
+  /** Falls back to the old mailto flow when the backend is not connected. */
+  const sendByEmail = () => {
     const subject = encodeURIComponent(form.subject || "Website Enquiry");
     const body = encodeURIComponent(`Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\n\n${form.message}`);
     window.location.href = `mailto:info@ges.lk?subject=${subject}&body=${body}`;
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSendError(null);
+
+    if (!isSupabaseConfigured()) {
+      sendByEmail();
+      setSent(true);
+      return;
+    }
+
+    setSending(true);
+    const { error } = await createClient().from("inquiries").insert({
+      name: form.name,
+      email: form.email,
+      phone: form.phone || null,
+      subject: form.subject || null,
+      message: form.message,
+    });
+    setSending(false);
+
+    if (error) {
+      setSendError("We could not send that just now. Opening your email app instead…");
+      sendByEmail();
+      setSent(true);
+      return;
+    }
+
+    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
     setSent(true);
   };
 
@@ -163,11 +197,16 @@ export default function ContactClient() {
               <input className={input} type="email" placeholder="Email Address" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               <input className={input} placeholder="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
               <textarea className={`${input} resize-none`} rows={5} placeholder="How can we help?" required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
-              <button type="submit" className="mt-1 inline-flex items-center justify-center gap-2 bg-[#00AC4E] hover:bg-[#00c258] text-white font-bold text-sm uppercase tracking-widest px-6 py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">
+              <button type="submit" disabled={sending} className="mt-1 inline-flex items-center justify-center gap-2 bg-[#00AC4E] hover:bg-[#00c258] disabled:opacity-60 text-white font-bold text-sm uppercase tracking-widest px-6 py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all">
                 <Send className="w-4 h-4" />
-                {sent ? "Opening your email…" : "Send Message"}
+                {sending ? "Sending…" : sent ? "Message sent" : "Send Message"}
               </button>
-              {sent && <p className="text-xs text-stone-500 text-center font-medium">Your email app should open with the message pre-filled. If not, email info@ges.lk directly.</p>}
+              {sendError && <p className="text-xs text-amber-700 text-center font-medium">{sendError}</p>}
+              {sent && !sendError && (
+                <p className="text-xs text-stone-500 text-center font-medium">
+                  Thank you — we have received your enquiry and will be in touch shortly.
+                </p>
+              )}
             </form>
           </div>
         </div>

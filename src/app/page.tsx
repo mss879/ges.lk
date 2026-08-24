@@ -9,78 +9,13 @@ import { motion } from "framer-motion";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { blogPosts } from "@/data/blogs";
 import Preloader from "@/app/components/Preloader";
-import { solutionsData } from "@/app/components/SiteNav";
+import SiteNav from "@/app/components/SiteNav";
+import HeroSlider from "@/app/components/HeroSlider";
+import { heroSlides } from "@/data/heroSlides";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const titleWords = "Renewable Energy with Green Engineering Systems".split(" ");
-const descLines = [
-  "Powering homes and businesses with clean, renewable solar".split(" "),
-  "solutions. Reduce your carbon footprint and energy costs today.".split(" ")
-];
-
-const partnerLogos = [
-  { src: "/logos-carosel/Asset-1@4x-3-scaled.webp", alt: "Partner Logo 1" },
-  { src: "/logos-carosel/Asset-3@4x-4-scaled.webp", alt: "Partner Logo 2" },
-  { src: "/logos-carosel/Asset-4-2@4x-scaled.webp", alt: "Partner Logo 3" },
-  { src: "/logos-carosel/Asset-3@4x-4-copy-scaled.webp", alt: "Partner Logo 4" },
-  { src: "/logos-carosel/Asset-1@4x-3-scaled.webp", alt: "Partner Logo 1" },
-  { src: "/logos-carosel/Asset-3@4x-4-scaled.webp", alt: "Partner Logo 2" },
-  { src: "/logos-carosel/Asset-4-2@4x-scaled.webp", alt: "Partner Logo 3" },
-  { src: "/logos-carosel/Asset-3@4x-4-copy-scaled.webp", alt: "Partner Logo 4" }
-];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const wordVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.215, 0.61, 0.355, 1] as [number, number, number, number],
-    },
-  },
-};
-
-const buttonVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 0.8,
-      duration: 0.6,
-      ease: "easeOut" as const,
-    },
-  },
-};
-
-const roofingImageVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      delay: 1.0,
-      duration: 0.8,
-      ease: "easeOut" as const,
-    },
-  },
-};
 
 const StarIcon = () => (
   <svg className="w-4.5 h-4.5 text-[#e2fa5a] fill-current shrink-0" viewBox="0 0 24 24">
@@ -95,7 +30,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [activeTab, setActiveTab] = useState("Home");
 
   useEffect(() => {
     const video = videoRef.current;
@@ -118,9 +52,6 @@ export default function Home() {
     };
   }, []);
   const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("Solar");
   const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
 
   // Values 3D Cylinder Interactive Drag & Infinite Rotation Refs and Handlers
@@ -531,519 +462,14 @@ export default function Home() {
     <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col">
       {isLoading && <Preloader onComplete={() => setIsLoading(false)} isVideoLoaded={isVideoLoaded} />}
 
-      {/* SECTION 1: Hero Fold (Full-bleed sky & house image) */}
-      <div className="w-full h-[130vh] min-h-[950px] shrink-0 relative flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#90d4f7] via-[#c5e6f8] to-[#e1f2fb]">
+      <SiteNav active="home" />
 
-        {/* Outer frame - now full-bleed */}
-        <div className="inner-dashboard relative opacity-0 w-full h-full overflow-hidden">
-
-          {/* Noise Overlay */}
-          <div
-            className="absolute inset-0 z-10 opacity-[0.04] pointer-events-none"
-            style={{
-              backgroundImage: "url('https://framerusercontent.com/images/rR6HYXBrMmX4cRpXfXUOvpvpB0.png')",
-              backgroundSize: "161px",
-              backgroundRepeat: "repeat"
-            }}
-          />
-
-          {/* Foreground Content Wrapper */}
-          <div className="relative z-20 w-full h-full pt-4 px-4 pb-0 sm:pt-6 sm:px-6 sm:pb-0 lg:pt-8 lg:px-8 lg:pb-0 flex flex-col justify-between overflow-hidden">
-
-            {/* Navigation Header */}
-            <header className="relative z-[100] transform-gpu flex-none flex items-center justify-between pb-4 pt-0 -mt-2 lg:-mt-3 w-full px-4 lg:px-8">
-
-              {/* Left Section: Logo */}
-              <div className="nav-item-anim opacity-0 relative z-50 transform-gpu flex items-center justify-start shrink-0">
-                <Image
-                  src="/logo.webp"
-                  alt="GES Logo"
-                  width={190}
-                  height={55}
-                  priority
-                  className="h-12 xl:h-14 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-500 cursor-pointer"
-                  onClick={() => setActiveTab("Home")}
-                />
-              </div>
-
-              {/* Center Section: Navigation Links */}
-              <nav className="hidden lg:flex items-center gap-4 xl:gap-6 2xl:gap-8 justify-center whitespace-nowrap">
-                {/* Home */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/"
-                    className={`text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 ${activeTab === "Home" ? "text-stone-950 font-extrabold" : "text-stone-700 hover:text-[#00AC4E]"
-                      }`}
-                  >
-                    Home
-                  </Link>
-                  <div className={`absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 ${activeTab === "Home" ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-50"}`} />
-                </div>
-
-                {/* About */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/about"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
-                  >
-                    About
-                  </Link>
-                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
-                </div>
-
-                {/* Solutions Dropdown */}
-                <div
-                  className="nav-item-anim opacity-0 relative py-4 -my-2 group"
-                  onMouseEnter={() => setActiveDropdown("Solutions")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <Link
-                    href="/solutions"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer text-stone-700 hover:text-[#00AC4E] transition-colors duration-300 inline-flex items-center gap-1"
-                  >
-                    Solutions
-                    <svg className="w-3 h-3 text-stone-500 group-hover:text-[#00AC4E] transition-all duration-300 transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </Link>
-                  <div className="absolute bottom-[8px] left-0 w-0 h-[3px] bg-[#00AC4E] transition-all duration-300 group-hover:w-full group-hover:opacity-50" />
-
-                  {/* Solutions Mega Menu Dropdown */}
-                  {activeDropdown === "Solutions" && (
-                    <div className="absolute top-[52px] left-1/2 -translate-x-1/2 flex w-[680px] bg-white/95 backdrop-blur-3xl border border-stone-200/50 rounded-[28px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] z-[200] animate-dropdown-fade">
-                      {/* Left Panel: Categories */}
-                      <div className="w-[260px] bg-stone-50/50 p-4 flex flex-col gap-1 border-r border-stone-100 shrink-0">
-                        <span className="text-[10px] font-extrabold text-stone-400 tracking-widest font-mono uppercase px-3 mb-2 block">Categories</span>
-                        {solutionsData.map((cat) => (
-                          <Link
-                            key={cat.id}
-                            href={cat.href}
-                            onMouseEnter={() => setActiveCategory(cat.category)}
-                            onClick={() => setActiveDropdown(null)}
-                            className={`px-3 py-2.5 rounded-[14px] flex items-center justify-between text-left group/cat transition-all duration-200 ${
-                              activeCategory === cat.category
-                                ? "bg-white text-[#00AC4E] shadow-[0_4px_12px_rgba(0,0,0,0.04)] font-bold border border-stone-100"
-                                : "text-stone-600 hover:text-[#00AC4E] hover:bg-white/50 border border-transparent"
-                            }`}
-                          >
-                            <span className="text-sm font-semibold">{cat.category}</span>
-                            <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                              activeCategory === cat.category ? "translate-x-0.5 text-[#00AC4E] opacity-100" : "opacity-0 -translate-x-1 group-hover/cat:opacity-100 group-hover/cat:translate-x-0 text-stone-400"
-                            }`} />
-                          </Link>
-                        ))}
-                        <div className="mt-auto pt-4">
-                          <Link
-                            href="/solutions"
-                            onClick={() => setActiveDropdown(null)}
-                            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-[14px] bg-stone-950 hover:bg-[#00AC4E] text-white text-[11px] font-bold uppercase tracking-widest transition-colors duration-200"
-                          >
-                            All Solutions <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Right Panel: Sub-items */}
-                      <div className="flex-1 p-5 bg-white flex flex-col justify-between min-h-[320px]">
-                        <div className="flex flex-col gap-3">
-                          <span className="text-[10px] font-extrabold text-stone-400 tracking-widest font-mono uppercase px-2 mb-1 block">
-                            {activeCategory} Options
-                          </span>
-                          <div className="flex flex-col gap-1">
-                            {solutionsData.find(cat => cat.category === activeCategory)?.subItems.map((sub, idx) => (
-                              <Link
-                                key={sub.title}
-                                href={sub.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className="p-3 rounded-[16px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/sub"
-                              >
-                                <div className="flex items-center gap-1.5">
-                                  <span className="text-[10px] font-bold font-mono tracking-wider text-[#00AC4E] opacity-70">0{idx + 1}</span>
-                                  <span className="text-sm font-bold text-stone-900 group-hover/sub:text-[#00AC4E] transition-colors">{sub.title}</span>
-                                  <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-0.5 group-hover/sub:-translate-y-0.5 transition-all text-[#00AC4E]" />
-                                </div>
-                                <span className="text-xs text-stone-500 font-medium leading-relaxed pl-4">{sub.desc}</span>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Products */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/products"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
-                  >
-                    Products
-                  </Link>
-                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
-                </div>
-
-                {/* Projects Dropdown */}
-                <div
-                  className="nav-item-anim opacity-0 relative py-4 -my-2 group"
-                  onMouseEnter={() => setActiveDropdown("Projects")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <Link
-                    href="/projects"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer text-stone-700 hover:text-[#00AC4E] transition-colors duration-300 inline-flex items-center gap-1"
-                  >
-                    Projects
-                    <svg className="w-3 h-3 text-stone-500 group-hover:text-[#00AC4E] transition-all duration-300 transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </Link>
-                  <div className="absolute bottom-[8px] left-0 w-0 h-[3px] bg-[#00AC4E] transition-all duration-300 group-hover:w-full group-hover:opacity-50" />
-
-                  {/* Projects Dropdown Menu */}
-                  {activeDropdown === "Projects" && (
-                    <div className="absolute top-[52px] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 backdrop-blur-3xl border border-stone-200/50 rounded-[24px] p-2 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] z-[200] animate-dropdown-fade">
-                      <div className="flex flex-col gap-1">
-                        <Link
-                          href="/projects?filter=residential"
-                          onClick={() => setActiveDropdown(null)}
-                          className="p-3.5 rounded-[18px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/proj"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Residential</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/proj:opacity-100 group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all text-[#00AC4E]" />
-                          </div>
-                          <span className="text-[11px] text-stone-500 font-medium leading-relaxed pl-1">Photos and details of our home solar setups.</span>
-                        </Link>
-                        <Link
-                          href="/projects?filter=commercial"
-                          onClick={() => setActiveDropdown(null)}
-                          className="p-3.5 rounded-[18px] hover:bg-stone-50 text-left transition-all duration-200 flex flex-col gap-0.5 group/proj"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm font-bold text-stone-900 group-hover/proj:text-[#00AC4E] transition-colors">Industrial & Commercial</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover/proj:opacity-100 group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all text-[#00AC4E]" />
-                          </div>
-                          <span className="text-[11px] text-stone-500 font-medium leading-relaxed pl-1">Photos and details of commercial energy systems.</span>
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Services */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/services"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
-                  >
-                    Maintenance
-                  </Link>
-                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
-                </div>
-
-                {/* Careers */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/careers"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
-                  >
-                    Careers
-                  </Link>
-                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
-                </div>
-
-                {/* FAQ */}
-                <div className="nav-item-anim opacity-0 relative py-2 cursor-pointer group">
-                  <Link
-                    href="/faq"
-                    className="text-sm lg:text-[14px] xl:text-[15px] font-bold cursor-pointer transition-colors duration-300 text-stone-700 hover:text-[#00AC4E]"
-                  >
-                    FAQ
-                  </Link>
-                  <div className="absolute bottom-[0px] left-0 h-[3px] bg-[#00AC4E] transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-50" />
-                </div>
-              </nav>
-
-              {/* Right Section: Consultation Button */}
-              <div className="hidden lg:flex items-center justify-end z-50 transform-gpu shrink-0">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-3.5 bg-white/40 hover:bg-white/60 text-stone-900 font-bold rounded-full pl-5 pr-1.5 py-1.5 border border-white/60 shadow-[0_4px_18px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-all duration-300 group cursor-pointer backdrop-blur-md"
-                >
-                  <span className="tracking-wide text-[14px]">Get Consultation</span>
-                  <div className="w-7 h-7 rounded-full bg-stone-950 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:translate-x-0.5">
-                    <ArrowRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                  </div>
-                </Link>
-              </div>
-
-              {/* Mobile hamburger menu (visible strictly below lg) */}
-              <div className="flex justify-end lg:hidden z-50">
-                <button
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="nav-item-anim opacity-0 bg-stone-900/10 hover:bg-stone-900/20 active:bg-stone-900/30 border border-stone-900/10 w-11 h-11 rounded-full flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all duration-300"
-                  aria-label="Toggle Menu"
-                >
-                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-transform duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
-                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"}`} />
-                  <div className={`w-4.5 h-0.5 bg-stone-950 rounded-full transition-transform duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-                </button>
-              </div>
-            </header>
-
-            {/* Main Content Wrapper (matches framer-9onuti) */}
-            <div className="flex-1 flex flex-col items-center justify-end pb-8 text-center px-4 max-w-4xl mx-auto z-30 select-none translate-y-16 sm:translate-y-24 lg:translate-y-32">
-
-
-
-              {/* Hero Text Content (matches framer-wfzur6) */}
-              <div className="flex flex-col items-center gap-4 max-w-3xl">
-                {/* Solar Energy Title (matches framer-1nvzpyf) */}
-                <motion.h1
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate={isLoading ? "hidden" : "visible"}
-                  className="font-display text-5xl sm:text-[56px] lg:text-[64px] leading-[1.08] lg:leading-[1.04] font-semibold tracking-[-0.03em] text-[#111111] max-w-2xl lg:max-w-3xl text-center"
-                >
-                  {titleWords.map((word, i) => (
-                    <span key={i} className="inline-block mr-[0.22em] overflow-hidden">
-                      <motion.span variants={wordVariants} className="inline-block">
-                        {word}
-                      </motion.span>
-                    </span>
-                  ))}
-                </motion.h1>
-
-                {/* Solar Solutions Description (matches framer-cokco8) */}
-                <motion.p
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate={isLoading ? "hidden" : "visible"}
-                  className="text-stone-600 font-medium text-xs sm:text-sm lg:text-[15px] leading-[1.4] max-w-xl text-center"
-                >
-                  {descLines.map((line, lineIdx) => (
-                    <span key={lineIdx} className="block">
-                      {line.map((word, wordIdx) => (
-                        <span key={wordIdx} className="inline-block mr-[0.2em] overflow-hidden">
-                          <motion.span variants={wordVariants} className="inline-block">
-                            {word}
-                          </motion.span>
-                        </span>
-                      ))}
-                    </span>
-                  ))}
-                </motion.p>
-              </div>
-
-              {/* Call To Actions (matches framer-pvrod3) */}
-              <motion.div
-                variants={buttonVariants}
-                initial="hidden"
-                animate={isLoading ? "hidden" : "visible"}
-                className="mt-8"
-              >
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2.5 bg-[#111111] hover:bg-[#1c1c1c] text-white font-bold rounded-xl pl-4.5 pr-1.5 py-1 border border-white/10 shadow-lg active:scale-[0.98] transition-all duration-300 group cursor-pointer"
-                >
-                  <span className="tracking-wide text-[14px]">Get Consultation</span>
-                  <div className="w-7 h-7 rounded-lg bg-[#e2fa5a] relative overflow-hidden shrink-0 transition-transform duration-300 group-hover:scale-105">
-                    {/* First Arrow (slides out top-right on hover) */}
-                    <div className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full group-hover:-translate-y-full">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-stone-950 stroke-[2.5]" />
-                    </div>
-                    {/* Second Arrow (slides in from bottom-left on hover) */}
-                    <div className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full translate-y-full group-hover:translate-x-0 group-hover:translate-y-0">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-stone-950 stroke-[2.5]" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            </div>
-
-            {/* Bottom Roofing Image - Fits the bottom of the hero fold flush from edge to edge */}
-            <motion.div
-              variants={roofingImageVariants}
-              initial="hidden"
-              animate={isLoading ? "hidden" : "visible"}
-              className="relative z-30 mt-auto select-none pointer-events-none -mx-4 sm:-mx-6 lg:-mx-8 -mb-6 sm:-mb-9 lg:-mb-12 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-[calc(100%+4rem)]"
-            >
-              <Image
-                src="/new-hero.png"
-                alt="Modern house with solar panels, large windows, and a parked car."
-                width={6250}
-                height={3516}
-                sizes="100vw"
-                priority
-                className="w-full h-auto block transition-transform duration-300 scale-105 translate-x-4 sm:translate-x-6 lg:translate-x-8"
-              />
-            </motion.div>
-
-          </div>
-
-          {/* Mobile Fullscreen Glass Drawer Menu */}
-          {isMobileMenuOpen && (
-            <div className="absolute inset-0 z-[100] bg-[#0c120c]/95 backdrop-blur-3xl flex flex-col p-6 sm:p-10 justify-between overflow-y-auto rounded-[20px] sm:rounded-[28px]">
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <Image
-                  src="/logo.webp"
-                  alt="SolarTech Logo"
-                  width={140}
-                  height={38}
-                  className="h-8 w-auto object-contain"
-                />
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/10 w-9 h-9 rounded-full flex items-center justify-center text-white cursor-pointer transition-colors duration-200"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* List of categories with staggered animations */}
-              <div className="flex-1 my-6 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-6 justify-center">
-                <div className="w-full max-w-[600px] mx-auto flex flex-col gap-6">
-
-                  {/* Category 1: Solutions */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Solar Solutions</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {[
-                        "Residential Solar",
-                        "Commercial & Industrial",
-                        "Utility-Scale Systems",
-                        "Energy Storage"
-                      ].map((item) => (
-                        <button
-                          key={item}
-                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
-                          onClick={() => {
-                            setActiveTab(item);
-                            setIsMobileMenuOpen(false);
-                          }}
-                        >
-                          <span>{item}</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Category 2: Projects Portfolio */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Projects Portfolio</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                      {[
-                        { name: "Residential Projects", href: "/projects?filter=residential" },
-                        { name: "Industrial & Commercial", href: "/projects?filter=commercial" }
-                      ].map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                          }}
-                        >
-                          <span>{item.name}</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Category 2: Direct Links */}
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-primary-green/80 font-bold px-1">Discover</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {[
-                        { name: "Home", href: "/" },
-                        { name: "About Us", href: "/#about" },
-                        { name: "News & Blog", href: "/blog" },
-                        { name: "Projects", href: "/projects" },
-                        { name: "FAQ", href: "/faq" },
-                        { name: "Solar Calculator", href: "/#calculator" },
-                        { name: "Contact", href: "/#contact" }
-                      ].map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-white/10 active:bg-white/15 transition-all duration-300 text-left text-xs font-bold text-white flex items-center justify-between group cursor-pointer"
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                          }}
-                        >
-                          <span>{item.name}</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-primary-green transition-colors" />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Footer with branding */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[10px] text-stone-500 font-mono">
-                <span>GES.lk Solarwave Dashboard</span>
-                <span>v1.3.0</span>
-              </div>
-            </div>
-          )}
-        </div> {/* Closes inner-dashboard */}
-      </div> {/* Closes SECTION 1 wrapper */}
-
-      {/* SECTION 1.5: Infinite Logo Marquee */}
-      <div className="w-full bg-[#f8f9fa] border-y border-stone-200/50 py-10 overflow-hidden relative z-30">
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-marquee {
-            animation: marquee 25s linear infinite;
-          }
-          .animate-marquee:hover {
-            animation-play-state: paused;
-          }
-        `}} />
-        <div className="max-w-[1360px] mx-auto px-6 sm:px-12 lg:px-24">
-          <p className="text-center text-[10px] sm:text-xs font-mono font-bold tracking-[0.25em] text-stone-400 uppercase mb-8">
-            / TRUSTED BY & INTEGRATING WITH INDUSTRY LEADERS /
-          </p>
-          
-          <div className="relative w-full overflow-hidden">
-            {/* Fade overlays on the sides */}
-            <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#f8f9fa] to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#f8f9fa] to-transparent z-10 pointer-events-none" />
-            
-            <div className="flex w-[200%] animate-marquee gap-16 md:gap-24 items-center whitespace-nowrap">
-              {/* Double array to make infinite loop seamless */}
-              {[...Array(2)].map((_, loopIdx) => (
-                <div key={loopIdx} className="flex shrink-0 justify-around w-1/2 gap-16 md:gap-24 items-center">
-                  {partnerLogos.map((logo, idx) => (
-                    <div key={idx} className="flex items-center justify-center h-7 md:h-9 w-24 md:w-32 transition-transform duration-300 hover:scale-105">
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={140}
-                        height={50}
-                        className="max-h-full max-w-full object-contain filter-none"
-                      />
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSlider slides={heroSlides} />
 
       {/* SECTION 2: About Us */}
       <section
         id="about"
-        className="w-full bg-white text-stone-900 py-24 md:py-32 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-stone-100/80 relative overflow-hidden"
+        className="w-full bg-white text-stone-900 py-16 md:py-24 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-stone-100/80 relative overflow-hidden"
       >
         {/* Soft Ambient Background Glows */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#00AC4E]/[0.02] rounded-full blur-[130px] pointer-events-none select-none" />
@@ -1055,7 +481,7 @@ export default function Home() {
               <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase">
                 / ABOUT US /
               </span>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-5xl font-black tracking-tight text-stone-950 leading-tight">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-stone-950 leading-tight">
                 Global Expertise,<br />
                 <span className="text-[#00AC4E]">Local Excellence.</span>
               </h2>
@@ -1160,7 +586,7 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto">
           {/* Header */}
           <div className="mb-8 flex flex-col items-center text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.1] text-stone-900 font-display font-black bento-card-anim">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-[1.1] text-stone-900 font-display font-black bento-card-anim">
               Why <span className="text-[#00AC4E]">Choose Us</span>
             </h2>
           </div>
@@ -1413,7 +839,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 2.5: Why Solar — Overcoming Sri Lanka's Energy Challenge */}
-      <section id="why-solar" className="bg-white text-stone-900 relative z-30 border-t border-stone-100/50 pt-20 md:pt-32">
+      <section id="why-solar" className="bg-white text-stone-900 relative z-30 border-t border-stone-100/50 pt-14 md:pt-24">
 
         {/* Soft Ambient Green and Blue Glows in Background */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-primary-green/[0.04] rounded-full blur-[130px] pointer-events-none select-none animate-pulse" />
@@ -1422,10 +848,10 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row relative z-20">
 
           {/* Left Column: Localized Context & Trust Badges */}
-          <div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-16 flex flex-col justify-start px-6 py-20 md:px-12 lg:px-20 lg:pt-28 lg:border-r border-stone-200/80">
+          <div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-16 flex flex-col justify-start px-6 py-14 md:px-12 lg:px-20 lg:pt-20 lg:border-r border-stone-200/80">
             <div className="flex flex-col gap-12 max-w-xl">
 
-              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-stone-950 leading-tight">
+              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-stone-950 leading-tight">
                 Why Solar is a Smart Investment in Sri Lanka.
               </h2>
 
@@ -1586,7 +1012,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 4.4: Services Image Slider Section */}
-      <section id="services" className="w-full bg-[#08150c] text-white py-24 md:py-32 relative overflow-hidden z-20 border-t border-white/10">
+      <section id="services" className="w-full bg-[#08150c] text-white py-16 md:py-24 relative overflow-hidden z-20 border-t border-white/10">
         <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-[#00AC4E]/[0.03] rounded-full blur-[120px] pointer-events-none select-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00AC4E]/[0.02] rounded-full blur-[100px] pointer-events-none select-none" />
 
@@ -1600,7 +1026,7 @@ export default function Home() {
                 <span className="text-[#00AC4E] font-mono text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">
                   / WHAT WE DO /
                 </span>
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight leading-none text-white">
+                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-black tracking-tight leading-none text-white">
                   Our Services Overview
                 </h2>
               </div>
@@ -1729,7 +1155,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 4.5: Recreated Process Section */}
-      <section className="approach-section-trigger w-full bg-[#f8f9fa] text-stone-900 py-24 md:py-32 relative overflow-hidden border-t border-stone-100/50 z-20">
+      <section className="approach-section-trigger w-full bg-[#f8f9fa] text-stone-900 py-16 md:py-24 relative overflow-hidden border-t border-stone-100/50 z-20">
 
         {/* Soft Ambient Background Glows */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-red-500/[0.015] rounded-full blur-[130px] pointer-events-none select-none" />
@@ -1742,7 +1168,7 @@ export default function Home() {
             <span className="font-mono text-xs font-bold text-stone-400 tracking-[0.25em] uppercase mb-6 block">
               /The process/
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight text-stone-900 leading-tight max-w-5xl">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-black tracking-tight text-stone-900 leading-tight max-w-5xl">
               How we guide every<br className="hidden md:inline" /> single /project to the<br className="hidden md:inline" /> finish line.
             </h2>
           </div>
@@ -1851,7 +1277,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 5: Latest Insights (Blog Preview - Redesigned & Widened) */}
-      <section className="w-full bg-[#f8f9fa] text-stone-900 py-28 border-t border-stone-200/40 relative z-20 overflow-hidden">
+      <section className="w-full bg-[#f8f9fa] text-stone-900 py-20 border-t border-stone-200/40 relative z-20 overflow-hidden">
         {/* Ambient background glows */}
         <div className="absolute top-1/2 left-[-100px] -translate-y-1/2 w-[500px] h-[500px] bg-[#00AC4E]/[0.03] rounded-full blur-[140px] pointer-events-none select-none" />
         <div className="absolute bottom-[-100px] right-[10%] w-[600px] h-[400px] bg-[#00AC4E]/[0.02] rounded-full blur-[150px] pointer-events-none select-none" />
@@ -1861,7 +1287,7 @@ export default function Home() {
           {/* Header Row */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div className="flex flex-col">
-              <h2 className="font-display text-4xl sm:text-5xl md:text-[52px] font-black tracking-tight text-stone-900 leading-none">
+              <h2 className="font-display text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight text-stone-900 leading-none">
                 Clean Energy & Engineering Insights
               </h2>
               <p className="text-stone-500 text-sm sm:text-base md:text-lg font-medium leading-relaxed mt-4 max-w-2xl">
@@ -1972,14 +1398,8 @@ export default function Home() {
 
       <footer
         id="contact"
-        className="w-full text-white pt-[240px] sm:pt-[310px] md:pt-[400px] lg:pt-[470px] xl:pt-[510px] pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
-        style={{
-          backgroundImage: 'url("/footer-1.webp")',
-          backgroundSize: '100% auto',
-          backgroundPosition: 'center -35%',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: '#012716'
-        }}
+        className="w-full text-white pt-20 md:pt-24 pb-10 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
+        style={{ backgroundColor: '#00612C' }}
       >
         <div className="max-w-[1360px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
@@ -1995,7 +1415,7 @@ export default function Home() {
                   className="h-9 w-auto object-contain brightness-0 invert"
                 />
               </div>
-              <p className="text-white/70 font-medium text-sm leading-relaxed max-w-sm">
+              <p className="text-white/85 font-medium text-sm leading-relaxed max-w-sm">
                 We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
               </p>
 
@@ -2014,7 +1434,7 @@ export default function Home() {
 
             {/* Column 2: Navigation Links */}
             <div className="lg:col-span-2 lg:col-start-7 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Links
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
@@ -2030,7 +1450,7 @@ export default function Home() {
 
             {/* Column 3: Legal/Policies */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Legal
               </h4>
               <ul className="flex flex-col gap-3 font-bold text-sm">
@@ -2043,10 +1463,10 @@ export default function Home() {
 
             {/* Column 4: Contact Us Info */}
             <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/50">
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-6 text-white/75">
                 Contact Us
               </h4>
-              <ul className="flex flex-col gap-4 font-bold text-sm text-white/80">
+              <ul className="flex flex-col gap-4 font-bold text-sm text-white/90">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -2066,7 +1486,7 @@ export default function Home() {
                   </svg>
                   <div className="flex flex-col">
                     <a href="tel:+94765332332" className="hover:text-[#e2ff3a] transition-colors font-bold">+94 76 533 2332</a>
-                    <a href="tel:0765332332" className="hover:text-[#e2ff3a] transition-colors text-xs text-white/50 font-semibold">076 533 2332</a>
+                    <a href="tel:0765332332" className="hover:text-[#e2ff3a] transition-colors text-xs text-white/75 font-semibold">076 533 2332</a>
                   </div>
                 </li>
               </ul>
@@ -2077,16 +1497,16 @@ export default function Home() {
       </footer>
 
       {/* COPYRIGHT SECTION: Deep Forest Green Bottom Bar with No Separator */}
-      <div className="w-full bg-[#012716] text-white/60 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
+      <div className="w-full bg-[#00612C] border-t border-white/10 text-white/80 py-8 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
         <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-6 text-center md:text-left">
 
           {/* Left: Copyright */}
-          <div className="text-xs font-bold text-white/50 justify-self-center md:justify-self-start">
+          <div className="text-xs font-bold text-white/80 justify-self-center md:justify-self-start">
             © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.
           </div>
 
           {/* Center: Built and Designed by ARC AI */}
-          <div className="text-white/80 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
+          <div className="text-white/90 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
             <span>Built and Designed by</span>
             <a
               href="https://www.arcai.agency"
@@ -2096,17 +1516,17 @@ export default function Home() {
               title="ARC AI - AI Automation and Software Company"
             >
               <Image
-                src="/arc-logo.webp"
+                src="/arclogo.webp"
                 alt="ARC AI | AI Automation & Software Company"
-                width={110}
-                height={32}
-                className="h-7.5 w-auto object-contain translate-y-[2px]"
+                width={350}
+                height={180}
+                className="h-8 w-auto object-contain"
               />
             </a>
           </div>
 
           {/* Right: Social Links */}
-          <div className="flex items-center justify-center md:justify-end gap-5 text-white/70 justify-self-center md:justify-self-end">
+          <div className="flex items-center justify-center md:justify-end gap-5 text-white/85 justify-self-center md:justify-self-end">
             <a href="#" className="hover:text-[#e2ff3a] transition-colors">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />

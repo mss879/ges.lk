@@ -3,10 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Wrench, Check, ShieldCheck, Send } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Wrench, Check, ShieldCheck, Send, Search, AlertTriangle, Cpu, Droplets, Activity, ArrowUpCircle, PlayCircle } from "lucide-react";
 import SiteNav from "@/app/components/SiteNav";
 import SiteFooter from "@/app/components/SiteFooter";
 import WebGLBackground from "@/app/components/WebGLBackground";
+import {
+  maintenanceServices,
+  onSiteActivities,
+  maintenanceVideo,
+  maintenancePoster,
+  type MaintenanceIcon,
+} from "@/data/maintenance";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -32,6 +41,17 @@ const generatorChecks = [
   "Spark plug cleaning",
   "Inspection of wiring and output voltage",
 ];
+
+
+const maintenanceIcons: Record<MaintenanceIcon, React.ReactNode> = {
+  inspection: <Search className="w-5 h-5" />,
+  preventive: <ShieldCheck className="w-5 h-5" />,
+  troubleshooting: <AlertTriangle className="w-5 h-5" />,
+  inverter: <Cpu className="w-5 h-5" />,
+  cleaning: <Droplets className="w-5 h-5" />,
+  monitoring: <Activity className="w-5 h-5" />,
+  upgrades: <ArrowUpCircle className="w-5 h-5" />,
+};
 
 export default function ServicesClient() {
   const root = useRef<HTMLDivElement>(null);
@@ -96,6 +116,111 @@ export default function ServicesClient() {
                 <ArrowRight className="w-4 h-4 text-[#e2ff3a] stroke-[2.5]" />
               </span>
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* MAINTENANCE & SERVICES */}
+      <section id="maintenance" className="relative w-full bg-white py-20 md:py-24 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden scroll-mt-24">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00AC4E]/[0.04] rounded-full blur-[130px] pointer-events-none" />
+        <div className="max-w-[1280px] mx-auto">
+          <div className="flex flex-col gap-3.5 max-w-3xl mb-12 reveal">
+            <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase">/ AFTER-SALES & MAINTENANCE /</span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight text-stone-950 leading-none">
+              Maintenance &amp; Services
+            </h2>
+            <p className="text-stone-600 text-sm sm:text-base font-medium leading-relaxed">
+              Our technicians look after your system long after handover — keeping generation high, catching faults
+              early and extending the life of every component.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            {/* main visual */}
+            <div className="lg:col-span-6 reveal">
+              <div className="relative w-full aspect-video rounded-[24px] overflow-hidden border border-stone-200/60 shadow-xl bg-stone-100">
+                {maintenanceVideo ? (
+                  <video
+                    className="absolute inset-0 w-full h-full object-cover"
+                    src={maintenanceVideo}
+                    poster={maintenancePoster}
+                    controls
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <>
+                    <Image
+                      src={maintenancePoster}
+                      alt="GES service technicians maintaining a rooftop solar system"
+                      fill
+                      sizes="(min-width: 1024px) 620px, 92vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 flex items-center gap-2.5">
+                      <PlayCircle className="w-5 h-5 text-[#e2ff3a] shrink-0" />
+                      <span className="text-white text-xs font-bold tracking-wide">
+                        Our service team on site
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* service list */}
+            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 reveal-group">
+              {maintenanceServices.map((svc) => (
+                <div
+                  key={svc.name}
+                  className="reveal-item rounded-2xl bg-stone-50 border border-stone-200/60 p-5 flex flex-col gap-2.5 hover:bg-white hover:border-[#00AC4E]/30 hover:shadow-md transition-all duration-300"
+                >
+                  <span className="w-10 h-10 rounded-xl bg-[#00AC4E]/10 border border-[#00AC4E]/15 flex items-center justify-center text-[#00AC4E] shrink-0">
+                    {maintenanceIcons[svc.icon]}
+                  </span>
+                  <h3 className="font-display text-base font-black tracking-tight text-stone-900 leading-snug">{svc.name}</h3>
+                  <p className="text-stone-500 text-xs font-medium leading-relaxed">{svc.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* on-site activity strip */}
+          <div className="mt-12 reveal-group">
+            <span className="text-stone-400 font-mono text-[10px] font-bold tracking-[0.2em] uppercase block mb-4">/ On site /</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+              {onSiteActivities.map((act) => (
+                <figure key={act.label} className="reveal-item group relative aspect-[4/3] rounded-2xl overflow-hidden border border-stone-200/60 bg-stone-100">
+                  <Image
+                    src={act.image}
+                    alt={act.label}
+                    fill
+                    sizes="(min-width: 1024px) 230px, 45vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+                  <figcaption className="absolute bottom-0 left-0 right-0 p-3 text-white text-[11px] font-bold leading-tight">
+                    {act.label}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 reveal flex flex-col sm:flex-row sm:items-center gap-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-3 bg-[#00AC4E] hover:bg-[#019544] text-white font-bold rounded-full pl-6 pr-2 py-2 shadow-lg active:scale-[0.98] transition-all duration-300 group w-fit"
+            >
+              <span className="text-sm tracking-wide">Contact Us for Maintenance</span>
+              <span className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                <ArrowRight className="w-4 h-4 text-white stroke-[2.5]" />
+              </span>
+            </Link>
+            <p className="text-stone-500 text-xs font-semibold">
+              Islandwide service · Existing GES systems and third-party installations.
+            </p>
           </div>
         </div>
       </section>

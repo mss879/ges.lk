@@ -3,7 +3,8 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
-import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import SiteNav from "@/app/components/SiteNav";
 import SiteFooter from "@/app/components/SiteFooter";
 import WebGLBackground from "@/app/components/WebGLBackground";
@@ -50,26 +51,16 @@ const ic = {
   ),
 };
 
-function VideoFrame({ icon, label }: { icon: React.ReactNode; label: string }) {
+function SolutionImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative w-full aspect-video rounded-[28px] overflow-hidden border border-stone-200/60 bg-gradient-to-br from-[#08150c] via-[#0c2417] to-[#04140b] shadow-xl group">
-      <div className="absolute inset-0 opacity-[0.08] text-[#00E676] flex items-center justify-center">
-        <div className="w-1/2 h-1/2">
-          <Icon d={icon} className="w-full h-full" />
-        </div>
-      </div>
-      <div className="absolute inset-0 grid-background opacity-30" />
-      {/* play button */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#e2ff3a] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-          <Play className="w-6 h-6 text-[#04140b] fill-[#04140b] translate-x-0.5" />
-        </div>
-        <span className="text-white/60 text-xs font-bold uppercase tracking-widest">{label}</span>
-      </div>
-      <div className="absolute top-4 left-4 flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-3 py-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#e2ff3a] animate-pulse" />
-        <span className="text-[9px] font-black uppercase tracking-widest text-white/80">Video coming soon</span>
-      </div>
+    <div className="relative w-full aspect-video rounded-[28px] overflow-hidden border border-stone-200/60 shadow-xl bg-stone-100">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 620px, 92vw"
+        className="object-cover"
+      />
     </div>
   );
 }
@@ -153,11 +144,10 @@ export default function SolutionDetailClient({ solution }: { solution: SolutionI
             {solution.diagram ? (
               <div className="rounded-[24px] bg-gradient-to-br from-stone-50 to-white border border-stone-200/60 p-5 sm:p-7 shadow-sm">
                 <SolarDiagram type={solution.diagram} />
-                <p className="text-center text-[10px] font-mono font-bold uppercase tracking-widest text-stone-400 mt-2">Live energy flow diagram</p>
               </div>
-            ) : (
-              <VideoFrame icon={ic[solution.iconName]} label={solution.title} />
-            )}
+            ) : solution.image ? (
+              <SolutionImage src={solution.image} alt={solution.title} />
+            ) : null}
           </div>
         </div>
       </section>

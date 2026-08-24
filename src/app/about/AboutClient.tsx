@@ -325,18 +325,18 @@ export default function AboutClient() {
           <div className="lg:col-span-6 grid grid-cols-2 gap-5 items-start reveal-group">
             <div className="space-y-5">
               <div className="reveal-item relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
-                <Image src="/about_us_office_v6.webp" alt="GES engineering office" fill sizes="300px" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
+                <Image src="/about_office_2026.webp" alt="GES engineers reviewing solar array designs in the Colombo office" fill sizes="(min-width: 1024px) 260px, 45vw" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
               </div>
               <div className="reveal-item relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
-                <Image src="/about_us_engineers_v6.webp" alt="GES engineers on site" fill sizes="300px" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
+                <Image src="/about_engineers_2026.webp" alt="GES technicians levelling a solar panel on a Sri Lankan rooftop" fill sizes="(min-width: 1024px) 260px, 45vw" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
               </div>
             </div>
-            <div className="space-y-5 pt-12">
+            <div className="space-y-5 pt-6 sm:pt-10 lg:pt-12">
               <div className="reveal-item relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
-                <Image src="/about_us_tech_v7.webp" alt="Battery storage & inverter room" fill sizes="300px" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
+                <Image src="/about_tech_2026.webp" alt="Industrial battery storage and inverter room" fill sizes="(min-width: 1024px) 260px, 45vw" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
               </div>
               <div className="reveal-item relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-stone-100/50 group/img">
-                <Image src="/about_us_building_v7.webp" alt="Sustainable building with rooftop solar" fill sizes="300px" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
+                <Image src="/about_building_2026.webp" alt="Tropical office building with a living green facade and rooftop solar" fill sizes="(min-width: 1024px) 260px, 45vw" className="object-cover group-hover/img:scale-105 transition-transform duration-700" />
               </div>
             </div>
           </div>
@@ -349,7 +349,7 @@ export default function AboutClient() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           <div className="lg:col-span-5 reveal order-2 lg:order-1">
             <div className="relative rounded-[32px] overflow-hidden border border-white/10 shadow-2xl aspect-[5/6]">
-              <Image src="/about_us_engineers_v5.webp" alt="A decade of solar engineering" fill sizes="500px" className="object-cover" />
+              <Image src="/about_history_lk_2026.webp" alt="The Sri Lankan GES engineering team in front of a completed solar installation" fill sizes="(min-width: 1024px) 440px, 90vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#08150c] via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
                 <div>
@@ -441,7 +441,7 @@ export default function AboutClient() {
               </p>
               <div className="relative z-10 mt-auto pt-4">
                 <div className="relative rounded-2xl overflow-hidden aspect-[16/8] border border-stone-200">
-                  <Image src="/green_terraces.webp" alt="Sustainable green landscape" fill sizes="600px" className="object-cover" />
+                  <Image src="/about_terraces_2026.webp" alt="Tea plantation terraces in the Sri Lankan central highlands" fill sizes="(min-width: 1024px) 480px, 90vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                   <span className="absolute bottom-4 left-4 text-white font-display font-black text-lg">Uplifting communities, sustainably.</span>
                 </div>
@@ -612,7 +612,7 @@ export default function AboutClient() {
           </div>
           <div className="lg:col-span-5 reveal">
             <div className="relative rounded-[32px] overflow-hidden border border-white/10 shadow-2xl aspect-[4/5]">
-              <Image src="/about_us_building_v6.webp" alt="Sustainable engineering at GES" fill sizes="500px" className="object-cover" />
+              <Image src="/about_values_2026.webp" alt="A GES engineer reviewing a live solar monitoring dashboard at dusk" fill sizes="(min-width: 1024px) 460px, 90vw" className="object-cover" />
             </div>
           </div>
         </div>

@@ -6,6 +6,8 @@ export interface SolutionItem {
   desc: string;
   features: string[];
   diagram?: "on-grid" | "off-grid" | "hybrid" | "bess";
+  /** product photo shown when a solution has no energy-flow diagram */
+  image?: string;
   iconName: "solar" | "power" | "hydrogen" | "waste" | "ev" | "battery";
 }
 
@@ -21,19 +23,9 @@ export const solutionsDataList: SolutionItem[] = [
     iconName: "solar",
   },
   {
-    slug: "off-grid",
-    title: "Off-Grid Solar",
-    tag: "02 / Solar",
-    eyebrow: "Solar",
-    desc: "A standalone solar system with battery storage that operates independently of the utility grid — providing power in remote or grid-unavailable locations.",
-    features: ["Battery storage included", "Complete grid independence", "Ideal for remote sites", "Uninterrupted day & night supply"],
-    diagram: "off-grid",
-    iconName: "solar",
-  },
-  {
     slug: "hybrid",
     title: "Hybrid Solar",
-    tag: "03 / Solar",
+    tag: "02 / Solar",
     eyebrow: "Solar",
     desc: "A smart solar solution that combines grid connectivity with battery storage — ensuring reliable power supply and enhanced energy independence.",
     features: ["Grid + battery combined", "Automatic backup on outage", "Maximum energy independence", "Smart load management"],
@@ -43,12 +35,22 @@ export const solutionsDataList: SolutionItem[] = [
   {
     slug: "bess",
     title: "BESS Storage",
-    tag: "04 / Solar",
+    tag: "03 / Solar",
     eyebrow: "Solar",
     desc: "An advanced energy storage solution that stores excess electricity for later use — improving energy efficiency, backup power availability and grid stability.",
     features: ["Store excess electricity", "Backup power on demand", "Improved grid stability", "Higher self-consumption"],
     diagram: "bess",
     iconName: "battery",
+  },
+  {
+    slug: "off-grid",
+    title: "Off-Grid Solar",
+    tag: "04 / Solar",
+    eyebrow: "Solar",
+    desc: "A standalone solar system with battery storage that operates independently of the utility grid — providing power in remote or grid-unavailable locations.",
+    features: ["Battery storage included", "Complete grid independence", "Ideal for remote sites", "Uninterrupted day & night supply"],
+    diagram: "off-grid",
+    iconName: "solar",
   },
   {
     slug: "mtg",
@@ -57,6 +59,7 @@ export const solutionsDataList: SolutionItem[] = [
     eyebrow: "Power Generation",
     desc: "A compact and efficient power generation system that converts fuel into electricity with low emissions and high reliability. Micro Turbine Generators are ideal for commercial, industrial and distributed energy applications, providing continuous and dependable power.",
     features: ["Low emissions", "Continuous & dependable", "Commercial & industrial scale", "High reliability operation"],
+    image: "/solution-mtg.webp",
     iconName: "power",
   },
   {
@@ -66,6 +69,7 @@ export const solutionsDataList: SolutionItem[] = [
     eyebrow: "Hydrogen Energy",
     desc: "A clean and efficient energy solution that converts hydrogen into electricity with minimal emissions. SFC fuel cells provide reliable, quiet and sustainable power for a wide range of residential, commercial and industrial applications.",
     features: ["Minimal emissions", "Quiet operation", "Residential to industrial", "Quiet, sustainable power"],
+    image: "/solution-fuel-cell.webp",
     iconName: "hydrogen",
   },
   {
@@ -75,6 +79,7 @@ export const solutionsDataList: SolutionItem[] = [
     eyebrow: "Waste Management",
     desc: "An eco-friendly waste management solution that converts organic waste into nutrient-rich compost quickly and efficiently. Composting machines help reduce waste, minimize environmental impact and support sustainable waste recycling practices.",
     features: ["Organic waste to compost", "Reduces landfill waste", "Sustainable recycling", "Eco-friendly conversion"],
+    image: "/solution-composting.webp",
     iconName: "waste",
   },
   {
@@ -84,6 +89,7 @@ export const solutionsDataList: SolutionItem[] = [
     eyebrow: "EV Charging",
     desc: "Fast, safe and intelligent EV charging solutions for homes, businesses and public charging networks.",
     features: ["Fast charging", "Safe & intelligent", "Home, business & public", "Premium Moreday brand components"],
+    image: "/solution-ev-charging.webp",
     iconName: "ev",
   },
 ];
@@ -105,7 +111,7 @@ export const categoriesDataList: SolutionCategory[] = [
     id: "solar",
     eyebrow: "Category / Solar",
     desc: "Harness clean, abundant energy from the sun with our cutting-edge solar power systems designed for residential, commercial, and industrial scaling.",
-    subItemSlugs: ["on-grid", "off-grid", "hybrid", "bess"],
+    subItemSlugs: ["on-grid", "hybrid", "bess", "off-grid"],
     iconName: "solar"
   },
   {
