@@ -149,9 +149,27 @@ const pillars = [
 ];
 
 const awards = [
-  { src: "/award-1.png", tag: "Recognition" },
-  { src: "/award-2.png", tag: "Recognition" },
-  { src: "/award-3.png", tag: "Recognition" },
+  {
+    src: "/award-1.png",
+    year: "2025",
+    level: "Silver",
+    title: "Best Display of Engineering Services",
+    desc: "Recognised for the stall with the best display of engineering services at techno Sri Lanka 2025, the national engineering and technology exhibition.",
+  },
+  {
+    src: "/award-3.png",
+    year: "2023",
+    level: "Bronze",
+    title: "Best Display & Demonstration of Engineering Products",
+    desc: "Awarded at techno Sri Lanka 2023, held under the theme \u201cEngineering for Regaining the Economy\u201d.",
+  },
+  {
+    src: "/award-2.png",
+    year: "2015",
+    level: "Bronze",
+    title: "Best Display of Imported Product",
+    desc: "Awarded at the National Engineering and Technology Exhibition 2015, our first recognition from the IESL.",
+  },
 ];
 
 const partnerLogos = [
@@ -649,14 +667,18 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 reveal-group max-w-[860px] mx-auto">
-            {awards.map((a, i) => (
+            {awards.map((a) => (
               <div
-                key={i}
+                key={a.src}
                 className="reveal-item group relative rounded-[28px] bg-gradient-to-b from-stone-50 to-white border border-stone-200/60 shadow-lg overflow-hidden hover:-translate-y-2 transition-all duration-500 flex flex-col"
               >
                 <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5 bg-white/90 backdrop-blur-md border border-stone-200/50 rounded-full px-3 py-1.5 shadow-sm">
-                  <span className="text-[#e2c200]"><Icon name="award" className="w-3.5 h-3.5" /></span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-stone-700">{a.tag}</span>
+                  <span className={a.level === "Silver" ? "text-stone-400" : "text-[#b87333]"}>
+                    <Icon name="award" className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-stone-700">
+                    {a.level} · {a.year}
+                  </span>
                 </div>
                 {/* Fixed-height well: the certificates have slightly different
                     aspect ratios, so sizing by height keeps all three the same
@@ -664,16 +686,19 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
                 <div className="relative w-full h-[230px] sm:h-[270px] bg-stone-100/60 flex items-center justify-center overflow-hidden p-4 sm:p-5">
                   <Image
                     src={a.src}
-                    alt={`GES Award ${i + 1}`}
+                    alt={`${a.level} Award ${a.year} — ${a.title}`}
                     width={460}
                     height={1090}
                     sizes="(min-width: 640px) 160px, 40vw"
                     className="h-full w-auto max-w-full object-contain group-hover:scale-[1.03] transition-transform duration-500 drop-shadow-md"
                   />
                 </div>
-                <div className="p-4 sm:p-5 border-t border-stone-100 flex items-center justify-between">
-                  <span className="font-display text-sm font-black text-stone-800">Award 0{i + 1}</span>
-                  <span className="font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">GES</span>
+                <div className="p-4 sm:p-5 border-t border-stone-100 flex flex-col gap-2 flex-1">
+                  <h3 className="font-display text-sm font-black text-stone-900 leading-snug">{a.title}</h3>
+                  <p className="text-stone-500 text-xs font-medium leading-relaxed">{a.desc}</p>
+                  <span className="mt-auto pt-2 font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+                    Institution of Engineers, Sri Lanka
+                  </span>
                 </div>
               </div>
             ))}
