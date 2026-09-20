@@ -155,10 +155,9 @@ const awards = [
 ];
 
 const partnerLogos = [
-  "/logos-carosel/Asset-1@4x-3-scaled.webp",
-  "/logos-carosel/Asset-3@4x-4-scaled.webp",
-  "/logos-carosel/Asset-4-2@4x-scaled.webp",
-  "/logos-carosel/Asset-3@4x-4-copy-scaled.webp",
+  { src: "/logos-carosel/Asset-1@4x-3-scaled.webp", alt: "Solen Beam" },
+  { src: "/logos-carosel/Asset-3@4x-4-scaled.webp", alt: "Solen Cable" },
+  { src: "/logos-carosel/Asset-3@4x-4-copy-scaled.webp", alt: "Moreday" },
 ];
 
 export default function AboutClient({ images }: { images?: SiteImageMap }) {
@@ -578,10 +577,10 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
               <p className="text-center text-[10px] sm:text-xs font-mono font-bold tracking-[0.25em] text-stone-400 uppercase mb-8">
                 / TRUSTED TECHNOLOGY PARTNERS /
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-center">
-                {partnerLogos.map((src, i) => (
-                  <div key={i} className="flex items-center justify-center h-12 grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
-                    <Image src={src} alt="Partner" width={140} height={50} className="max-h-full max-w-full object-contain" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 items-center">
+                {partnerLogos.map((logo) => (
+                  <div key={logo.src} className="flex items-center justify-center h-12 grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+                    <Image src={logo.src} alt={logo.alt} width={140} height={50} className="max-h-full max-w-full object-contain" />
                   </div>
                 ))}
               </div>

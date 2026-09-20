@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ArrowLeftRight, Scale, TrendingUp } from "lucide-react";
 import SiteNav from "@/app/components/SiteNav";
 import SiteFooter from "@/app/components/SiteFooter";
 import WebGLBackground from "@/app/components/WebGLBackground";
@@ -95,6 +95,41 @@ const solarSolutions = [
     desc: "A standalone solar system with battery storage that operates independently of the utility grid — providing power in remote or grid-unavailable locations.",
     diagram: "off-grid" as const,
     features: ["Battery storage included", "Complete grid independence", "Ideal for remote sites", "Uninterrupted day & night supply"],
+  },
+];
+
+/**
+ * The three Solar PV electricity export schemes offered in Sri Lanka.
+ * Tariffs are set by the utility and the regulator and change over time, so
+ * this describes how each scheme works rather than quoting rates.
+ */
+const exportSchemes = [
+  {
+    id: "net-metering",
+    name: "Net Metering",
+    icon: "swap" as const,
+    summary: "Offset your own consumption, unit for unit.",
+    detail:
+      "Units you export are credited against units you import, and any unused credit carries forward to the following month. You are never paid in cash — the benefit shows up as a reduced bill.",
+    bestFor: "Homes and businesses whose yearly generation is close to their yearly usage.",
+  },
+  {
+    id: "net-accounting",
+    name: "Net Accounting",
+    icon: "scale" as const,
+    summary: "Buy what you use, sell what you spare.",
+    detail:
+      "Import and export are measured separately. You pay the normal tariff for what you draw from the grid and are paid a separate rate for what you send back, with any net credit settled to you.",
+    bestFor: "Sites that regularly generate more than they consume.",
+  },
+  {
+    id: "net-plus",
+    name: "Net Plus",
+    icon: "trend" as const,
+    summary: "Sell your whole generation to the grid.",
+    detail:
+      "Nothing is offset. The full output of the system is sold to the utility at an agreed rate while your consumption is billed separately, as two independent accounts.",
+    bestFor: "Owners treating the roof purely as a revenue-generating asset.",
   },
 ];
 
@@ -238,6 +273,16 @@ export default function SolutionsClient() {
             </div>
           </div>
 
+          {/* Short overview before the individual systems */}
+          <div className="max-w-3xl mb-12 reveal">
+            <p className="text-stone-600 text-sm sm:text-base font-medium leading-relaxed">
+              Every property has a different roof, load profile and budget, so we start with the site rather than
+              the product. The four systems below run from a straightforward grid-tied array through to complete
+              off-grid independence — which one fits depends on whether you want to cut your bill, stay powered
+              through an outage, or both. If you are not sure, we will size it for you after a site assessment.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {solarSolutions.map((s) => (
               <div
@@ -277,6 +322,63 @@ export default function SolutionsClient() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* SOLAR PV ELECTRICITY EXPORT SCHEMES */}
+      <section id="export-schemes" className="relative w-full bg-white py-20 md:py-24 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden scroll-mt-24">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="flex flex-col gap-3.5 max-w-3xl mb-12 reveal">
+            <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase">
+              / EXPORT SCHEMES /
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight text-stone-950 leading-none">
+              Solar PV Electricity Export Schemes
+            </h2>
+            <p className="text-stone-600 text-sm sm:text-base font-medium leading-relaxed">
+              Once your system is connected, the electricity it sends back to the grid is settled under one of three
+              schemes. The scheme you choose decides whether solar reduces your bill or earns you an income — we help
+              you pick the one that matches how you actually use power.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 reveal-group">
+            {exportSchemes.map((scheme, i) => {
+              const SchemeIcon =
+                scheme.icon === "swap" ? ArrowLeftRight : scheme.icon === "scale" ? Scale : TrendingUp;
+              return (
+                <div
+                  key={scheme.id}
+                  className="reveal-item flex flex-col rounded-[24px] bg-stone-50 border border-stone-200/60 p-7 hover:bg-white hover:border-[#00AC4E]/30 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="w-11 h-11 rounded-2xl bg-[#00AC4E]/10 border border-[#00AC4E]/15 flex items-center justify-center text-[#00AC4E]">
+                      <SchemeIcon className="w-5 h-5" />
+                    </span>
+                    <span className="font-mono text-sm font-bold text-stone-300">0{i + 1}</span>
+                  </div>
+
+                  <h3 className="font-display text-xl font-black tracking-tight text-stone-950 mt-5">
+                    {scheme.name}
+                  </h3>
+                  <p className="text-[#00AC4E] text-sm font-bold mt-1">{scheme.summary}</p>
+                  <p className="text-stone-600 text-sm font-medium leading-relaxed mt-3">{scheme.detail}</p>
+
+                  <div className="mt-auto pt-5">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 block mb-1.5">
+                      Best for
+                    </span>
+                    <p className="text-stone-700 text-xs font-semibold leading-relaxed">{scheme.bestFor}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-8 text-xs text-stone-500 font-medium leading-relaxed max-w-3xl reveal">
+            Export rates and eligibility are set by the utility and the regulator and are revised from time to time.
+            We confirm the current terms and handle the CEB or LECO application as part of every installation.
+          </p>
         </div>
       </section>
 
