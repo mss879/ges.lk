@@ -140,52 +140,21 @@ const configs: Record<DiagramType, Config> = {
 };
 
 /* ----------------------------------------------------------------- icons */
-/* Drawn on a ~48px box centred on the origin, stroked with currentColor. */
+/*
+ * Illustrated node icons (public/diagram-icons). These are raster artwork, so
+ * unlike the previous inline glyphs they do not inherit `currentColor` — the
+ * green accent is baked in. Muted nodes are dimmed with opacity instead.
+ */
 
-function glyph(kind: NodeKind) {
-  switch (kind) {
-    case "panels":
-      return (
-        <>
-          <rect x="-16" y="-14" width="32" height="21" rx="2.5" />
-          <path d="M-16 -7H16M-16 0H16M-5.4 -14V7M5.4 -14V7" />
-          <path d="M0 7v8M-7 15h14" />
-        </>
-      );
-    case "inverter":
-      return (
-        <>
-          <rect x="-13" y="-15" width="26" height="30" rx="4.5" />
-          <path d="M-7.5 5c0-7 4.5-7 7.5-2.5S7.5 2 7.5 -5" />
-          <path d="M-6 -9.5h12" />
-        </>
-      );
-    case "battery":
-      return (
-        <>
-          <rect x="-16" y="-10.5" width="28" height="21" rx="4" />
-          <path d="M14.5 -4.5v9" />
-          <path d="M1.5 -6 -4 1h5l-2 6" />
-        </>
-      );
-    case "grid":
-      return (
-        <>
-          <path d="M-11 15 -5.5 -10h11L11 15" />
-          <path d="M-9 -10h18M0 -10v-4.5" />
-          <path d="M-7.4 -3h14.8M-9.4 6h18.8" />
-        </>
-      );
-    case "home":
-      return (
-        <>
-          <path d="M-14 -1 0 -14l14 13" />
-          <path d="M-10.5 -3.5V14h21V-3.5" />
-          <path d="M-3.2 14V6h6.4v8" />
-        </>
-      );
-  }
-}
+const ICONS: Record<NodeKind, string> = {
+  panels: "/diagram-icons/panels.webp",
+  inverter: "/diagram-icons/inverter.webp",
+  battery: "/diagram-icons/battery.webp",
+  grid: "/diagram-icons/grid.webp",
+  home: "/diagram-icons/home.webp",
+};
+
+const ICON_SIZE = 46;
 
 /* ------------------------------------------------------------- geometry */
 
@@ -379,7 +348,6 @@ export default function SolarDiagram({
         {/* ---- nodes ---- */}
         {cfg.nodes.map((n) => {
           const { cx, cy } = pos[n.id];
-          const accent = n.muted ? "#94a3b8" : n.hero ? "#00AC4E" : "#0f172a";
           return (
             <g key={n.id} opacity={n.muted ? 0.55 : 1}>
               <rect
@@ -394,16 +362,14 @@ export default function SolarDiagram({
                 strokeDasharray={n.muted ? "5 5" : undefined}
                 filter={`url(#${uid}-shadow)`}
               />
-              <g
-                transform={`translate(${cx} ${cy - 21}) scale(0.7)`}
-                stroke={accent}
-                strokeWidth="2.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              >
-                {glyph(n.kind)}
-              </g>
+              <image
+                href={ICONS[n.kind]}
+                x={cx - ICON_SIZE / 2}
+                y={cy - 46}
+                width={ICON_SIZE}
+                height={ICON_SIZE}
+                preserveAspectRatio="xMidYMid meet"
+              />
               <text
                 x={cx}
                 y={cy + 18}
