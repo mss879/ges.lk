@@ -7,7 +7,12 @@
  * Everything is laid out on a fixed 3x3 grid and connected with orthogonal
  * (right-angle) runs so the result reads like an engineering single-line
  * drawing rather than a scatter of diagonal lines. Flow direction is shown
- * with static arrow heads — the diagrams are deliberately not animated.
+ * with static arrow heads.
+ *
+ * On-Grid additionally animates the current itself — a marching dash along each
+ * run — because it is the diagram used to explain how power actually moves.
+ * The others stay static on purpose. Motion is disabled under
+ * prefers-reduced-motion.
  */
 
 export type DiagramType = "on-grid" | "hybrid" | "bess" | "off-grid";
@@ -28,6 +33,8 @@ const GAP = 10; // breathing room between a card edge and its connector
 
 const COL = [110, 450, 790]; // x centres
 const ROW = [70, 240, 410]; // y centres
+
+const ANIMATED_TYPES = new Set<DiagramType>(["on-grid"]);
 
 const FLOW: Record<FlowKind, { color: string; label: string }> = {
   solar: { color: "#00AC4E", label: "Solar generation" },
@@ -242,6 +249,7 @@ export default function SolarDiagram({
 }) {
   const cfg = configs[type];
   const uid = `d-${type}`;
+  const animated = ANIMATED_TYPES.has(type);
   const pos: Record<string, Pos> = Object.fromEntries(
     cfg.nodes.map((n) => [n.id, { cx: COL[n.col], cy: ROW[n.row], col: n.col, row: n.row }])
   );
@@ -261,6 +269,18 @@ export default function SolarDiagram({
 
   return (
     <figure className="w-full">
+      {animated && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+        @keyframes gesCurrentFlow { to { stroke-dashoffset: -32; } }
+        .ges-current { stroke-dasharray: 5 11; animation: gesCurrentFlow 1.5s linear infinite; }
+        @media (prefers-reduced-motion: reduce) { .ges-current { animation: none; } }
+      `,
+          }}
+        />
+      )}
+
       <svg
         viewBox={`0 ${vbTop} ${W} ${vbHeight}`}
         className="w-full h-auto"
@@ -336,8 +356,19 @@ export default function SolarDiagram({
                       stroke={color}
                       strokeWidth="2.5"
                       strokeLinecap="round"
+                      strokeOpacity={animated ? 0.3 : 1}
                       markerEnd={`url(#${uid}-arw-${e.flow})`}
                     />
+                    {animated && (
+                      <path
+                        d={d}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        className="ges-current"
+                      />
+                    )}
                   </g>
                 );
               })}
@@ -412,6 +443,11 @@ export default function SolarDiagram({
         <p className="text-center text-xs text-stone-500 font-medium leading-relaxed max-w-xl mx-auto">
           {cfg.caption}
         </p>
+        {animated && (
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-stone-400 motion-reduce:hidden">
+            Moving dashes show the direction of current
+          </p>
+        )}
       </figcaption>
     </figure>
   );
