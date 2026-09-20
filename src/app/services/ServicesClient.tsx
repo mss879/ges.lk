@@ -92,10 +92,10 @@ export default function ServicesClient() {
       <SiteNav active="services" />
 
       {/* HERO */}
-      <section className="relative w-full min-h-[70vh] flex items-center overflow-hidden bg-[#04140b]">
+      <section className="relative w-full min-h-[58vh] flex items-center overflow-hidden bg-[#04140b]">
         <div className="absolute inset-0 z-0"><WebGLBackground variant="dark" /></div>
         <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[#04140b] via-[#04140b]/40 to-[#04140b]/70" />
-        <div className="relative z-10 max-w-[1240px] mx-auto px-6 sm:px-12 lg:px-20 py-28 w-full">
+        <div className="relative z-10 max-w-[1240px] mx-auto px-6 sm:px-12 lg:px-20 py-20 w-full">
           <span className="hero-eyebrow inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-[#e2ff3a] mb-7 backdrop-blur-md">
             <Wrench className="w-3.5 h-3.5" /> Service & Maintenance
           </span>
@@ -121,10 +121,10 @@ export default function ServicesClient() {
       </section>
 
       {/* MAINTENANCE & SERVICES */}
-      <section id="maintenance" className="relative w-full bg-white py-20 md:py-24 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden scroll-mt-24">
+      <section id="maintenance" className="relative w-full bg-white py-14 md:py-16 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden scroll-mt-24">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00AC4E]/[0.04] rounded-full blur-[130px] pointer-events-none" />
         <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col gap-3.5 max-w-3xl mb-12 reveal">
+          <div className="flex flex-col gap-3.5 max-w-3xl mb-9 reveal">
             <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase">/ AFTER-SALES & MAINTENANCE /</span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight text-stone-950 leading-none">
               Maintenance &amp; Services
@@ -135,10 +135,10 @@ export default function ServicesClient() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-            {/* main visual */}
-            <div className="lg:col-span-6 reveal">
-              <div className="relative w-full aspect-video rounded-[24px] overflow-hidden border border-stone-200/60 shadow-xl bg-stone-100">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            {/* main visual — stretches to the height of the service list beside it */}
+            <div className="lg:col-span-6 reveal flex">
+              <div className="relative w-full aspect-video lg:aspect-auto lg:h-full lg:min-h-[320px] rounded-[24px] overflow-hidden border border-stone-200/60 shadow-xl bg-stone-100">
                 {maintenanceVideo ? (
                   <video
                     className="absolute inset-0 w-full h-full object-cover"
@@ -186,7 +186,7 @@ export default function ServicesClient() {
           </div>
 
           {/* on-site activity strip */}
-          <div className="mt-12 reveal-group">
+          <div className="mt-10 reveal-group">
             <span className="text-stone-400 font-mono text-[10px] font-bold tracking-[0.2em] uppercase block mb-4">/ On site /</span>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
               {onSiteActivities.map((act) => (
@@ -208,7 +208,7 @@ export default function ServicesClient() {
           </div>
 
           {/* CTA */}
-          <div className="mt-12 reveal flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="mt-10 reveal flex flex-col sm:flex-row sm:items-center gap-4">
             <Link
               href="/contact"
               className="inline-flex items-center gap-3 bg-[#00AC4E] hover:bg-[#019544] text-white font-bold rounded-full pl-6 pr-2 py-2 shadow-lg active:scale-[0.98] transition-all duration-300 group w-fit"
@@ -226,10 +226,10 @@ export default function ServicesClient() {
       </section>
 
       {/* SERVICE CHECKLISTS */}
-      <section className="relative w-full bg-white py-24 md:py-32 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden">
+      <section className="relative w-full bg-white py-16 md:py-20 px-6 sm:px-12 lg:px-20 border-t border-stone-100/80 overflow-hidden">
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#00AC4E]/[0.03] rounded-full blur-[130px] pointer-events-none" />
         <div className="max-w-[1280px] mx-auto">
-          <div className="flex flex-col items-center text-center mb-16 reveal">
+          <div className="flex flex-col items-center text-center mb-10 reveal">
             <span className="text-[#00AC4E] font-mono text-xs font-bold tracking-[0.2em] uppercase mb-4">/ WHAT WE INSPECT /</span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-stone-950 leading-tight max-w-3xl">
               Thorough, scheduled maintenance — every component covered.
@@ -300,10 +300,10 @@ export default function ServicesClient() {
       </section>
 
       {/* REQUEST FORM */}
-      <section id="request" className="relative w-full text-white py-24 md:py-32 px-6 sm:px-12 lg:px-20 overflow-hidden bg-[#04140b] scroll-mt-20">
+      <section id="request" className="relative w-full text-white py-16 md:py-20 px-6 sm:px-12 lg:px-20 overflow-hidden bg-[#04140b] scroll-mt-20">
         <div className="absolute inset-0 z-0 opacity-60"><WebGLBackground variant="dark" /></div>
         <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#04140b] via-[#04140b]/80 to-transparent" />
-        <div className="relative z-10 max-w-[1080px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="relative z-10 max-w-[1080px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-5 flex flex-col gap-5 reveal">
             <span className="text-[#e2ff3a] font-mono text-xs font-bold tracking-[0.2em] uppercase">/ REQUEST SERVICE /</span>
             <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight leading-tight">
