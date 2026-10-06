@@ -1,12 +1,20 @@
-import type { Metadata } from "next";
 import SolutionsClient from "./SolutionsClient";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema, jsonLdGraph } from "@/lib/seo/schema";
 
-export const metadata: Metadata = {
-  title: "Our Solutions | Green Engineering Systems (Pvt) Ltd",
+export const metadata = pageMetadata({
+  title: "Solar & Clean Energy Solutions — On-Grid, Hybrid, Off-Grid & BESS",
   description:
-    "Explore GES solutions: Solar (On-Grid, Off-Grid, Hybrid, BESS), Power Generation (MTG), Hydrogen Energy (Fuel Cell), Waste Management (Composting) and EV Charging (Moreday).",
-};
+    "Compare GES solutions for Sri Lanka: on-grid, hybrid and off-grid solar, battery energy storage (BESS), micro turbine generators, fuel cells, composting machines and Moreday EV chargers.",
+  path: "/solutions",
+});
 
 export default function SolutionsPage() {
-  return <SolutionsClient />;
+  return (
+    <>
+      <JsonLd data={jsonLdGraph(breadcrumbSchema([{ name: "Solutions", path: "/solutions" }]))} />
+      <SolutionsClient />
+    </>
+  );
 }

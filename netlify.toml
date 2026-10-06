@@ -1,0 +1,8 @@
+# Netlify picks up Next.js automatically (OpenNext adapter); this only pins
+# the build. Set the primary domain to www.ges.lk in Site settings → Domain
+# management so ges.lk 301-redirects to it.
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"

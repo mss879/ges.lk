@@ -1,12 +1,20 @@
-import type { Metadata } from "next";
 import CareersClient from "./CareersClient";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema, jsonLdGraph } from "@/lib/seo/schema";
 
-export const metadata: Metadata = {
-  title: "Careers | Green Engineering Systems (Pvt) Ltd",
+export const metadata = pageMetadata({
+  title: "Careers in Solar Energy",
   description:
-    "Build your career in clean energy with Green Engineering Systems. Explore the areas we hire for — engineering, installation, sales and more — and send us your CV.",
-};
+    "Build your career in clean energy with Green Engineering Systems. See the areas we hire for — engineering, installation, sales, project management and maintenance — and send us your CV.",
+  path: "/careers",
+});
 
 export default function CareersPage() {
-  return <CareersClient />;
+  return (
+    <>
+      <JsonLd data={jsonLdGraph(breadcrumbSchema([{ name: "Careers", path: "/careers" }]))} />
+      <CareersClient />
+    </>
+  );
 }

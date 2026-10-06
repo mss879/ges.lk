@@ -3,7 +3,6 @@
 @theme inline {
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
-  --font-mozilla: var(--font-mozilla);
   --color-primary-green: #00AC4E;
 }
 
@@ -215,4 +214,297 @@
   inset: 0;
   width: 100%;
   height: 100%;
+}
+/* Lightweight replacements for the homepage's former framer-motion transitions.
+   Keyed elements remount on change, which replays these. */
+@keyframes ges-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ges-fade-zoom {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ges-underline-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-ges-fade-up {
+  animation: ges-fade-up 0.4s ease-out both;
+}
+
+.animate-ges-fade-zoom {
+  animation: ges-fade-zoom 0.5s ease-in-out both;
+}
+
+.animate-ges-underline-in {
+  transform-origin: left center;
+  animation: ges-underline-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ges-fade-up,
+  .animate-ges-fade-zoom,
+  .animate-ges-underline-in {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Blog article typography — shared by the public article page and the admin
+   editor, so what an editor sees is what readers get. Mirrors the styling of
+   the original hand-rolled Markdown renderer.
+   --------------------------------------------------------------------------- */
+.blog-prose {
+  @apply text-stone-600;
+}
+
+.blog-prose > :first-child {
+  @apply mt-0;
+}
+
+.blog-prose p {
+  @apply my-5 text-sm leading-relaxed font-semibold text-stone-600 sm:text-base;
+}
+
+.blog-prose h2 {
+  @apply mt-12 mb-6 scroll-mt-24 border-l-4 border-[#00AC4E] pl-4 font-display text-2xl leading-tight font-black tracking-tight text-stone-950 sm:text-3xl;
+}
+
+.blog-prose h3 {
+  @apply mt-8 mb-4 scroll-mt-24 font-display text-xl font-extrabold tracking-tight text-stone-900 sm:text-2xl;
+}
+
+.blog-prose h4 {
+  @apply mt-6 mb-3 scroll-mt-24 font-display text-lg font-extrabold tracking-tight text-stone-900;
+}
+
+.blog-prose strong {
+  @apply font-extrabold text-stone-900;
+}
+
+.blog-prose a {
+  @apply font-semibold text-[#00AC4E] underline transition-colors hover:text-[#00AC4E]/80;
+}
+
+.blog-prose :not(pre) > code {
+  @apply rounded border border-stone-200/50 bg-stone-100 px-1.5 py-0.5 font-mono text-xs font-bold text-[#00AC4E];
+}
+
+.blog-prose hr {
+  @apply my-10 border-stone-200/60;
+}
+
+.blog-prose ul,
+.blog-prose ol {
+  @apply my-4 flex flex-col gap-3 pl-2;
+}
+
+.blog-prose ul > li,
+.blog-prose ol > li {
+  @apply relative;
+}
+
+.blog-prose ul > li {
+  @apply pl-5;
+}
+
+.blog-prose ul > li::before {
+  content: "";
+  @apply absolute top-[0.65em] left-0 h-1.5 w-1.5 rounded-full bg-[#00AC4E];
+}
+
+.blog-prose ol {
+  counter-reset: blog-ol;
+}
+
+.blog-prose ol > li {
+  counter-increment: blog-ol;
+  @apply pl-7;
+}
+
+.blog-prose ol > li::before {
+  content: counter(blog-ol) ".";
+  @apply absolute top-[0.3em] left-0 w-4 text-right font-mono text-xs font-black text-[#00AC4E];
+}
+
+.blog-prose li > p {
+  @apply my-0;
+}
+
+.blog-prose li > ul,
+.blog-prose li > ol {
+  @apply mt-3 mb-0;
+}
+
+.blog-prose blockquote {
+  @apply my-6 border-l-4 border-stone-300 py-1.5 pl-4 font-medium leading-relaxed text-stone-600 italic;
+}
+
+.blog-prose blockquote p {
+  @apply my-2;
+}
+
+/* Code blocks hold the posts' box-drawing diagrams and formulas. */
+.blog-prose pre {
+  @apply my-8 overflow-x-auto rounded-2xl border border-stone-800 bg-stone-950 p-5 font-mono text-xs leading-relaxed text-stone-100 sm:text-sm;
+}
+
+.blog-prose pre code {
+  @apply bg-transparent p-0 font-mono text-inherit;
+  white-space: pre;
+}
+
+.blog-prose figure {
+  @apply my-8 flex flex-col items-center gap-2;
+}
+
+.blog-prose figure img,
+.blog-prose img {
+  @apply h-auto max-h-[450px] w-full rounded-2xl border border-stone-200/50 object-cover shadow-sm;
+}
+
+.blog-prose figcaption {
+  @apply text-center text-xs font-semibold text-stone-400 italic;
+}
+
+/* Tables: the public page wraps them in .blog-table for sideways scrolling;
+   the editor's table view adds its own wrapper. */
+.blog-prose .blog-table,
+.blog-prose .tableWrapper {
+  @apply my-8 w-full overflow-x-auto rounded-2xl border border-stone-200/50 shadow-sm;
+}
+
+.blog-prose table {
+  @apply min-w-full border-collapse bg-white;
+}
+
+.blog-prose th {
+  @apply bg-stone-50 px-6 py-4 text-left align-top text-xs font-extrabold tracking-wider text-stone-800 uppercase sm:text-sm;
+}
+
+.blog-prose td {
+  @apply border-t border-stone-100 px-6 py-4 align-top text-xs font-semibold text-stone-600 sm:text-sm;
+}
+
+.blog-prose th p,
+.blog-prose td p {
+  @apply m-0 text-inherit;
+  font: inherit;
+}
+
+/* Callouts: tip / note / warning boxes. The label comes from CSS so the
+   editor and the public page render it identically. */
+.blog-prose [data-callout] {
+  @apply relative my-8 rounded-r-2xl border-l-4 p-5 sm:p-6;
+}
+
+.blog-prose [data-callout]::before {
+  @apply mb-1 block text-xs leading-none font-black tracking-widest uppercase;
+}
+
+.blog-prose [data-callout] p {
+  @apply my-2 text-xs font-semibold leading-relaxed text-stone-700 sm:text-sm;
+}
+
+.blog-prose [data-callout="tip"] {
+  @apply border-[#00AC4E] bg-[#00AC4E]/5;
+}
+
+.blog-prose [data-callout="tip"]::before {
+  content: "Professional Tip";
+  @apply text-[#00AC4E];
+}
+
+.blog-prose [data-callout="warning"] {
+  @apply border-amber-500 bg-amber-50/70;
+}
+
+.blog-prose [data-callout="warning"]::before {
+  content: "Engineering Warning";
+  @apply text-amber-800;
+}
+
+.blog-prose [data-callout="note"] {
+  @apply border-[#085EAC] bg-[#085EAC]/5;
+}
+
+.blog-prose [data-callout="note"]::before {
+  content: "Note";
+  @apply text-[#085EAC];
+}
+
+/* Editor-only affordances */
+.blog-prose.ProseMirror {
+  @apply min-h-[420px] outline-none;
+}
+
+.blog-prose.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-stone-400;
+}
+
+.blog-prose.ProseMirror .selectedCell {
+  @apply bg-[#00AC4E]/10;
+}
+
+.blog-prose.ProseMirror img.ProseMirror-selectednode {
+  @apply outline-2 outline-offset-2 outline-[#00AC4E];
+}
+
+/* Markdown inside AI chat replies (src/components/chat/AssistantMessage.tsx). */
+.chat-prose p {
+  @apply my-1.5;
+}
+
+.chat-prose > :first-child {
+  @apply mt-0;
+}
+
+.chat-prose > :last-child {
+  @apply mb-0;
+}
+
+.chat-prose ul,
+.chat-prose ol {
+  @apply my-1.5 pl-5;
+}
+
+.chat-prose ul {
+  @apply list-disc;
+}
+
+.chat-prose ol {
+  @apply list-decimal;
+}
+
+.chat-prose li {
+  @apply my-0.5;
+}
+
+.chat-prose strong {
+  @apply font-extrabold text-stone-900;
+}
+
+.chat-prose code {
+  @apply rounded bg-stone-100 px-1 font-mono text-xs;
 }

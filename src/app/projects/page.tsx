@@ -1,15 +1,19 @@
 import fs from 'fs';
 import path from 'path';
-import { Suspense } from 'react';
 import ProjectsClient from './ProjectsClient';
-import { createPublicClient } from '@/lib/supabase/public';
+import JsonLd from '@/components/seo/JsonLd';
+import { pageMetadata } from '@/lib/seo/metadata';
+import { breadcrumbSchema, jsonLdGraph } from '@/lib/seo/schema';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { createPublicClient, PROJECTS_TAG } from '@/lib/supabase/public';
 import type { ProjectWithImages } from '@/lib/supabase/types';
 
-export const metadata = {
-  title: 'Clean Energy Installations Portfolio | GES Sri Lanka',
+export const metadata = pageMetadata({
+  title: 'Solar Installation Projects in Sri Lanka',
   description:
-    'Explore our completed solar energy installations across Sri Lanka — categorized into Residential and Commercial projects, with location, system capacity and project photographs.',
-};
+    'See completed GES solar installations across Sri Lanka — residential rooftops and commercial systems, with locations, system capacities and project photos.',
+  path: '/projects',
+});
 
 export interface Project {
   name: string;
@@ -79,8 +83,9 @@ function parseFolder(folder: string): { name: string; location: string | null; c
 
 /**
  * Fallback source: the folders under public/1. Installations/.
- * Used until the Supabase migrations have been run and the projects table is
- * populated, so the public page never renders empty.
+ * Only used when Supabase isn't configured (local development without a
+ * backend). On Netlify, public/ files aren't in the server bundle, so reading
+ * them during a background re-render would cache an empty portfolio.
  */
 function readProjectsFromDisk(): Project[] {
   const installationsDir = path.join(process.cwd(), 'public/1. Installations');
@@ -117,22 +122,25 @@ function readProjectsFromDisk(): Project[] {
   return projects;
 }
 
-/** Primary source: the projects + project_images tables managed from /admin. */
-async function readProjectsFromSupabase(): Promise<Project[] | null> {
-  const supabase = createPublicClient();
-  if (!supabase) return null;
+/**
+ * Primary source: the projects + project_images tables managed from /admin.
+ * Throws on a database error so a background re-render keeps serving the last
+ * good page instead of caching an empty one.
+ */
+async function readProjectsFromSupabase(): Promise<Project[]> {
+  const supabase = createPublicClient(PROJECTS_TAG);
+  if (!supabase) return [];
 
-  try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*, project_images(*)')
-      .eq('is_published', true)
-      .order('position')
-      .order('position', { referencedTable: 'project_images' });
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*, project_images(*)')
+    .eq('is_published', true)
+    .order('position')
+    .order('position', { referencedTable: 'project_images' });
 
-    if (error || !data || data.length === 0) return null;
+  if (error) throw new Error(`Couldn't load projects: ${error.message}`);
 
-    return (data as ProjectWithImages[]).map((row) => ({
+  return ((data ?? []) as ProjectWithImages[]).map((row) => ({
       name: row.name,
       location: row.location,
       capacity: row.capacity,
@@ -142,17 +150,15 @@ async function readProjectsFromSupabase(): Promise<Project[] | null> {
         .map((img) => img.url),
       category: row.category,
     }));
-  } catch {
-    return null;
-  }
 }
 
 export default async function ProjectsPage() {
-  const projects = (await readProjectsFromSupabase()) ?? readProjectsFromDisk();
+  const projects = isSupabaseConfigured() ? await readProjectsFromSupabase() : readProjectsFromDisk();
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center font-bold text-stone-500">Loading Portfolio...</div>}>
+    <>
+      <JsonLd data={jsonLdGraph(breadcrumbSchema([{ name: 'Projects', path: '/projects' }]))} />
       <ProjectsClient projects={projects} />
-    </Suspense>
+    </>
   );
 }

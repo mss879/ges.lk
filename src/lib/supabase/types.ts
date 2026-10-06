@@ -54,6 +54,10 @@ export interface Lead {
   notes: string | null;
   value: number | null;
   position: number;
+  /** Where the lead came from (added in migration 0012). */
+  source?: "manual" | "contact_form" | "ai_agent";
+  /** The AI chat that produced it, when loaded with `ai_chat_sessions(id)`. */
+  ai_chat_sessions?: { id: string }[] | null;
   created_at: string;
   updated_at: string;
 }

@@ -13,6 +13,7 @@ type ActiveKey =
   | "products"
   | "services"
   | "careers"
+  | "blog"
   | "faq"
   | "contact"
   | null;
@@ -22,6 +23,7 @@ const navLinks: { label: string; href: string; key: ActiveKey }[] = [
   { label: "About", href: "/about", key: "about" },
   { label: "Products", href: "/products", key: "products" },
   { label: "Maintenance", href: "/services", key: "services" },
+  { label: "Blog", href: "/blog", key: "blog" },
   { label: "Careers", href: "/careers", key: "careers" },
   { label: "FAQ", href: "/faq", key: "faq" },
 ];
@@ -86,12 +88,15 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
     if (!isMobileMenuOpen) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Lets floating widgets (the chat launcher) step aside while the drawer is open.
+    document.documentElement.dataset.navOpen = "true";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsMobileMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = previous;
+      delete document.documentElement.dataset.navOpen;
       window.removeEventListener("keydown", onKey);
     };
   }, [isMobileMenuOpen]);
@@ -133,6 +138,7 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
       ],
     },
     { label: "Maintenance", href: "/services", key: "services" },
+    { label: "Blog", href: "/blog", key: "blog" },
     { label: "Careers", href: "/careers", key: "careers" },
     { label: "FAQ", href: "/faq", key: "faq" },
     { label: "Contact", href: "/contact", key: "contact" },
@@ -155,10 +161,10 @@ export default function SiteNav({ active = null }: { active?: ActiveKey }) {
           <Link href="/" className="relative z-50 flex items-center shrink-0">
             <Image
               src="/logo.webp"
-              alt="GES Logo"
+              alt="GES — Green Engineering Systems"
               width={190}
               height={55}
-              priority
+              loading="eager"
               className="h-11 xl:h-13 w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500"
             />
           </Link>

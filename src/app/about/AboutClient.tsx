@@ -258,7 +258,7 @@ export default function AboutClient({ images }: { images?: SiteImageMap }) {
         <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[#04140b] via-[#04140b]/40 to-[#04140b]/70 pointer-events-none" />
         <div
           className="absolute inset-0 z-[2] opacity-[0.05] pointer-events-none mix-blend-overlay"
-          style={{ backgroundImage: "url('https://framerusercontent.com/images/rR6HYXBrMmX4cRpXfXUOvpvpB0.png')", backgroundSize: "161px" }}
+          style={{ backgroundImage: "url('/textures/noise.png')", backgroundSize: "160px" }}
         />
 
         <div className="relative z-10 max-w-[1240px] mx-auto px-6 sm:px-12 lg:px-20 py-28 w-full">

@@ -6,6 +6,7 @@ import { Upload, Loader2, RotateCcw, ExternalLink, ImagePlus } from "lucide-reac
 import { createClient } from "@/lib/supabase/client";
 import { slotsForPage, type SiteImageSlot, type SitePage } from "@/data/siteImageSlots";
 import type { StoredSiteImage } from "./page";
+import { refreshPublic } from "@/app/admin/actions";
 
 const BUCKET = "site-images";
 
@@ -99,6 +100,8 @@ export default function ContentClient({ stored }: { stored: StoredSiteImage[] })
       return [...without, next];
     });
     setMessage({ kind: "ok", text: `Updated “${slot.label}”.` });
+    // The public pages are cached between deploys; push the change live now.
+    void refreshPublic("site-images").catch(() => {});
     setBusyKey(null);
     if (inputs.current[slot.key]) inputs.current[slot.key]!.value = "";
   };
@@ -131,6 +134,7 @@ export default function ContentClient({ stored }: { stored: StoredSiteImage[] })
       return [...without, next];
     });
     setMessage({ kind: "ok", text: `Reverted “${slot.label}” to the original.` });
+    void refreshPublic("site-images").catch(() => {});
     setBusyKey(null);
   };
 

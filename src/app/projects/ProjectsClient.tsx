@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   Search,
@@ -34,33 +34,132 @@ interface ProjectsClientProps {
 
 type Filter = "all" | "residential" | "commercial";
 
+function ProjectCard({ project, onOpen }: { project: Project; onOpen: (project: Project) => void }) {
+  return (
+  <div
+    onClick={() => onOpen(project)}
+    className="group relative flex flex-col justify-start cursor-pointer w-full"
+    style={{ perspective: "1000px" }}
+  >
+    <div className="absolute inset-x-4 bottom-14 top-4 bg-white/10 backdrop-blur-xs border border-white/20 rounded-[28px] transform rotate-3 translate-y-3.5 translate-x-1.5 scale-[0.97] transition-all duration-500 group-hover:rotate-6 group-hover:translate-y-6 group-hover:translate-x-3 shadow-sm z-0" />
+    <div className="absolute inset-x-2 bottom-14 top-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-[28px] transform -rotate-2 -translate-y-2.5 -translate-x-1.5 scale-[0.99] transition-all duration-500 group-hover:-rotate-4 group-hover:-translate-y-4 group-hover:-translate-x-3 shadow-md z-10" />
+
+    <div className="relative z-20 flex items-end transform transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-1">
+      <div className="bg-white/40 backdrop-blur-md border-t border-r border-l border-white/30 rounded-t-2xl px-5 py-2.5 w-fit min-w-[130px] font-mono text-[9px] font-extrabold uppercase tracking-widest text-[#00AC4E] flex items-center gap-1.5 shadow-[0_-3px_10px_rgba(0,0,0,0.01)] translate-y-[1px] border-b-2 border-white/40">
+        {project.category === "residential" ? <Home className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
+        {project.category === "residential" ? "Residential" : "Commercial"}
+      </div>
+    </div>
+
+    <div className="relative z-20 bg-white/40 backdrop-blur-md border border-white/30 rounded-b-[28px] rounded-tr-[28px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_60px_-12px_rgba(0,172,78,0.22)] hover:border-[#00AC4E]/40 transition-all duration-500 flex flex-col justify-between aspect-[4/3.2] w-full transform group-hover:-translate-y-3 group-hover:rotate-1">
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#00AC4E] z-30" />
+      <div className="relative w-full h-[62%] overflow-hidden bg-stone-100/50 border-b border-white/20">
+        <Image
+          src={project.images[0]}
+          alt={project.name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 30vw"
+          className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
+        />
+        <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
+          <ImageIcon className="w-3.5 h-3.5 text-[#00AC4E]" />
+          <span>{project.images.length} {project.images.length === 1 ? "Photo" : "Photos"}</span>
+        </div>
+      </div>
+      <div className="p-5 flex flex-col justify-between flex-1 bg-white/20">
+        <div className="flex flex-col gap-1.5">
+          <h3 className="font-display text-[15px] sm:text-[16px] font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug line-clamp-2">
+            {project.name}
+          </h3>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {project.location && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-stone-500">
+                <MapPin className="w-3 h-3 text-stone-400 shrink-0" />
+                {project.location}
+              </span>
+            )}
+            {project.capacity && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#00AC4E]">
+                <Zap className="w-3 h-3 shrink-0" />
+                {project.capacity}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center justify-end border-t border-white/20 pt-3.5 mt-2">
+          <span className="text-[11px] font-extrabold text-[#00AC4E] flex items-center gap-1.5">
+            <span>View Project Images</span>
+            <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1.5 transition-transform" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  );
+}
+
+function Section({
+  title,
+  subtitle,
+  icon,
+  items,
+  onOpen,
+}: {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  items: Project[];
+  onOpen: (project: Project) => void;
+}) {
+  if (items.length === 0) return null;
+  return (
+    <div className="mb-16">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 rounded-2xl bg-[#00AC4E] flex items-center justify-center text-white shadow-lg shadow-[#00AC4E]/20 shrink-0">{icon}</div>
+        <div className="flex flex-col">
+          <h2 className="font-display text-2xl sm:text-3xl font-black tracking-tight text-stone-950 leading-none">{title}</h2>
+          <span className="text-stone-500 text-xs font-bold uppercase tracking-widest mt-1.5">{subtitle} · {items.length} {items.length === 1 ? "Project" : "Projects"}</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 pt-4">
+        {items.map((project) => (
+          <ProjectCard key={project.folderName} project={project} onOpen={onOpen} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function ProjectsClient({ projects }: ProjectsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // The ?filter= param is read after mount instead of through useSearchParams,
+  // which would opt the whole page out of server rendering (crawlers would only
+  // see a loading state). The server renders every project; the tab applies here.
   useEffect(() => {
-    const filterParam = searchParams.get("filter") as Filter;
-    if (filterParam === "residential" || filterParam === "commercial") {
-      setFilter(filterParam);
-    } else {
-      setFilter("all");
-    }
-  }, [searchParams]);
+    const readFilter = () => {
+      const filterParam = new URLSearchParams(window.location.search).get("filter");
+      setFilter(filterParam === "residential" || filterParam === "commercial" ? filterParam : "all");
+    };
+    readFilter();
+    window.addEventListener("popstate", readFilter);
+    return () => window.removeEventListener("popstate", readFilter);
+  }, []);
 
   const handleFilterChange = (key: Filter) => {
     setFilter(key);
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     if (key === "all") {
       params.delete("filter");
     } else {
       params.set("filter", key);
     }
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    const query = params.toString();
+    window.history.pushState(null, "", query ? `${pathname}?${query}` : pathname);
   };
 
   const matchesSearch = (p: Project) =>
@@ -94,88 +193,6 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
     e.stopPropagation();
     if (!selectedProject) return;
     setCurrentImageIndex((prev) => (prev - 1 + selectedProject.images.length) % selectedProject.images.length);
-  };
-
-  const ProjectCard = ({ project }: { project: Project }) => (
-    <div
-      onClick={() => openProject(project)}
-      className="group relative flex flex-col justify-start cursor-pointer w-full"
-      style={{ perspective: "1000px" }}
-    >
-      <div className="absolute inset-x-4 bottom-14 top-4 bg-white/10 backdrop-blur-xs border border-white/20 rounded-[28px] transform rotate-3 translate-y-3.5 translate-x-1.5 scale-[0.97] transition-all duration-500 group-hover:rotate-6 group-hover:translate-y-6 group-hover:translate-x-3 shadow-sm z-0" />
-      <div className="absolute inset-x-2 bottom-14 top-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-[28px] transform -rotate-2 -translate-y-2.5 -translate-x-1.5 scale-[0.99] transition-all duration-500 group-hover:-rotate-4 group-hover:-translate-y-4 group-hover:-translate-x-3 shadow-md z-10" />
-
-      <div className="relative z-20 flex items-end transform transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-1">
-        <div className="bg-white/40 backdrop-blur-md border-t border-r border-l border-white/30 rounded-t-2xl px-5 py-2.5 w-fit min-w-[130px] font-mono text-[9px] font-extrabold uppercase tracking-widest text-[#00AC4E] flex items-center gap-1.5 shadow-[0_-3px_10px_rgba(0,0,0,0.01)] translate-y-[1px] border-b-2 border-white/40">
-          {project.category === "residential" ? <Home className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
-          {project.category === "residential" ? "Residential" : "Commercial"}
-        </div>
-      </div>
-
-      <div className="relative z-20 bg-white/40 backdrop-blur-md border border-white/30 rounded-b-[28px] rounded-tr-[28px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_60px_-12px_rgba(0,172,78,0.22)] hover:border-[#00AC4E]/40 transition-all duration-500 flex flex-col justify-between aspect-[4/3.2] w-full transform group-hover:-translate-y-3 group-hover:rotate-1">
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#00AC4E] z-30" />
-        <div className="relative w-full h-[62%] overflow-hidden bg-stone-100/50 border-b border-white/20">
-          <Image
-            src={project.images[0]}
-            alt={project.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 30vw"
-            className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
-          />
-          <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
-            <ImageIcon className="w-3.5 h-3.5 text-[#00AC4E]" />
-            <span>{project.images.length} {project.images.length === 1 ? "Photo" : "Photos"}</span>
-          </div>
-        </div>
-        <div className="p-5 flex flex-col justify-between flex-1 bg-white/20">
-          <div className="flex flex-col gap-1.5">
-            <h3 className="font-display text-[15px] sm:text-[16px] font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug line-clamp-2">
-              {project.name}
-            </h3>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              {project.location && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-stone-500">
-                  <MapPin className="w-3 h-3 text-stone-400 shrink-0" />
-                  {project.location}
-                </span>
-              )}
-              {project.capacity && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#00AC4E]">
-                  <Zap className="w-3 h-3 shrink-0" />
-                  {project.capacity}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center justify-end border-t border-white/20 pt-3.5 mt-2">
-            <span className="text-[11px] font-extrabold text-[#00AC4E] flex items-center gap-1.5">
-              <span>View Project Images</span>
-              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1.5 transition-transform" />
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const Section = ({ title, subtitle, icon, items }: { title: string; subtitle: string; icon: React.ReactNode; items: Project[] }) => {
-    if (items.length === 0) return null;
-    return (
-      <div className="mb-16">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-[#00AC4E] flex items-center justify-center text-white shadow-lg shadow-[#00AC4E]/20 shrink-0">{icon}</div>
-          <div className="flex flex-col">
-            <h2 className="font-display text-2xl sm:text-3xl font-black tracking-tight text-stone-950 leading-none">{title}</h2>
-            <span className="text-stone-500 text-xs font-bold uppercase tracking-widest mt-1.5">{subtitle} · {items.length} {items.length === 1 ? "Project" : "Projects"}</span>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 pt-4">
-          {items.map((project) => (
-            <ProjectCard key={project.folderName} project={project} />
-          ))}
-        </div>
-      </div>
-    );
   };
 
   const total = residential.length + commercial.length;
@@ -259,10 +276,10 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
         ) : (
           <div className="pt-4">
             {(filter === "all" || filter === "residential") && (
-              <Section title="Residential Projects" subtitle="Homes powered by solar" icon={<Home className="w-6 h-6" />} items={residential} />
+              <Section title="Residential Projects" subtitle="Homes powered by solar" icon={<Home className="w-6 h-6" />} items={residential} onOpen={openProject} />
             )}
             {(filter === "all" || filter === "commercial") && (
-              <Section title="Commercial Projects" subtitle="Businesses & institutions" icon={<Building2 className="w-6 h-6" />} items={commercial} />
+              <Section title="Commercial Projects" subtitle="Businesses & institutions" icon={<Building2 className="w-6 h-6" />} items={commercial} onOpen={openProject} />
             )}
           </div>
         )}
@@ -300,7 +317,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
             <div className="flex items-center justify-center gap-2.5 overflow-x-auto py-1.5 px-4 max-w-4xl mx-auto select-none">
               {selectedProject.images.map((img, idx) => (
                 <button key={img} onClick={() => setCurrentImageIndex(idx)} className={`relative w-14 h-10 sm:w-16 sm:h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all duration-300 cursor-pointer ${currentImageIndex === idx ? "border-[#00AC4E] scale-105 shadow-md shadow-[#00AC4E]/20" : "border-white/10 hover:border-white/30 opacity-60 hover:opacity-90"}`}>
-                  <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
                 </button>
               ))}
             </div>

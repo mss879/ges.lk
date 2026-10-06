@@ -7,18 +7,23 @@ export const dynamic = "force-dynamic";
 export default async function CrmPage() {
   const supabase = await createClient();
 
-  const [{ data: pipelines, error: pErr }, { data: stages }, { data: leads }] = await Promise.all([
+  const [{ data: pipelines, error: pErr }, { data: stages }, withChats] = await Promise.all([
     supabase.from("pipelines").select("*").order("position"),
     supabase.from("pipeline_stages").select("*").order("position"),
-    supabase.from("leads").select("*").order("position"),
+    // Leads plus the AI chat that produced them (migration 0012).
+    supabase.from("leads").select("*, ai_chat_sessions(id)").order("position"),
   ]);
+  // Before 0012 has been run the chat relation doesn't exist — load leads plainly.
+  const leads = withChats.error
+    ? (await supabase.from("leads").select("*").order("position")).data
+    : withChats.data;
 
   return (
     <div>
       <h1 className="font-display text-2xl font-black tracking-tight text-stone-900">CRM</h1>
       <p className="mt-1 text-sm font-medium text-stone-500">
         Drag leads between stages. Pipelines and stages are editable — the default pipeline and its
-        &ldquo;New Leads&rdquo; stage are kept because converted inquiries land there.
+        &ldquo;New Leads&rdquo; stage are kept because converted inquiries and AI-agent leads land there.
       </p>
 
       {pErr ? (

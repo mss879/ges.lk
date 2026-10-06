@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Lock, Plus, Pencil, Trash2, X, Mail, Phone, GripVertical } from "lucide-react";
+import Link from "next/link";
+import { Lock, Plus, Pencil, Trash2, X, Mail, Phone, GripVertical, Bot } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Lead, Pipeline, PipelineStage } from "@/lib/supabase/types";
 
@@ -25,6 +26,8 @@ export default function CrmBoard({
   const [error, setError] = useState<string | null>(null);
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [newLead, setNewLead] = useState({ name: "", email: "", phone: "" });
+  // Cards whose notes are expanded.
+  const [openNotes, setOpenNotes] = useState<Set<string>>(() => new Set());
 
   const supabase = createClient();
   const active = pipelines.find((p) => p.id === activeId) ?? null;
@@ -324,11 +327,49 @@ export default function CrmBoard({
                         </span>
                       )}
                     </div>
-                    {lead.inquiry_id && (
-                      <span className="mt-2 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-blue-600">
-                        From inquiry
-                      </span>
+                    {lead.notes && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenNotes((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(lead.id)) next.delete(lead.id);
+                            else next.add(lead.id);
+                            return next;
+                          })
+                        }
+                        className="mt-2 block w-full rounded-lg bg-stone-50 px-2 py-1.5 text-left cursor-pointer"
+                        title={openNotes.has(lead.id) ? "Collapse notes" : "Show notes"}
+                      >
+                        <span
+                          className={`block whitespace-pre-line text-[10px] font-semibold leading-snug text-stone-500 ${
+                            openNotes.has(lead.id) ? "" : "line-clamp-2"
+                          }`}
+                        >
+                          {lead.notes}
+                        </span>
+                      </button>
                     )}
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {lead.inquiry_id && (
+                        <span className="inline-block rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-blue-600">
+                          From inquiry
+                        </span>
+                      )}
+                      {lead.source === "ai_agent" && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#00AC4E]/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-[#007a37]">
+                          <Bot className="h-2.5 w-2.5" /> AI Agent
+                        </span>
+                      )}
+                      {lead.ai_chat_sessions?.[0]?.id && (
+                        <Link
+                          href={`/admin/ai-agent/conversations/${lead.ai_chat_sessions[0].id}`}
+                          className="text-[10px] font-bold text-[#007a37] underline hover:text-[#00AC4E]"
+                        >
+                          View chat
+                        </Link>
+                      )}
+                    </div>
                   </article>
                 ))}
 

@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
         <div className="rounded-2xl border border-stone-200 bg-white p-7 shadow-sm">
           <h1 className="font-display text-xl font-black tracking-tight text-stone-900">Admin sign in</h1>
           <p className="mt-1.5 text-sm text-stone-500 font-medium">
-            Manage inquiries, the CRM pipeline and projects.
+            Manage inquiries, the CRM, projects, the blog and the AI agent.
           </p>
 
           {configured ? (

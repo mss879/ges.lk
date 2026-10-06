@@ -256,7 +256,8 @@ export default function SolarDiagram({
         role="img"
         aria-labelledby={`${uid}-title ${uid}-desc`}
       >
-        <title id={`${uid}-title`}>{type.replace("-", " ")} system diagram</title>
+        {/* One string child: React 19 renders a multi-part <title> differently on server and client. */}
+        <title id={`${uid}-title`}>{`${type.replace("-", " ")} system diagram`}</title>
         <desc id={`${uid}-desc`}>{cfg.caption}</desc>
 
         <defs>

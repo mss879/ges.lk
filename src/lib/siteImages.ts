@@ -1,4 +1,4 @@
-import { createPublicClient } from "@/lib/supabase/public";
+import { createPublicClient, SITE_IMAGES_TAG } from "@/lib/supabase/public";
 import { defaultImageMap, type SiteImageMap, type SitePage } from "@/data/siteImageSlots";
 
 /**
@@ -10,7 +10,7 @@ import { defaultImageMap, type SiteImageMap, type SitePage } from "@/data/siteIm
  */
 export async function getSiteImages(page: SitePage): Promise<SiteImageMap> {
   const defaults = defaultImageMap(page);
-  const supabase = createPublicClient();
+  const supabase = createPublicClient(SITE_IMAGES_TAG);
   if (!supabase) return defaults;
 
   try {

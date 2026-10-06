@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { requireSupabaseEnv } from "./config";
@@ -62,3 +63,24 @@ export async function isCurrentUserAdmin(): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Guard for Server Actions and Route Handlers that act as an admin.
+ *
+ * Server Actions are plain POST endpoints anyone can call, so each one must
+ * re-check access itself (the proxy only bounces anonymous page views).
+ * Returns a Supabase client acting as the signed-in admin — its writes still
+ * go through RLS — or throws. Memoised for the length of a request.
+ */
+export const requireAdmin = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("You are signed out. Sign in again and retry.");
+
+  const { data, error } = await supabase.from("admin_users").select("id").eq("id", user.id).maybeSingle();
+  if (error || !data) throw new Error("This account doesn't have admin access.");
+
+  return { supabase, user };
+});

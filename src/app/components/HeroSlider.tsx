@@ -16,6 +16,9 @@ const AUTOPLAY_MS = 6000;
 export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Slides 2+ are fetched once the browser is idle, so they don't compete with
+  // the first slide (the likely LCP image) for bandwidth on first load.
+  const [loadRest, setLoadRest] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const count = slides.length;
@@ -38,6 +41,15 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
   }, [paused, count]);
+
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(() => setLoadRest(true), { timeout: 2500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setLoadRest(true), 1500);
+    return () => clearTimeout(id);
+  }, []);
 
   // Arrow-key navigation when the slider has focus.
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -62,6 +74,8 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
     >
       {slides.map((slide, i) => {
         const isActive = i === index;
+        // One <h1> per page: the first slide's title. The rest are <h2>s.
+        const Heading = i === 0 ? "h1" : "h2";
         return (
           <div
             key={slide.id}
@@ -72,16 +86,18 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
             }`}
           >
-            <Image
-              src={slide.src}
-              alt={slide.alt}
-              fill
-              priority={i === 0}
-              sizes="100vw"
-              className={`object-cover transition-transform duration-[7000ms] ease-out motion-reduce:transform-none ${
-                isActive ? "scale-105" : "scale-100"
-              }`}
-            />
+            {(i === 0 || loadRest || isActive) && (
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                fill
+                {...(i === 0 ? { fetchPriority: "high" as const, loading: "eager" as const } : {})}
+                sizes="100vw"
+                className={`object-cover transition-transform duration-[7000ms] ease-out motion-reduce:transform-none ${
+                  isActive ? "scale-105" : "scale-100"
+                }`}
+              />
+            )}
 
             {/* Legibility scrim — darker at the bottom-left where the copy sits. */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
@@ -96,9 +112,9 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                 <p className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.25em] text-[#e2ff3a] uppercase mb-4">
                   / {slide.eyebrow} /
                 </p>
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[0.95]">
+                <Heading className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[0.95]">
                   {slide.title}
-                </h1>
+                </Heading>
                 <p className="mt-4 text-sm sm:text-base text-white/80 leading-relaxed max-w-md">
                   {slide.description}
                 </p>
@@ -136,7 +152,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
+          <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1">
             {slides.map((slide, i) => (
               <button
                 key={slide.id}
@@ -144,10 +160,15 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                 onClick={() => goTo(i)}
                 aria-label={`Go to slide ${i + 1}: ${slide.title}`}
                 aria-current={i === index}
-                className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                  i === index ? "w-8 bg-[#e2ff3a]" : "w-3 bg-white/40 hover:bg-white/70"
-                }`}
-              />
+                // The visible bar stays 6px tall; the padding gives a 24px tap target.
+                className="group/dot flex h-6 min-w-6 items-center justify-center cursor-pointer"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-all duration-500 ${
+                    i === index ? "w-8 bg-[#e2ff3a]" : "w-3 bg-white/40 group-hover/dot:bg-white/70"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </>

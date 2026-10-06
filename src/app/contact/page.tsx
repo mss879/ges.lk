@@ -1,12 +1,20 @@
-import type { Metadata } from "next";
 import ContactClient from "./ContactClient";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema, jsonLdGraph } from "@/lib/seo/schema";
 
-export const metadata: Metadata = {
-  title: "Contact Us | Green Engineering Systems (Pvt) Ltd",
+export const metadata = pageMetadata({
+  title: "Contact Us — Kelaniya Office, Phone & Opening Hours",
   description:
-    "Get in touch with Green Engineering Systems. Offices in Kelaniya, Sri Lanka. Email info@ges.lk, call 076 533 2332, or send us a message.",
-};
+    "Contact Green Engineering Systems (GES) at No 12, Thorana Junction, Kandy Rd, Kelaniya. Call 076 533 2332 or email info@ges.lk for a solar consultation and site assessment.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
-  return <ContactClient />;
+  return (
+    <>
+      <JsonLd data={jsonLdGraph(breadcrumbSchema([{ name: "Contact", path: "/contact" }]))} />
+      <ContactClient />
+    </>
+  );
 }

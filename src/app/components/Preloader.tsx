@@ -81,9 +81,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       className="fixed inset-0 z-[99999] flex select-none items-center justify-center overflow-hidden bg-[#f8f9fa]"
     >
       <div ref={contentRef} className="flex flex-col items-center px-6">
-        <h1 className="welcome-item font-display text-4xl font-black tracking-tight text-stone-900 sm:text-5xl">
+        {/* A <p>, not an <h1>: the page's single h1 is the hero headline. */}
+        <p className="welcome-item font-display text-4xl font-black tracking-tight text-stone-900 sm:text-5xl">
           Welcome
-        </h1>
+        </p>
 
         <span className="welcome-item mt-3 font-display text-[10px] font-extrabold uppercase tracking-[0.35em] text-stone-400">
           Green Engineering Systems

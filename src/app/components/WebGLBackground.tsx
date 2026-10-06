@@ -155,7 +155,10 @@ export default function WebGLBackground({
     const uMode = gl.getUniformLocation(program, "uMode");
     gl.uniform1f(uMode, variant === "dark" ? 1.0 : 0.0);
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    // Touch devices (mostly phones) get a lower cap: the shader is ~25 noise
+    // lookups per pixel per frame, and a soft gradient doesn't need retina pixels.
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, isTouch ? 1.25 : 1.75);
     const resize = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;

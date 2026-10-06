@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Inbox, KanbanSquare, FolderKanban, ImageIcon, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Inbox, KanbanSquare, FolderKanban, ImageIcon, Newspaper, Bot, LogOut, Menu, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const NAV = [
@@ -13,6 +13,8 @@ const NAV = [
   { href: "/admin/crm", label: "CRM", icon: KanbanSquare },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/content", label: "Homepage & About", icon: ImageIcon },
+  { href: "/admin/blog", label: "Blog", icon: Newspaper },
+  { href: "/admin/ai-agent", label: "AI Agent", icon: Bot },
 ];
 
 export default function AdminShell({

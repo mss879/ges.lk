@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { Inbox, KanbanSquare, FolderKanban, ArrowUpRight } from "lucide-react";
+import { Inbox, KanbanSquare, FolderKanban, ArrowUpRight, Bot, Newspaper } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import type { Inquiry, PipelineStage } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
+
+/** ISO timestamp `days` ago (kept out of render so the component stays pure). */
+function daysAgo(days: number) {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+}
 
 function StatCard({
   label,
@@ -39,15 +44,31 @@ function StatCard({
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
 
-  const [inquiriesTotal, inquiriesNew, leadsTotal, projectsTotal, projectsResidential, projectsCommercial] =
-    await Promise.all([
-      supabase.from("inquiries").select("*", { count: "exact", head: true }),
-      supabase.from("inquiries").select("*", { count: "exact", head: true }).eq("status", "new"),
-      supabase.from("leads").select("*", { count: "exact", head: true }),
-      supabase.from("projects").select("*", { count: "exact", head: true }),
-      supabase.from("projects").select("*", { count: "exact", head: true }).eq("category", "residential"),
-      supabase.from("projects").select("*", { count: "exact", head: true }).eq("category", "commercial"),
-    ]);
+  const weekAgo = daysAgo(7);
+  const [
+    inquiriesTotal,
+    inquiriesNew,
+    leadsTotal,
+    projectsTotal,
+    projectsResidential,
+    projectsCommercial,
+    chatsWeek,
+    aiLeads,
+    postsPublished,
+    postsDraft,
+  ] = await Promise.all([
+    supabase.from("inquiries").select("*", { count: "exact", head: true }),
+    supabase.from("inquiries").select("*", { count: "exact", head: true }).eq("status", "new"),
+    supabase.from("leads").select("*", { count: "exact", head: true }),
+    supabase.from("projects").select("*", { count: "exact", head: true }),
+    supabase.from("projects").select("*", { count: "exact", head: true }).eq("category", "residential"),
+    supabase.from("projects").select("*", { count: "exact", head: true }).eq("category", "commercial"),
+    // These two tables arrive with migrations 0010 / 0012; a missing table just reads as 0.
+    supabase.from("ai_chat_sessions").select("id", { count: "exact", head: true }).gt("message_count", 0).gte("created_at", weekAgo),
+    supabase.from("ai_chat_sessions").select("id", { count: "exact", head: true }).not("lead_id", "is", null),
+    supabase.from("blog_posts").select("id", { count: "exact", head: true }).eq("status", "published"),
+    supabase.from("blog_posts").select("id", { count: "exact", head: true }).eq("status", "draft"),
+  ]);
 
   const { data: recent } = await supabase
     .from("inquiries")
@@ -113,6 +134,20 @@ export default async function AdminDashboardPage() {
           sub={`${projectsResidential.count ?? 0} residential · ${projectsCommercial.count ?? 0} commercial`}
           href="/admin/projects"
           icon={FolderKanban}
+        />
+        <StatCard
+          label="AI chats (7 days)"
+          value={chatsWeek.count ?? 0}
+          sub={`${aiLeads.count ?? 0} conversations turned into leads`}
+          href="/admin/ai-agent"
+          icon={Bot}
+        />
+        <StatCard
+          label="Blog posts"
+          value={postsPublished.count ?? 0}
+          sub={`${postsDraft.count ?? 0} drafts`}
+          href="/admin/blog"
+          icon={Newspaper}
         />
       </div>
 

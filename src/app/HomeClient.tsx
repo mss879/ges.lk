@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
-import { ArrowUpRight, ArrowRight, Battery, Wind, Thermometer, Calendar, Clock } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowUpRight, ArrowRight, Calendar, Clock } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { blogPosts } from "@/data/blogs";
 import Preloader from "@/app/components/Preloader";
 import SiteNav from "@/app/components/SiteNav";
+import SiteFooter from "@/app/components/SiteFooter";
+import LazyVideo from "@/app/components/LazyVideo";
+import type { PostSummary } from "@/lib/blog/types";
+import { formatPostDate, formatReadTime, initials } from "@/lib/blog/format";
 import HeroSlider from "@/app/components/HeroSlider";
 import { heroSlides } from "@/data/heroSlides";
 import { defaultImageMap, type SiteImageMap } from "@/data/siteImageSlots";
@@ -18,13 +20,14 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const StarIcon = () => (
-  <svg className="w-4.5 h-4.5 text-[#e2fa5a] fill-current shrink-0" viewBox="0 0 24 24">
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-  </svg>
-);
-
-export default function HomeClient({ images }: { images?: SiteImageMap }) {
+export default function HomeClient({
+  images,
+  posts = [],
+}: {
+  images?: SiteImageMap;
+  /** The latest published blog posts (up to three), fetched by page.tsx. */
+  posts?: PostSummary[];
+}) {
   // Falls back to the shipped images when rendered without CMS data.
   const img = { ...defaultImageMap("homepage"), ...(images ?? {}) };
   // Hero slide artwork is CMS-controlled; the copy stays in heroSlides.ts.
@@ -36,129 +39,7 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoaded = () => {
-      setIsVideoLoaded(true);
-    };
-
-    if (video.readyState >= 3) {
-      setIsVideoLoaded(true);
-    } else {
-      video.addEventListener("canplaythrough", handleLoaded);
-      video.addEventListener("loadeddata", handleLoaded);
-    }
-
-    return () => {
-      video.removeEventListener("canplaythrough", handleLoaded);
-      video.removeEventListener("loadeddata", handleLoaded);
-    };
-  }, []);
-  const [hoveredBarIndex, setHoveredBarIndex] = useState<number | null>(null);
-  const [activeValueIndex, setActiveValueIndex] = useState<number | null>(null);
-
-  // Values 3D Cylinder Interactive Drag & Infinite Rotation Refs and Handlers
-  const cylinderRef = useRef<HTMLDivElement>(null);
-  const rotationRef = useRef(0);
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const startRotationRef = useRef(0);
-
-  useEffect(() => {
-    let animationFrameId: number;
-    const animate = () => {
-      if (!isDraggingRef.current && cylinderRef.current) {
-        rotationRef.current += 0.08;
-        cylinderRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
-
-  const handleCylinderPointerDown = (e: React.PointerEvent) => {
-    isDraggingRef.current = true;
-    startXRef.current = e.clientX;
-    startRotationRef.current = rotationRef.current;
-    const target = e.currentTarget as HTMLElement;
-    target.setPointerCapture(e.pointerId);
-  };
-
-  const handleCylinderPointerMove = (e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
-    const deltaX = e.clientX - startXRef.current;
-    rotationRef.current = startRotationRef.current - deltaX * 0.2;
-    if (cylinderRef.current) {
-      cylinderRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
-    }
-  };
-
-  const handleCylinderPointerUp = (e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    const target = e.currentTarget as HTMLElement;
-    target.releasePointerCapture(e.pointerId);
-  };
-
-  const [batteryCharge, setBatteryCharge] = useState(0);
-  const [isFilling, setIsFilling] = useState(true);
   const [activeService, setActiveService] = useState<number>(0);
-
-  const valuesData = [
-    {
-      title: "Human",
-      desc: "We put people first in everything we build, driving success through empathy and collaboration.",
-      badgeLabel: "RETENTION RATE:",
-      badgeVal: "99% Engineering Trust",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    },
-    {
-      title: "Curious",
-      desc: "We constantly question current paradigms to discover smarter, cutting-edge solar solutions.",
-      badgeLabel: "R&D INVESTMENT:",
-      badgeVal: "Pioneering Smart Tech",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    },
-    {
-      title: "Pragmatic",
-      desc: "We value real-world results over hypothetical concepts, designing systems for maximum durability.",
-      badgeLabel: "SYSTEM RELIABILITY:",
-      badgeVal: "99.98% Operational Up-time",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    },
-    {
-      title: "Impact-Driven",
-      desc: "We scale clean power to deliver tangible financial savings and accelerate carbon neutrality.",
-      badgeLabel: "CARBON OFFSET:",
-      badgeVal: "100K+ Tons CO2 Save",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    },
-    {
-      title: "Future-Ready",
-      desc: "We engineer systems designed to adapt to future grid evolutions and next-generation battery integrations.",
-      badgeLabel: "GRID READINESS:",
-      badgeVal: "100% Future-Compatible Tech",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    },
-    {
-      title: "Quality-First",
-      desc: "We uphold elite engineering standards, using tier-one components built to endure the harshest climates.",
-      badgeLabel: "HARDWARE QUALITY:",
-      badgeVal: "Tier-1 Clean Energy Tech",
-      bgClass: "bg-gradient-to-br from-[#00E676] via-[#00AC4E] to-[#008F3F]"
-    }
-  ];
-
-  const doubleValues = [
-    ...valuesData,
-    ...valuesData
-  ];
 
   const servicesData = [
     {
@@ -174,69 +55,6 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
       image: "/service_repair.webp"
     }
   ];
-
-  // 24-hour detailed generation data for high-density solar yield chart
-  const hourlyData = [
-    { hour: "12:00 AM", val: 0.0, height: 0 },
-    { hour: "01:00 AM", val: 0.0, height: 0 },
-    { hour: "02:00 AM", val: 0.0, height: 0 },
-    { hour: "03:00 AM", val: 0.0, height: 0 },
-    { hour: "04:00 AM", val: 0.0, height: 0 },
-    { hour: "05:00 AM", val: 0.1, height: 4 },
-    { hour: "06:00 AM", val: 0.4, height: 10 },
-    { hour: "07:00 AM", val: 0.9, height: 22 },
-    { hour: "08:00 AM", val: 1.8, height: 38 },
-    { hour: "09:00 AM", val: 2.9, height: 55 },
-    { hour: "10:00 AM", val: 3.8, height: 70 },
-    { hour: "11:00 AM", val: 4.8, height: 85 },
-    { hour: "12:00 PM", val: 5.4, height: 95 },
-    { hour: "01:00 PM", val: 5.8, height: 100 },
-    { hour: "02:00 PM", val: 5.5, height: 92 },
-    { hour: "03:00 PM", val: 4.6, height: 80 },
-    { hour: "04:00 PM", val: 3.4, height: 60 },
-    { hour: "05:00 PM", val: 2.1, height: 38 },
-    { hour: "06:00 PM", val: 1.1, height: 20 },
-    { hour: "07:00 PM", val: 0.4, height: 8 },
-    { hour: "08:00 PM", val: 0.1, height: 2 },
-    { hour: "09:00 PM", val: 0.0, height: 0 },
-    { hour: "10:00 PM", val: 0.0, height: 0 },
-    { hour: "11:00 PM", val: 0.0, height: 0 },
-  ];
-
-  // Background slow charge / gradual fill-up simulation
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isFilling) {
-      // Slower, smooth charging animation: 0% -> 100% over 20 seconds (1% every 200ms)
-      interval = setInterval(() => {
-        setBatteryCharge((prev) => {
-          if (prev >= 100) {
-            setIsFilling(false);
-            return 100;
-          }
-          return prev + 1;
-        });
-      }, 200);
-    } else {
-      // Ambient slow charge: increase by 1% every 8 seconds if under 100%
-      interval = setInterval(() => {
-        setBatteryCharge((prev) => {
-          if (prev < 100) {
-            return prev + 1;
-          }
-          return prev;
-        });
-      }, 8000);
-    }
-    return () => clearInterval(interval);
-  }, [isFilling]);
-
-  const handleBatteryClick = () => {
-    if (!isFilling) {
-      setBatteryCharge(0);
-      setIsFilling(true);
-    }
-  };
 
   useEffect(() => {
     if (isLoading) return;
@@ -383,8 +201,6 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
         }
       );
 
-      const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
-
       // alignTimelineLine is defined at the useEffect level for broad scope access
 
       // Run alignment immediately
@@ -467,8 +283,10 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
   }, [isLoading]);
 
   return (
-    <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col">
-      {isLoading && <Preloader onComplete={() => setIsLoading(false)} isVideoLoaded={isVideoLoaded} />}
+    // overflow-x-clip: decorative glows must not widen the page on phones
+    // (clip, unlike hidden, keeps the sticky nav working).
+    <div ref={containerRef} className="w-full min-h-screen bg-[#f8f9fa] flex flex-col overflow-x-clip">
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
 
       <SiteNav active="home" />
 
@@ -702,12 +520,9 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
             {/* Card 2: Sustainable Innovation (Col 3, Row 1-2) with video background */}
             <div className="col-span-1 md:col-span-1 md:row-span-2 relative rounded-[32px] overflow-hidden bg-stone-50 text-stone-900 p-6 flex flex-col justify-end group shadow-lg shadow-stone-100/50 border border-stone-200 bento-card-anim min-h-[290px] md:min-h-0">
               <div className="absolute inset-0 z-0 top-0 h-[48%] overflow-hidden rounded-t-[32px]">
-                <video
+                <LazyVideo
                   src="/drone_flyby_solar.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                  poster="/drone_flyby_solar-poster.webp"
                   className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-102"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-stone-50 via-stone-50/80 to-transparent pointer-events-none" />
@@ -794,12 +609,9 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
             {/* Card 5: End-to-End Support (Col 3-4, Row 3) with video background */}
             <div className="col-span-1 md:col-span-2 md:row-span-1 relative rounded-[32px] overflow-hidden bg-zinc-950 text-white p-6 py-8 px-8 md:py-10 md:px-10 md:min-h-[185px] flex flex-col sm:flex-row items-center sm:justify-between gap-6 group shadow-xl border border-zinc-800 bento-card-anim text-center sm:text-left">
               <div className="absolute inset-0 z-0">
-                <video
+                <LazyVideo
                   src="/sunset_solar_panels.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                  poster="/sunset_solar_panels-poster.webp"
                   className="w-full h-full object-cover opacity-65 transition-all duration-700 group-hover:scale-102"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent pointer-events-none" />
@@ -1060,11 +872,7 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
                   >
                     <span>{service.title}</span>
                     {activeService === idx && (
-                      <motion.div
-                        layoutId="activeServiceTabUnderline"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00AC4E]"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
+                      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00AC4E] animate-ges-underline-in" />
                     )}
                   </button>
                 ))}
@@ -1078,21 +886,14 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
                   </span>
                 </div>
 
-                <motion.div
-                  key={activeService}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.4 }}
-                  className="flex flex-col gap-4"
-                >
+                <div key={activeService} className="flex flex-col gap-4 animate-ges-fade-up">
                   <h3 className="font-display text-2xl sm:text-3xl font-black text-white leading-tight">
                     {servicesData[activeService].title}
                   </h3>
                   <p className="text-stone-300 text-sm sm:text-base md:text-base font-medium leading-relaxed">
                     {servicesData[activeService].description}
                   </p>
-                </motion.div>
+                </div>
               </div>
 
               {/* Action Button & Slide Navigation Arrows */}
@@ -1132,25 +933,17 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
             {/* Right Column: Image Slider */}
             <div className="lg:col-span-7 relative aspect-[16/10] w-full rounded-[32px] overflow-hidden shadow-2xl border border-white/10 bg-[#0d140e] group/slider">
               {/* Animated image container */}
-              <motion.div
-                key={activeService}
-                initial={{ opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="absolute inset-0 w-full h-full"
-              >
+              <div key={activeService} className="absolute inset-0 w-full h-full animate-ges-fade-zoom">
                 <Image
                   src={servicesData[activeService].image}
                   alt={servicesData[activeService].title}
                   fill
-                  priority
                   className="object-cover transition-transform duration-700 ease-out group-hover/slider:scale-[1.03]"
                   sizes="(max-width: 1024px) 100vw, 800px"
                 />
                 {/* Overlay gradient to blend nicely */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
-              </motion.div>
+              </div>
 
               {/* Small floating counter in corner */}
               <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs font-mono font-bold tracking-widest text-white z-10">
@@ -1285,6 +1078,7 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
       </section>
 
       {/* SECTION 5: Latest Insights (Blog Preview - Redesigned & Widened) */}
+      {posts.length > 0 && (
       <section className="w-full bg-[#f8f9fa] text-stone-900 py-20 border-t border-stone-200/40 relative z-20 overflow-hidden">
         {/* Ambient background glows */}
         <div className="absolute top-1/2 left-[-100px] -translate-y-1/2 w-[500px] h-[500px] bg-[#00AC4E]/[0.03] rounded-full blur-[140px] pointer-events-none select-none" />
@@ -1314,7 +1108,7 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
 
           {/* Grid of latest 3 posts (Widened grid with premium gaps) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 xl:gap-12">
-            {blogPosts.slice(0, 3).map((post) => (
+            {posts.map((post) => (
               <article
                 key={post.slug}
                 className="bg-white border border-stone-200/50 rounded-[32px] overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.015)] hover:shadow-[0_30px_60px_-15px_rgba(0,172,78,0.08)] transition-all duration-500 group flex flex-col justify-between hover:-translate-y-1.5 relative"
@@ -1322,13 +1116,15 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
                 <div className="flex flex-col">
                   {/* Cover Image */}
                   <div className="relative h-[200px] sm:h-[220px] overflow-hidden">
+                    {post.cover_url && (
                     <Image
-                      src={post.image}
-                      alt={post.title}
+                      src={post.cover_url}
+                      alt={post.cover_alt || post.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 46vw, 30vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-transparent" />
                     <span className="absolute top-5 left-5 bg-white/95 backdrop-blur-md border border-stone-200/30 text-stone-700 font-bold text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-xl shadow-sm">
                       {post.category}
@@ -1341,21 +1137,21 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
                     <div className="flex items-center gap-3 text-[10px] font-bold text-stone-400 font-mono tracking-wider leading-none">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-stone-400" />
-                        {post.date}
+                        {formatPostDate(post.published_at)}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-stone-200" />
                       <span className="flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-stone-400" />
-                        {post.readTime}
+                        {formatReadTime(post.reading_minutes)}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h4 className="font-display text-xl sm:text-2xl font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug">
+                    <h3 className="font-display text-xl sm:text-2xl font-black text-stone-900 group-hover:text-[#00AC4E] transition-colors duration-300 leading-snug">
                       <Link href={`/blog/${post.slug}`}>
                         {post.title}
                       </Link>
-                    </h4>
+                    </h3>
 
                     {/* Excerpt */}
                     <p className="text-stone-500 text-xs sm:text-sm leading-relaxed font-semibold line-clamp-3">
@@ -1364,7 +1160,7 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
 
                     {/* Dynamic Technical Metrics (Stunning Engineering Detail) */}
                     <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-stone-100">
-                      {post.metrics.slice(0, 2).map((m, idx) => (
+                      {(post.metrics ?? []).slice(0, 2).map((m, idx) => (
                         <div key={idx} className="bg-stone-50 border border-stone-200/30 rounded-xl px-3 py-2 flex flex-col justify-center">
                           <span className="text-[8px] font-black text-stone-400 uppercase tracking-widest leading-none">{m.label}</span>
                           <span className="text-xs font-black text-stone-700 tracking-tight mt-1">{m.value}</span>
@@ -1378,11 +1174,13 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
                 <div className="px-6 sm:px-8 pb-8 pt-4 border-t border-stone-50 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-full bg-[#00AC4E]/5 border border-[#00AC4E]/20 flex items-center justify-center font-bold text-[#00AC4E] text-xs shadow-sm">
-                      {post.author.avatar}
+                      {initials(post.author_name)}
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs font-extrabold text-stone-800 leading-none">{post.author.name}</span>
-                      <span className="text-[9px] font-bold text-stone-400 tracking-wider mt-1">{post.author.role.split(",")[0]}</span>
+                      <span className="text-xs font-extrabold text-stone-800 leading-none">{post.author_name}</span>
+                      {post.author_role && (
+                        <span className="text-[9px] font-bold text-stone-400 tracking-wider mt-1">{post.author_role.split(",")[0]}</span>
+                      )}
                     </div>
                   </div>
 
@@ -1403,177 +1201,9 @@ export default function HomeClient({ images }: { images?: SiteImageMap }) {
 
         </div>
       </section>
+      )}
 
-      <footer
-        id="contact"
-        className="w-full text-white pt-12 md:pt-14 pb-8 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-white/5 relative z-10 font-sans"
-        style={{ backgroundColor: '#01401F' }}
-      >
-        <div className="max-w-[1360px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-9 lg:gap-8">
-
-            {/* Column 1: Brand details & Newsletter Subscription */}
-            <div className="lg:col-span-5 flex flex-col items-start">
-              <div className="mb-4 flex items-center">
-                <Image
-                  src="/logo.webp"
-                  alt="GES Logo"
-                  width={150}
-                  height={42}
-                  className="h-9 w-auto object-contain brightness-0 invert"
-                />
-              </div>
-              <p className="text-white/85 font-medium text-sm leading-relaxed max-w-sm">
-                We are a renewable energy engineering company with a mission to empower communities through reliable, clean solar power.
-              </p>
-
-              {/* Premium email subscription input */}
-              <div className="mt-6 flex items-center justify-between bg-transparent border border-white/20 rounded-2xl p-1.5 w-full max-w-md focus-within:border-white/50 transition-all duration-300">
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="bg-transparent pl-3 pr-2 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none w-full font-semibold"
-                />
-                <button className="bg-[#e2ff3a] text-[#012716] hover:bg-[#e2ff3a]/90 transition-all duration-300 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest cursor-pointer shrink-0 shadow-sm active:scale-[0.98]">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-
-            {/* Column 2: Navigation Links */}
-            <div className="lg:col-span-2 lg:col-start-7 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-4 text-white/75">
-                Links
-              </h4>
-              <ul className="flex flex-col gap-3 font-bold text-sm">
-                <li><Link href="/" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Home</Link></li>
-                <li><Link href="/#about" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">About Us</Link></li>
-                <li><Link href="/#solutions" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Services</Link></li>
-                <li><Link href="/projects" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Projects</Link></li>
-                <li><Link href="/blog" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Blogs</Link></li>
-                <li><Link href="/faq" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">FAQ</Link></li>
-                <li><Link href="/#contact" className="hover:text-[#e2ff3a] text-left transition-colors cursor-pointer">Contact</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: Legal/Policies */}
-            <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-4 text-white/75">
-                Legal
-              </h4>
-              <ul className="flex flex-col gap-3 font-bold text-sm">
-                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Terms & Conditions</a></li>
-                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">Engineering Standards</a></li>
-                <li><a href="#" className="hover:text-[#e2ff3a] transition-colors">License Details</a></li>
-              </ul>
-            </div>
-
-            {/* Column 4: Contact Us Info */}
-            <div className="lg:col-span-2 flex flex-col">
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-4 text-white/75">
-                Contact Us
-              </h4>
-              <ul className="flex flex-col gap-3 font-bold text-sm text-white/90">
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="leading-relaxed font-semibold">714/1, Thorana Junction, Kandy Road, Kelaniya, Sri Lanka</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href="mailto:sales@ges.lk" className="hover:text-[#e2ff3a] transition-colors">sales@ges.lk</a>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#e2ff3a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <div className="flex flex-col">
-                    <a href="tel:+94765332332" className="hover:text-[#e2ff3a] transition-colors font-bold">+94 76 533 2332</a>
-                    <a href="tel:0765332332" className="hover:text-[#e2ff3a] transition-colors text-xs text-white/75 font-semibold">076 533 2332</a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-      </footer>
-
-      {/* COPYRIGHT SECTION: Deep Forest Green Bottom Bar with No Separator */}
-      <div className="w-full bg-[#01401F] border-t border-white/10 text-white/80 py-5 px-6 sm:px-12 md:px-16 lg:px-24 relative z-10 font-sans">
-        <div className="max-w-[1360px] mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4 text-center md:text-left">
-
-          {/* Left: Copyright */}
-          <div className="text-xs font-bold text-white/80 justify-self-center md:justify-self-start">
-            © {new Date().getFullYear()} GES (PVT) LTD. All rights reserved.
-          </div>
-
-          {/* Center: Built and Designed by ARC AI */}
-          <div className="text-white/90 flex items-center justify-center gap-2 text-xs font-bold justify-self-center">
-            <span>Built and Designed by</span>
-            <a
-              href="https://www.arcai.agency"
-              target="_blank"
-              rel="noopener"
-              className="inline-flex items-center transition-all duration-300 hover:scale-105"
-              title="ARC AI - AI Automation and Software Company"
-            >
-              <Image
-                src="/arclogo.webp"
-                alt="ARC AI | AI Automation & Software Company"
-                width={350}
-                height={180}
-                className="h-8 w-auto object-contain"
-              />
-            </a>
-          </div>
-
-          {/* Right: Social Links */}
-          <div className="flex items-center justify-center md:justify-end gap-5 text-white/85 justify-self-center md:justify-self-end">
-            <a href="#" className="hover:text-[#e2ff3a] transition-colors">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-              </svg>
-            </a>
-            <a href="#" className="hover:text-[#e2ff3a] transition-colors">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-            </a>
-            <a href="#" className="hover:text-[#e2ff3a] transition-colors">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-              </svg>
-            </a>
-            <a href="#" className="hover:text-[#e2ff3a] transition-colors">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0 3.259-.014 3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Fixed Glassmorphism Blur Bar — bottom of viewport, persistent */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-[9999] pointer-events-none select-none"
-        style={{ height: '60px' }}
-      >
-        <div
-          className="w-full h-full"
-          style={{
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.95) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.95) 100%)',
-          }}
-        />
-      </div>
+      <SiteFooter id="contact" />
 
     </div>
   );

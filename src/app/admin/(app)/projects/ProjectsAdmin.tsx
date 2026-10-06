@@ -6,6 +6,12 @@ import { Plus, Pencil, Trash2, X, Upload, Loader2, MapPin, Zap, ImageOff } from 
 import { createClient } from "@/lib/supabase/client";
 import { MAX_PROJECT_IMAGES, PROJECT_IMAGES_BUCKET } from "@/lib/supabase/config";
 import type { ProjectCategory, ProjectImage, ProjectWithImages } from "@/lib/supabase/types";
+import { refreshPublic } from "@/app/admin/actions";
+
+/** Pushes saved changes to the live /projects page (it's cached between deploys). */
+const publish = () => {
+  void refreshPublic("projects").catch(() => {});
+};
 
 type Draft = {
   id: string | null;
@@ -85,6 +91,7 @@ export default function ProjectsAdmin({ initial }: { initial: ProjectWithImages[
       setProjects((prev) =>
         prev.map((p) => (p.id === draft.id ? { ...p, ...payload, project_images: images } : p))
       );
+      publish();
     } else {
       const { data, error: e } = await supabase
         .from("projects")
@@ -97,6 +104,7 @@ export default function ProjectsAdmin({ initial }: { initial: ProjectWithImages[
         return;
       }
       setProjects((prev) => [...prev, data as ProjectWithImages]);
+      publish();
       // Keep the editor open so images can be attached to the new row.
       setDraft({ ...draft, id: (data as ProjectWithImages).id });
       setBusy(false);
@@ -121,6 +129,7 @@ export default function ProjectsAdmin({ initial }: { initial: ProjectWithImages[
       return;
     }
     setProjects((prev) => prev.filter((x) => x.id !== p.id));
+    publish();
   };
 
   /* ------------------------------------------------------------- images */
@@ -186,6 +195,7 @@ export default function ProjectsAdmin({ initial }: { initial: ProjectWithImages[
       setProjects((prev) =>
         prev.map((p) => (p.id === draft.id ? { ...p, project_images: next } : p))
       );
+      publish();
     }
     setUploading(false);
     if (fileRef.current) fileRef.current.value = "";
@@ -203,6 +213,7 @@ export default function ProjectsAdmin({ initial }: { initial: ProjectWithImages[
     const next = images.filter((i) => i.id !== img.id);
     setImages(next);
     setProjects((prev) => prev.map((p) => (p.id === draft?.id ? { ...p, project_images: next } : p)));
+    publish();
   };
 
   /* ------------------------------------------------------------- render */
