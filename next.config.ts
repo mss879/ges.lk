@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Turbopack's on-disk build cache (.next/cache/turbopack) stores the values
+    // of environment variables the build sees, the chat's secret keys included.
+    // Netlify keeps .next/cache between builds and its secrets scanner fails the
+    // deploy when it finds them there, so the build cache stays off.
+    turbopackFileSystemCacheForBuild: false,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

@@ -2,7 +2,10 @@
 # the build. Set the primary domain to www.ges.lk in Site settings → Domain
 # management so ges.lk 301-redirects to it.
 [build]
-  command = "npm run build"
+  # Drops any Turbopack cache restored from an earlier build: it can hold secret
+  # values (see turbopackFileSystemCacheForBuild in next.config.ts), and new
+  # builds no longer write one.
+  command = "rm -rf .next/cache/turbopack && npm run build"
 
 [build.environment]
   NODE_VERSION = "22"
